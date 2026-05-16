@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-title">القصص الأسطورية</title>
+  <meta name="description" id="page-desc" content="قصة من القصص الأسطورية">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#060608; --card:#0f0f14; --red:#9b1a1a; --red-bright:#cc2222;
+      --gold:#c8a84b; --gold-dim:#8a7030; --text:#d8d0c8; --text-dim:#7a7268;
+      --white:#f0ece4; --border:#1e1e28;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Cairo',serif;min-height:100vh;overflow-x:hidden}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,168,75,0.08)}
+    .nav-logo{font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);text-decoration:none;text-shadow:0 0 20px rgba(200,168,75,0.3)}
+    .back-btn{display:flex;align-items:center;gap:0.5rem;color:var(--text-dim);text-decoration:none;font-size:0.85rem;font-weight:300;transition:color 0.3s}
+    .back-btn:hover{color:var(--gold)}
+
+    /* HERO */
+    .story-hero{height:70vh;position:relative;overflow:hidden;margin-top:64px}
+    .story-hero img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) contrast(1.1) brightness(0.7);transition:transform 8s ease}
+    .story-hero img.loaded{transform:scale(1.05)}
+    .story-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,var(--bg) 0%,rgba(6,6,8,0.5) 40%,rgba(6,6,8,0.2) 100%)}
+    .hero-content{position:absolute;bottom:4rem;left:50%;transform:translateX(-50%);width:100%;max-width:820px;padding:0 2rem;text-align:center;z-index:1}
+    .story-cat{font-size:0.65rem;font-weight:700;letter-spacing:0.35em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1rem;display:block}
+    .story-title{font-family:'Amiri',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--white);line-height:1.3;text-shadow:0 4px 40px rgba(0,0,0,0.9);margin-bottom:1.5rem}
+    .story-meta{display:flex;align-items:center;justify-content:center;gap:1.5rem;font-size:0.75rem;color:var(--text-dim)}
+    .meta-dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
+
+    /* PROGRESS BAR */
+    .progress-bar{position:fixed;top:64px;left:0;right:0;height:2px;z-index:99;background:rgba(200,168,75,0.1)}
+    .progress-fill{height:100%;background:linear-gradient(to left,var(--gold),var(--red));width:0%;transition:width 0.1s}
+
+    /* BODY */
+    .story-wrap{max-width:760px;margin:0 auto;padding:5rem 2rem 6rem}
+
+    .story-lead{font-family:'Amiri',serif;font-size:1.35rem;font-style:italic;color:var(--gold);line-height:2;margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--border);text-align:center}
+
+    .story-text{font-family:'Amiri',serif;font-size:1.2rem;line-height:2.4;color:var(--text);text-align:justify}
+    .story-text p{margin-bottom:2rem}
+    .story-text p:first-child::first-letter{font-size:4.5rem;float:right;line-height:1;margin-left:0.5rem;margin-top:0.3rem;color:var(--gold);font-family:'Amiri',serif;text-shadow:0 0 20px rgba(200,168,75,0.3)}
+
+    /* ORNAMENT */
+    .ornament{text-align:center;color:var(--gold-dim);font-size:1rem;letter-spacing:1rem;opacity:0.5;margin:3rem 0}
+
+    /* END SECTION */
+    .story-end{margin-top:4rem;padding:3rem;border:1px solid var(--border);text-align:center;background:linear-gradient(135deg,rgba(155,26,26,0.04),transparent);position:relative}
+    .story-end::before,.story-end::after{content:'';position:absolute;width:40px;height:40px;border-color:var(--gold-dim);border-style:solid;opacity:0.3}
+    .story-end::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
+    .story-end::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
+    .end-label{font-size:0.65rem;letter-spacing:0.3em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1rem}
+    .end-text{font-family:'Amiri',serif;font-size:1.1rem;color:var(--text-dim);line-height:1.8;font-style:italic}
+
+    /* RELATED */
+    .related-section{margin-top:5rem;padding-top:3rem;border-top:1px solid var(--border)}
+    .related-title{font-size:0.7rem;font-weight:700;letter-spacing:0.3em;color:var(--text-dim);text-transform:uppercase;margin-bottom:2rem}
+    .related-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+    .related-card{background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all 0.3s;text-decoration:none;display:block}
+    .related-card:hover{border-color:rgba(200,168,75,0.2);transform:translateY(-3px)}
+    .related-img{width:100%;height:140px;object-fit:cover;filter:grayscale(50%);transition:all 0.4s;display:block}
+    .related-card:hover .related-img{filter:grayscale(20%)}
+    .related-body{padding:1rem}
+    .related-tag{font-size:0.6rem;font-weight:700;letter-spacing:0.2em;color:var(--red-bright);text-transform:uppercase;display:block;margin-bottom:0.5rem}
+    .related-name{font-family:'Amiri',serif;font-size:1rem;color:var(--white);line-height:1.4}
+
+    /* SHARE */
+    .share-bar{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)}
+    .share-label{font-size:0.75rem;color:var(--text-dim);letter-spacing:0.1em}
+    .share-btn{padding:0.5rem 1.2rem;border:1px solid var(--border);color:var(--text-dim);text-decoration:none;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;transition:all 0.3s;cursor:pointer;background:none}
+    .share-btn:hover{border-color:var(--gold-dim);color:var(--gold)}
+
+    /* SCROLL TO TOP */
+    .scroll-top{position:fixed;bottom:2rem;left:2rem;width:44px;height:44px;background:rgba(6,6,8,0.9);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1rem;transition:all 0.3s;opacity:0;pointer-events:none;z-index:50;backdrop-filter:blur(8px)}
+    .scroll-top.visible{opacity:1;pointer-events:all}
+    .scroll-top:hover{border-color:var(--gold-dim);color:var(--gold)}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center}
+    .footer-logo{font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold);margin-bottom:0.5rem}
+    .footer-text{font-size:0.75rem;color:var(--text-dim)}
+
+    @media(max-width:600px){
+      .story-hero{height:50vh}
+      .story-wrap{padding:3rem 1.5rem 5rem}
+      .related-grid{grid-template-columns:1fr}
+      .story-text{font-size:1.1rem}
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<nav>
+  <a href="index.html" class="back-btn">→ القصص الأسطورية</a>
+  <a href="index.html" class="nav-logo">القصص الأسطورية</a>
+</nav>
+
+<div class="story-hero">
+  <img id="hero-img" src="" alt="">
+  <div class="hero-content">
+    <span class="story-cat" id="story-cat"></span>
+    <h1 class="story-title" id="story-title"></h1>
+    <div class="story-meta">
+      <span id="story-date"></span>
+      <div class="meta-dot"></div>
+      <span id="story-read"></span>
+      <div class="meta-dot"></div>
+      <span id="story-cat2"></span>
+    </div>
+  </div>
+</div>
+
+<div class="story-wrap">
+  <p class="story-lead" id="story-excerpt"></p>
+  <div class="story-text" id="story-body"></div>
+  <div class="ornament">✦ ✦ ✦</div>
+
+  <div class="story-end">
+    <p class="end-label">◆ نهاية القصة</p>
+    <p class="end-text" id="story-end-text">شكراً لقراءتك. إذا أعجبتك القصة، شاركها مع من تظن أنه يحب الرعب والغموض.</p>
+  </div>
+
+  <div class="share-bar">
+    <span class="share-label">شارك القصة:</span>
+    <button class="share-btn" onclick="shareWhatsApp()">واتساب</button>
+    <button class="share-btn" onclick="shareFacebook()">فيسبوك</button>
+    <button class="share-btn" onclick="copyLink()">نسخ الرابط</button>
+  </div>
+
+  <div class="related-section">
+    <p class="related-title">◆ قصص قد تعجبك</p>
+    <div class="related-grid" id="related-grid"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">القصص الأسطورية</div>
+  <p class="footer-text">© ٢٠٢٦ — جميع الحقوق محفوظة</p>
+</footer>
+
+<button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="stories.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const id = params.get('id') || 's1';
+const story = STORIES[id];
+
+if (!story) {
+  window.location.href = 'index.html';
+} else {
+  document.getElementById('page-title').textContent = story.title + ' — القصص الأسطورية';
+  document.getElementById('page-desc').setAttribute('content', story.excerpt);
+  const img = document.getElementById('hero-img');
+  img.src = story.img;
+  img.onload = () => img.classList.add('loaded');
+  document.getElementById('story-cat').textContent = '◆ ' + story.cat;
+  document.getElementById('story-cat2').textContent = story.cat;
+  document.getElementById('story-title').textContent = story.title;
+  document.getElementById('story-date').textContent = story.date;
+  document.getElementById('story-read').textContent = story.readTime + ' قراءة';
+  document.getElementById('story-excerpt').textContent = story.excerpt;
+  document.getElementById('story-body').innerHTML = story.body;
+
+  const related = document.getElementById('related-grid');
+  (story.related || []).forEach(rid => {
+    const r = STORIES[rid];
+    if (!r) return;
+    related.innerHTML += `
+      <a href="story.html?id=${r.id}" class="related-card">
+        <img class="related-img" src="${r.img}" alt="${r.title}" loading="lazy">
+        <div class="related-body">
+          <span class="related-tag">◆ ${r.cat}</span>
+          <p class="related-name">${r.title}</p>
+        </div>
+      </a>`;
+  });
+}
+
+/* PROGRESS */
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+  const btn = document.getElementById('scroll-top');
+  btn.classList.toggle('visible', el.scrollTop > 400);
+});
+
+/* SHARE */
+function shareWhatsApp(){
+  window.open('https://wa.me/?text=' + encodeURIComponent(story.title + ' — اقرأ القصة: ' + window.location.href));
+}
+function shareFacebook(){
+  window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href));
+}
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href).then(() => alert('تم نسخ الرابط!'));
+}
+</script>
+</body>
+</html>
