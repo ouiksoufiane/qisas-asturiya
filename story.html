@@ -149,11 +149,19 @@
 
 <button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script src="stories.js"></script>
+<script src="stories.js?v=2"></script>
 <script>
-const params = new URLSearchParams(window.location.search);
-const id = params.get('id') || 's1';
-const story = STORIES[id];
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id') || 's1';
+
+  if (typeof STORIES === 'undefined') {
+    document.getElementById('story-body').innerHTML = '<p style="color:var(--text-dim);text-align:center;padding:4rem 0">جاري التحميل...</p>';
+    window.location.reload();
+    return;
+  }
+
+  var story = STORIES[id];
 
 if (!story) {
   window.location.href = 'index.html';
@@ -161,7 +169,7 @@ if (!story) {
   document.getElementById('page-title').textContent = story.title + ' — القصص الأسطورية';
   document.getElementById('page-desc').setAttribute('content', story.excerpt);
   const img = document.getElementById('hero-img');
-  img.src = story.img;
+  img.src = story.img || 'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=1400&q=85&auto=format';
   img.onload = () => img.classList.add('loaded');
   document.getElementById('story-cat').textContent = '◆ ' + story.cat;
   document.getElementById('story-cat2').textContent = story.cat;
@@ -185,6 +193,7 @@ if (!story) {
       </a>`;
   });
 }
+})();
 
 /* PROGRESS */
 window.addEventListener('scroll', () => {
