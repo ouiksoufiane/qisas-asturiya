@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>القصص الأسطورية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #060608;
+      --bg2: #0d0d12;
+      --card: #0f0f14;
+      --card-hover: #16161e;
+      --red: #9b1a1a;
+      --red-bright: #cc2222;
+      --gold: #c8a84b;
+      --gold-dim: #8a7030;
+      --text: #d8d0c8;
+      --text-dim: #7a7268;
+      --white: #f0ece4;
+      --border: #1e1e28;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cairo', 'Amiri', serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ─── CANVAS BG ─── */
+    #bg-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(6,6,8,0.95), transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(200,168,75,0.08);
+    }
+
+    .nav-logo {
+      font-family: 'Amiri', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 30px rgba(200,168,75,0.4);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 300;
+      transition: color 0.3s;
+      letter-spacing: 0.03em;
+    }
+
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%,
+        rgba(155,26,26,0.12) 0%,
+        rgba(200,168,75,0.04) 40%,
+        transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      color: var(--red-bright);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.3s forwards;
+    }
+
+    .hero-title {
+      font-family: 'Amiri', serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--white);
+      text-shadow:
+        0 0 60px rgba(200,168,75,0.3),
+        0 0 120px rgba(155,26,26,0.2);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.5s forwards;
+    }
+
+    .hero-title span {
+      color: var(--gold);
+      display: block;
+    }
+
+    .hero-subtitle {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-dim);
+      max-width: 480px;
+      line-height: 1.9;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 1s 0.7s forwards;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 2.5rem;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      transition: all 0.4s;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+    }
+
+    .hero-cta::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(200,168,75,0.1), transparent);
+      transform: translateX(100%);
+      transition: transform 0.4s;
+    }
+
+    .hero-cta:hover::before { transform: translateX(0); }
+    .hero-cta:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 30px rgba(200,168,75,0.15), inset 0 0 30px rgba(200,168,75,0.05);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: fadeIn 1s 1.5s forwards;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, var(--gold-dim), transparent);
+      animation: scrollPulse 2s infinite;
+    }
+
+    /* ─── SECTIONS ─── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 8rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.35em;
+      color: var(--red-bright);
+      text-transform: uppercase;
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to left, transparent, var(--border));
+    }
+
+    .section-title {
+      font-family: 'Amiri', serif;
+      font-size: 2rem;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ─── FEATURED STORY ─── */
+    .featured {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: 5rem;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      transition: border-color 0.3s;
+      cursor: pointer;
+    }
+
+    .featured:hover {
+      border-color: rgba(200,168,75,0.2);
+    }
+
+    .featured:hover .featured-img-wrap::after {
+      opacity: 0.6;
+    }
+
+    .featured-img-wrap {
+      position: relative;
+      height: 520px;
+      overflow: hidden;
+    }
+
+    .featured-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(155,26,26,0.4), rgba(6,6,8,0.6));
+      opacity: 0.8;
+      transition: opacity 0.5s;
+    }
+
+    .featured-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(40%) contrast(1.1);
+      transition: transform 0.8s ease;
+    }
+
+    .featured:hover .featured-img-wrap img {
+      transform: scale(1.05);
+    }
+
+    .featured-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      z-index: 2;
+      padding: 0.3rem 0.8rem;
+      background: var(--red);
+      color: var(--white);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .featured-content {
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--card);
+      position: relative;
+    }
+
+    .featured-content::before {
+      content: '❝';
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      font-size: 4rem;
+      color: var(--border);
+      font-family: serif;
+      line-height: 1;
+    }
+
+    .featured-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .featured-cat {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .featured-dot {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--text-dim);
+    }
+
+    .featured-date {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .featured-title {
+      font-family: 'Amiri', serif;
+      font-size: 1.9rem;
+      line-height: 1.4;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+
+    .featured-excerpt {
+      font-size: 0.95rem;
+      line-height: 2;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+    }
+
+    .read-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--gold);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid rgba(200,168,75,0.3);
+      padding-bottom: 0.3rem;
+      transition: all 0.3s;
+      width: fit-content;
+    }
+
+    .read-btn:hover {
+      border-color: var(--gold);
+      gap: 0.8rem;
+    }
+
+    /* ─── STORIES GRID ─── */
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 5rem;
+    }
+
+    .story-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s;
+      position: relative;
+    }
+
+    .story-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--red), var(--gold));
+      transform: scaleX(0);
+      transition: transform 0.4s;
+    }
+
+    .story-card:hover {
+      border-color: rgba(200,168,75,0.15);
+      background: var(--card-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+
+    .story-card:hover::after { transform: scaleX(1); }
+
+    .card-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      filter: grayscale(50%) contrast(1.1);
+      transition: all 0.5s;
+      display: block;
+    }
+
+    .story-card:hover .card-img {
+      filter: grayscale(20%) contrast(1.15);
+      transform: scale(1.03);
+    }
+
+    .card-img-wrap {
+      overflow: hidden;
+      height: 200px;
+      position: relative;
+    }
+
+    .card-img-wrap::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: linear-gradient(to top, var(--card), transparent);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .card-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      color: var(--red-bright);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-family: 'Amiri', serif;
+      font-size: 1.15rem;
+      line-height: 1.5;
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-excerpt {
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: var(--text-dim);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      padding: 0 1.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-date {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    .card-read {
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+
+    /* ─── DIVIDER ─── */
+    .ornament {
+      text-align: center;
+      margin: 4rem 0;
+      color: var(--gold-dim);
+      font-size: 1.2rem;
+      letter-spacing: 1rem;
+      opacity: 0.5;
+    }
+
+    /* ─── QUOTE SECTION ─── */
+    .quote-section {
+      margin: 5rem 0;
+      padding: 4rem;
+      border: 1px solid var(--border);
+      position: relative;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(155,26,26,0.04), transparent);
+    }
+
+    .quote-section::before,
+    .quote-section::after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-color: var(--gold-dim);
+      border-style: solid;
+      opacity: 0.3;
+    }
+
+    .quote-section::before {
+      top: -1px; right: -1px;
+      border-width: 1px 1px 0 0;
+    }
+
+    .quote-section::after {
+      bottom: -1px; left: -1px;
+      border-width: 0 0 1px 1px;
+    }
+
+    .quote-text {
+      font-family: 'Amiri', serif;
+      font-size: 1.6rem;
+      font-style: italic;
+      color: var(--white);
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .quote-attr {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      color: var(--gold-dim);
+      text-transform: uppercase;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Amiri', serif;
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      text-shadow: 0 0 30px rgba(200,168,75,0.2);
+    }
+
+    .footer-text {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1.5rem 0;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ─── STORY PAGE (MODAL) ─── */
+    .story-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: var(--bg);
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .story-modal.open {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: fixed;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 210;
+      background: rgba(6,6,8,0.8);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-close:hover {
+      border-color: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .story-hero {
+      height: 60vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .story-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(40%) contrast(1.1);
+    }
+
+    .story-hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top,
+        var(--bg) 0%,
+        rgba(6,6,8,0.6) 50%,
+        rgba(6,6,8,0.3) 100%);
+    }
+
+    .story-hero-content {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 760px;
+      padding: 0 2rem;
+      text-align: center;
+      z-index: 1;
+    }
+
+    .story-cat-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      color: var(--red-bright);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .story-main-title {
+      font-family: 'Amiri', serif;
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      color: var(--white);
+      line-height: 1.3;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.8);
+    }
+
+    .story-body-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 4rem 2rem 8rem;
+    }
+
+    .story-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    .story-body {
+      font-family: 'Amiri', serif;
+      font-size: 1.2rem;
+      line-height: 2.2;
+      color: var(--text);
+      text-align: justify;
+    }
+
+    .story-body p {
+      margin-bottom: 1.8rem;
+    }
+
+    .story-body p:first-child::first-letter {
+      font-size: 4rem;
+      float: right;
+      line-height: 1;
+      margin-left: 0.5rem;
+      margin-top: 0.2rem;
+      color: var(--gold);
+      font-family: 'Amiri', serif;
+    }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 0.6; }
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 1;   transform: scaleY(1.2); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .featured { grid-template-columns: 1fr; }
+      .featured-img-wrap { height: 300px; }
+      .stories-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .stories-grid { grid-template-columns: 1fr; }
+      .featured-content { padding: 2rem; }
+      .quote-section { padding: 2.5rem 1.5rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">القصص الأسطورية</a>
+  <ul class="nav-links">
+    <li><a href="#stories">القصص</a></li>
+    <li><a href="#about">عن الموقع</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">◆ عالم من الظلام والغموض ◆</p>
+  <h1 class="hero-title">
+    القصص
+    <span>الأسطورية</span>
+  </h1>
+  <p class="hero-subtitle">
+    قصص تسكن الذاكرة، وتسكنك بعد أن تنتهي من قراءتها.<br>
+    ادخل إلى عالم لن تخرج منه كما دخلت.
+  </p>
+  <a href="#stories" class="hero-cta">اكتشف القصص ←</a>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main id="stories">
+
+  <!-- SECTION HEADER -->
+  <div class="section-header reveal">
+    <span class="section-label">◆ قصة مميزة</span>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- FEATURED STORY -->
+  <article class="featured reveal" onclick="openStory('story1')">
+    <div class="featured-img-wrap">
+      <span class="featured-badge">★ مميزة</span>
+      <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=800&q=80&auto=format" alt="البيت المهجور">
+    </div>
+    <div class="featured-content">
+      <div class="featured-meta">
+        <span class="featured-cat">رعب</span>
+        <div class="featured-dot"></div>
+        <span class="featured-date">١٦ مايو ٢٠٢٦</span>
+      </div>
+      <h2 class="featured-title">
+        البيت الذي عاد إليه صاحبه بعد موته...
+        قصة مرعبة لن تنساها
+      </h2>
+      <p class="featured-excerpt">
+        في أحد أحياء مدينة صغيرة وهادئة، كان هناك منزل قديم مهجور منذ سنوات.
+        الجيران كانوا يتجنبون الاقتراب منه، ليس لأنه مخيف فقط...
+        بل لأن قصته لم تكن عادية.
+      </p>
+      <a class="read-btn">اقرأ القصة كاملة ←</a>
+    </div>
+  </article>
+
+  <!-- MORE STORIES HEADER -->
+  <div class="section-header reveal" style="margin-top: 5rem;">
+    <span class="section-label">◆ المزيد من القصص</span>
+    <div class="section-line"></div>
+  </div>
+
+  <!-- STORIES GRID -->
+  <div class="stories-grid">
+
+    <article class="story-card reveal" onclick="openStory('story2')">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&q=70&auto=format" alt="الطريق">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">◆ غموض</span>
+        <h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3>
+        <p class="card-excerpt">
+          كنا نقود في منتصف الليل عندما وجدنا طريقاً لم يكن موجوداً على أي خريطة...
+          قررنا السير فيه. لم نخرج منه حتى الصباح.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="card-date">١٦ مايو ٢٠٢٦</span>
+        <span class="card-read">اقرأ ←</span>
+      </div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('story3')">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=600&q=70&auto=format" alt="الغابة">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">◆ رعب</span>
+        <h3 class="card-title">الصوت الذي يأتي من داخل الجدران</h3>
+        <p class="card-excerpt">
+          بدأ كل شيء في ليلة شتائية بارد. صوت خفيف، كطرق بعيد من داخل الحائط.
+          أولاً ظننته خيالاً. لكن الصوت لم يتوقف.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="card-date">١٤ مايو ٢٠٢٦</span>
+        <span class="card-read">اقرأ ←</span>
+      </div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('story4')">
+      <div class="card-img-wrap">
+        <img class="card-img" src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=70&auto=format" alt="الظل">
+      </div>
+      <div class="card-body">
+        <span class="card-tag">◆ إثارة</span>
+        <h3 class="card-title">الظل الذي لا صاحب له</h3>
+        <p class="card-excerpt">
+          رأيته لأول مرة في المرآة. ظل يتحرك بينما أنا واقف.
+          أغمضت عيني. لما فتحتهما... لم يكن في المرآة سواه.
+        </p>
+      </div>
+      <div class="card-footer">
+        <span class="card-date">١٢ مايو ٢٠٢٦</span>
+        <span class="card-read">اقرأ ←</span>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- QUOTE -->
+  <div class="quote-section reveal" id="about">
+    <p class="quote-text">
+      "أكثر الأشياء رعباً ليست تلك التي نراها،<br>
+      بل تلك التي نشعر بها في الظلام"
+    </p>
+    <span class="quote-attr">— القصص الأسطورية</span>
+  </div>
+
+  <div class="ornament">✦ ✦ ✦</div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">القصص الأسطورية</div>
+  <ul class="footer-links">
+    <li><a href="#">الرئيسية</a></li>
+    <li><a href="#">القصص</a></li>
+    <li><a href="#">تواصل معنا</a></li>
+  </ul>
+  <p class="footer-text">
+    © ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة
+  </p>
+</footer>
+
+<!-- STORY MODAL -->
+<div class="story-modal" id="story-modal">
+  <button class="modal-close" onclick="closeStory()">✕</button>
+  <div id="modal-content"></div>
+</div>
+
+<script>
+/* ─── PARTICLE CANVAS ─── */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+
+function Particle() {
+  this.x = Math.random() * W;
+  this.y = Math.random() * H;
+  this.r = Math.random() * 1.2 + 0.3;
+  this.vx = (Math.random() - 0.5) * 0.15;
+  this.vy = (Math.random() - 0.5) * 0.15;
+  this.alpha = Math.random() * 0.4 + 0.05;
+  this.color = Math.random() > 0.7
+    ? `rgba(200,168,75,${this.alpha})`
+    : `rgba(155,26,26,${this.alpha})`;
+}
+
+function init() {
+  resize();
+  particles = Array.from({length: 120}, () => new Particle());
+}
+
+function animate() {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W;
+    if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H;
+    if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+
+init();
+animate();
+window.addEventListener('resize', resize);
+
+/* ─── SCROLL REVEAL ─── */
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      setTimeout(() => e.target.classList.add('visible'), i * 100);
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+reveals.forEach(el => observer.observe(el));
+
+/* ─── STORY DATA ─── */
+const stories = {
+  story1: {
+    title: 'البيت الذي عاد إليه صاحبه بعد موته... قصة مرعبة لن تنساها',
+    cat: 'رعب',
+    date: '١٦ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=1200&q=80&auto=format',
+    body: `
+      <p>في أحد أحياء مدينة صغيرة وهادئة، كان هناك منزل قديم مهجور منذ سنوات. الجيران كانوا يتجنبون الاقتراب منه، ليس لأنه مخيف فقط... بل لأن قصته لم تكن عادية.</p>
+      <p>"كان المنزل يعود لرجل يُدعى سليم. رجل هادئ، يعيش بمفرده، لا يختلط بالناس كثيراً. لكن في أحد الأيام... اختفى فجأة."</p>
+      <p>لا صوت، لا أثر، لا رسالة. وكأنه تبخّر. بعد أيام من البحث، عثرت الشرطة على جثته في غابة بعيدة عن المنزل. تم دفنه، وانتهت القصة... أو هكذا ظن الجميع.</p>
+      <p>مرت سنوات، وبقي المنزل مُقفلاً. حتى جاء ذلك اليوم الذي رأى فيه الجار العجوز ضوءاً يتحرك خلف نوافذ المنزل. قال لنفسه ربما أحد اللصوص. لكن الأمر تكرر في الليالي التالية.</p>
+      <p>وفي صباح يوم بارد، وجد الجيران باب المنزل مفتوحاً. دخلوا بحذر. كانت الأثاث في أماكنها، الغبار يغطي كل شيء... إلا طاولة المطبخ. كانت نظيفة، وعليها كوب قهوة لا يزال دافئاً.</p>
+      <p>فتش الجيران المنزل بالكامل. لم يجدوا أحداً. لكن أحد الأطفال توقف أمام المرآة القديمة في الممر وقال بصوت خافت: "الرجل الذي في المرآة يبتسم لي."</p>
+      <p>التفت الكبار نحو المرآة. لم يروا شيئاً. لكن الطفل أصرّ: "إنه يقول إنه سعيد بعودته."</p>
+      <p>غادر الجميع المنزل بسرعة. ولم يعد أحد يقترب منه... لكن كل ليلة، يرون الضوء يتحرك خلف النوافذ.</p>
+    `
+  },
+  story2: {
+    title: 'الطريق الذي لا يظهر على الخريطة',
+    cat: 'غموض',
+    date: '١٦ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&q=80&auto=format',
+    body: `
+      <p>كنا نقود في منتصف الليل، أنا وصديقي، على الطريق السريع الصحراوي عندما ظهر أمامنا انعطاف لم يكن على أي خريطة. لافتة صدئة تقول: "طريق الواحة — ٤ كم".</p>
+      <p>قال صديقي: "ربما طريق قديم لا يظهر على التطبيق." قررنا أن نكمل. أردنا الوصول قبل الفجر.</p>
+      <p>أربعة كيلومترات مرت. ثم ثمانية. ثم الكيلومتر السادس عشر. لا واحة، لا نهاية للطريق، فقط الظلام والرمال من الجانبين.</p>
+      <p>حين أردنا الرجوع، وجدنا أن الطريق خلفنا اختفى. لم يكن هناك إلا رمال ممتدة كما لو أننا لم نمر من هناك أصلاً.</p>
+      <p>واصلنا السير إلى الأمام. لم يكن هناك خيار آخر. وعند الفجر بالضبط، وجدنا أنفسنا على الطريق السريع الرئيسي مجدداً. في نفس النقطة التي انعطفنا منها.</p>
+      <p>الغريب أن الرحلة التي استغرقت ساعات، لم تستهلك من الوقود سوى كميات قليلة جداً. وعندما بحثنا عن تلك اللافتة الصدئة في اليوم التالي، لم نجدها.</p>
+    `
+  },
+  story3: {
+    title: 'الصوت الذي يأتي من داخل الجدران',
+    cat: 'رعب',
+    date: '١٤ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=1200&q=80&auto=format',
+    body: `
+      <p>بدأ كل شيء في ليلة شتائية باردة. صوت خفيف، كطرق بعيد من داخل الحائط. أولاً ظننته خيالاً. الرياح، ربما، أو الحرارة المركزية. لكن الصوت لم يتوقف.</p>
+      <p>في اليوم الثالث، بدأت أتتبعه. كان يبدو من جدار غرفة النوم الغربية. طرقت على الجدار. توقف الصوت للحظة. ثم أجابني بثلاث طرقات.</p>
+      <p>استدعيت عمالاً لفتح الجدار، ظناً منا أن قطة أو حيواناً ما محاصر هناك. حين فتحوا الجدار، وجدوا فراغاً قديماً. غرفة صغيرة مختومة، يبدو أنها بُنيت في الجدار منذ عشرات السنين.</p>
+      <p>داخلها كان هناك كرسي قديم، ومنضدة عليها صورة لعائلة. الأم، الأب، وطفلان. لم نتعرف على أحد. لكن جارتي العجوز حين رأت الصورة، أمسكت بصدرها وقالت: "هؤلاء عاشوا هنا قبل خمسين عاماً. جميعهم ماتوا في حادثة."</p>
+      <p>أغلقنا الغرفة من جديد. في تلك الليلة، عادت الطرقات. لكنها هذه المرة كانت أربعاً. عدد أفراد الأسرة في الصورة.</p>
+    `
+  },
+  story4: {
+    title: 'الظل الذي لا صاحب له',
+    cat: 'إثارة',
+    date: '١٢ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1200&q=80&auto=format',
+    body: `
+      <p>رأيته لأول مرة في مرآة الحمام. ظل يتحرك خلفي بينما أنا واقف ساكناً تماماً. أغمضت عيني بسرعة وفتحتهما. لم يكن في المرآة سواه.</p>
+      <p>خرجت من الحمام بسرعة. قلت لنفسي إجهاد، قلة نوم، ربما توهم. لكن في اليوم التالي حدث نفس الشيء. وفي اليوم الثالث أيضاً.</p>
+      <p>بدأت أصوّر المرآة بكاميرا تعمل طوال الليل. في الصباح حين راجعت التسجيل، رأيت الظل يتحرك في المرآة حتى حين كنت أنا نائماً بعيداً.</p>
+      <p>ذهبت إلى جارتي القديمة التي تعرف تاريخ الحي. حين وصفت لها ما أراه، أحكمت إغلاق نوافذها وقالت: "تلك المرآة قديمة. كانت في منزل رجل فقد ظله ذات يوم."</p>
+      <p>لم أفهم ما تعني. لكنها أضافت: "الظل يبحث عن صاحبه. وإذا وجده... لن يتركه."</p>
+      <p>في تلك الليلة كسرت المرآة. لكن الظل لا يزال هناك. يمشي معي أينما ذهبت. فقط لا أستطيع أن أراه إلا في المرايا.</p>
+    `
+  }
+};
+
+/* ─── MODAL FUNCTIONS ─── */
+function openStory(id) {
+  const s = stories[id];
+  if (!s) return;
+  document.getElementById('modal-content').innerHTML = `
+    <div class="story-hero">
+      <img src="${s.img}" alt="${s.title}">
+      <div class="story-hero-content">
+        <p class="story-cat-label">◆ ${s.cat}</p>
+        <h1 class="story-main-title">${s.title}</h1>
+      </div>
+    </div>
+    <div class="story-body-wrap">
+      <div class="story-meta-bar">
+        <span>${s.date}</span>
+        <span>◆</span>
+        <span>${s.cat}</span>
+        <span>◆</span>
+        <span>القصص الأسطورية</span>
+      </div>
+      <div class="story-body">${s.body}</div>
+    </div>
+  `;
+  const modal = document.getElementById('story-modal');
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeStory() {
+  document.getElementById('story-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeStory();
+});
+</script>
+
+</body>
+</html>
