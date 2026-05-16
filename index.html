@@ -86,9 +86,13 @@
     .card-tag{display:inline-block;font-size:0.6rem;font-weight:700;letter-spacing:0.25em;color:var(--red-bright);text-transform:uppercase;margin-bottom:0.75rem}
     .card-title{font-family:'Amiri',serif;font-size:1.1rem;line-height:1.55;color:var(--white);margin-bottom:0.75rem}
     .card-excerpt{font-size:0.82rem;line-height:1.8;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .card-footer{padding:1rem 1.5rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    .card-footer{padding:1rem 1.5rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.5rem}
     .card-date{font-size:0.7rem;color:var(--text-dim)}
-    .card-read{font-size:0.7rem;color:var(--gold);font-weight:600;letter-spacing:0.1em}
+    .card-btns{display:flex;gap:0.5rem}
+    .card-read{font-size:0.68rem;color:var(--gold);font-weight:600;letter-spacing:0.05em;padding:0.3rem 0.7rem;border:1px solid rgba(200,168,75,0.3);text-decoration:none;transition:all 0.3s;background:none}
+    .card-read:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
+    .card-watch{font-size:0.68rem;color:var(--red-bright);font-weight:600;letter-spacing:0.05em;padding:0.3rem 0.7rem;border:1px solid rgba(204,34,34,0.3);text-decoration:none;transition:all 0.3s;background:none;cursor:pointer}
+    .card-watch:hover{border-color:var(--red-bright);background:rgba(204,34,34,0.08)}
 
     /* QUOTE */
     .quote-section{margin:5rem 0;padding:4rem;border:1px solid var(--border);position:relative;text-align:center;background:linear-gradient(135deg,rgba(155,26,26,0.04),transparent)}
@@ -133,13 +137,16 @@
 <section class="hero">
   <p class="hero-eyebrow">◆ عالم من الظلام والغموض ◆</p>
   <h1 class="hero-title">القصص<span>الأسطورية</span></h1>
-  <p class="hero-subtitle">قصص تسكن الذاكرة، وتسكنك بعد أن تنتهي من قراءتها.<br>ادخل إلى عالم لن تخرج منه كما دخلت.</p>
+  <p class="hero-subtitle">قصص تُقرأ... وقصص تُشاهد.<br>ادخل إلى عالم لن تخرج منه كما دخلت.</p>
   <div class="hero-stats">
     <div class="stat"><span class="stat-num">١٠</span><span class="stat-label">قصة حصرية</span></div>
-    <div class="stat"><span class="stat-num">١٠٠٪</span><span class="stat-label">مجاني</span></div>
+    <div class="stat"><span class="stat-num">📖+🎬</span><span class="stat-label">نص وفيديو</span></div>
     <div class="stat"><span class="stat-num">∞</span><span class="stat-label">رعب مضمون</span></div>
   </div>
-  <a href="#stories" class="hero-cta">اكتشف القصص ←</a>
+  <div style="display:flex;gap:1rem;opacity:0;animation:fadeUp 1s 1s forwards">
+    <a href="#stories" class="hero-cta">📖 ابدأ القراءة</a>
+    <a href="#videos" class="hero-cta" style="border-color:rgba(204,34,34,0.4);color:var(--red-bright)">🎬 شاهد القصص</a>
+  </div>
   <div class="scroll-indicator"><div class="scroll-line"></div></div>
 </section>
 
@@ -183,7 +190,7 @@
         <h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3>
         <p class="card-excerpt">سائق شاحنات محترف منذ عشرين سنة. يعرف كل طريق. لكنه لم يتوقع أن يجد لافتة تشير إلى طريق غير موجود... ويختفي خلفه بعد دخوله.</p>
       </div>
-      <div class="card-footer"><span class="card-date">١٦ مايو ٢٠٢٦</span><span class="card-read">١٤ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">١٦ مايو</span><div class="card-btns"><a href="story.html?id=s2" class="card-read">📖 اقرأ</a><a href="story.html?id=s2#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s3" class="story-card reveal">
@@ -193,7 +200,7 @@
         <h3 class="card-title">صوت أمي في الهاتف</h3>
         <p class="card-excerpt">اتصلت به في الساعة 3:17 صباحاً. بصوتها تماماً. بنبرتها، بطريقتها، بحنانها. أمه... التي دفنها قبل ثلاثة أشهر.</p>
       </div>
-      <div class="card-footer"><span class="card-date">١٤ مايو ٢٠٢٦</span><span class="card-read">١١ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">١٤ مايو</span><div class="card-btns"><a href="story.html?id=s3" class="card-read">📖 اقرأ</a><a href="story.html?id=s3#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s4" class="story-card reveal">
@@ -203,7 +210,7 @@
         <h3 class="card-title">الطفل الذي يتحدث مع الجدار</h3>
         <p class="card-excerpt">ابنه كريم يجلس كل مساء أمام زاوية الغرفة ويتحدث مع "الرجل". قال له: "يريد أن يعرف لماذا لم يأتِ أحد من أصدقائه حين كان مريضاً."</p>
       </div>
-      <div class="card-footer"><span class="card-date">١٢ مايو ٢٠٢٦</span><span class="card-read">١٠ دقائق ←</span></div>
+      <div class="card-footer"><span class="card-date">١٢ مايو</span><div class="card-btns"><a href="story.html?id=s4" class="card-read">📖 اقرأ</a><a href="story.html?id=s4#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s5" class="story-card reveal">
@@ -213,7 +220,7 @@
         <h3 class="card-title">الصورة التي تتغير</h3>
         <p class="card-excerpt">صورة قديمة في خزانة المنزل المستأجر. في اليوم الأول ينظر الأب إلى الكاميرا. في الثاني ينظر إليه. في السابع... هو في الصورة.</p>
       </div>
-      <div class="card-footer"><span class="card-date">١٠ مايو ٢٠٢٦</span><span class="card-read">١٢ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">١٠ مايو</span><div class="card-btns"><a href="story.html?id=s5" class="card-read">📖 اقرأ</a><a href="story.html?id=s5#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s6" class="story-card reveal">
@@ -223,7 +230,7 @@
         <h3 class="card-title">الغرفة 207</h3>
         <p class="card-excerpt">قال موظف الاستقبال: "أي غرفة إلا 207." سأله لماذا. قال: "من يبيت فيها لا يستيقظ صباحاً." ثم أضاف: "إلا أنت."</p>
       </div>
-      <div class="card-footer"><span class="card-date">٩ مايو ٢٠٢٦</span><span class="card-read">١٣ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">٩ مايو</span><div class="card-btns"><a href="story.html?id=s6" class="card-read">📖 اقرأ</a><a href="story.html?id=s6#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s7" class="story-card reveal">
@@ -233,7 +240,7 @@
         <h3 class="card-title">آخر تسجيل</h3>
         <p class="card-excerpt">هاتف قديم في محل مستعمل. فيه تسجيل واحد. رجل يبكي ويقول: "لا تفتح الباب مهما حدث." ثم ثلاث طرقات. ثم صمت أبدي.</p>
       </div>
-      <div class="card-footer"><span class="card-date">٧ مايو ٢٠٢٦</span><span class="card-read">١١ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">٧ مايو</span><div class="card-btns"><a href="story.html?id=s7" class="card-read">📖 اقرأ</a><a href="story.html?id=s7#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s8" class="story-card reveal">
@@ -243,7 +250,7 @@
         <h3 class="card-title">الرجل الذي يمشي خلفك دائماً</h3>
         <p class="card-excerpt">أربعة أيام يراه في كل مكان. استدار ليواجهه. كان على بعد خطوة. قال بهدوء تام: "أنت تعرفني." وفي تلك اللحظة... تذكر.</p>
       </div>
-      <div class="card-footer"><span class="card-date">٥ مايو ٢٠٢٦</span><span class="card-read">١٢ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">٥ مايو</span><div class="card-btns"><a href="story.html?id=s8" class="card-read">📖 اقرأ</a><a href="story.html?id=s8#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s9" class="story-card reveal">
@@ -253,7 +260,7 @@
         <h3 class="card-title">المنزل الذي لا يتركك تخرج</h3>
         <p class="card-excerpt">دخل منزل عمه المتوفى لساعة. حاول الخروج. الباب يعود به إلى نفس الغرفة. النافذة تطل على نفس الغرفة. ووجد في الدرج رسالة عمه.</p>
       </div>
-      <div class="card-footer"><span class="card-date">٣ مايو ٢٠٢٦</span><span class="card-read">١٣ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">٣ مايو</span><div class="card-btns"><a href="story.html?id=s9" class="card-read">📖 اقرأ</a><a href="story.html?id=s9#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
     <a href="story.html?id=s10" class="story-card reveal">
@@ -263,7 +270,7 @@
         <h3 class="card-title">رسالة كتبتها قبل أن أموت</h3>
         <p class="card-excerpt">استيقظ ووجد على مكتبه رسالة بخطه: "لا تنظر خلفك الآن. اقرأ أولاً." كل يوم رسالة جديدة. كل رسالة تكشف ليلة لا يتذكرها.</p>
       </div>
-      <div class="card-footer"><span class="card-date">١ مايو ٢٠٢٦</span><span class="card-read">١٣ دقيقة ←</span></div>
+      <div class="card-footer"><span class="card-date">١ مايو</span><div class="card-btns"><a href="story.html?id=s10" class="card-read">📖 اقرأ</a><a href="story.html?id=s10#video" class="card-watch">🎬 شاهد</a></div></div>
     </a>
 
   </div>
