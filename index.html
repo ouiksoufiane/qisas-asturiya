@@ -3,306 +3,429 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>القصص الأسطورية — قصص رعب وغموض</title>
-  <meta name="description" content="قصص رعب وغموض باللغة العربية. قصص تسكن الذاكرة وتسكنك بعد أن تنتهي من قراءتها.">
+  <title>القصص الأسطورية — قصص تُقرأ، قصص تُشاهد، قصص الذكاء الاصطناعي</title>
+  <meta name="description" content="القصص الأسطورية — منصة قصص الرعب والغموض. قصص مكتوبة، فيديوهات، وقصص بالذكاء الاصطناعي.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{
-      --bg:#060608; --bg2:#0d0d12; --card:#0f0f14; --card-hover:#16161e;
-      --red:#9b1a1a; --red-bright:#cc2222; --gold:#c8a84b; --gold-dim:#8a7030;
-      --text:#d8d0c8; --text-dim:#7a7268; --white:#f0ece4; --border:#1e1e28;
+      --bg:#060608;--card:#0f0f14;--card-hover:#16161e;
+      --red:#9b1a1a;--red-bright:#cc2222;--gold:#c8a84b;--gold-dim:#8a7030;
+      --blue:#1a4a7a;--blue-bright:#2a7abf;
+      --text:#d8d0c8;--text-dim:#7a7268;--white:#f0ece4;--border:#1e1e28;
     }
     html{scroll-behavior:smooth}
     body{background:var(--bg);color:var(--text);font-family:'Cairo',serif;min-height:100vh;overflow-x:hidden}
-    #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.4}
+    #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(6,6,8,0.97),transparent);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,168,75,0.08)}
-    .nav-logo{font-family:'Amiri',serif;font-size:1.4rem;color:var(--gold);text-decoration:none;text-shadow:0 0 30px rgba(200,168,75,0.4)}
-    .nav-links{display:flex;gap:2rem;list-style:none}
-    .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.9rem;font-weight:300;transition:color 0.3s}
-    .nav-links a:hover{color:var(--gold)}
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,168,75,0.1)}
+    .nav-logo{font-family:'Amiri',serif;font-size:1.35rem;color:var(--gold);text-decoration:none;text-shadow:0 0 20px rgba(200,168,75,0.35)}
+    .nav-links{display:flex;gap:0;list-style:none}
+    .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.82rem;font-weight:400;transition:all 0.3s;padding:0.4rem 0.9rem;border:1px solid transparent;border-radius:2px}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);border-color:rgba(200,168,75,0.2);background:rgba(200,168,75,0.05)}
 
-    /* HERO */
-    .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(155,26,26,0.14) 0%,rgba(200,168,75,0.05) 40%,transparent 70%);pointer-events:none}
-    .hero-eyebrow{font-size:0.75rem;font-weight:300;letter-spacing:0.3em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s 0.3s forwards}
-    .hero-title{font-family:'Amiri',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:700;line-height:1.1;color:var(--white);text-shadow:0 0 60px rgba(200,168,75,0.3),0 0 120px rgba(155,26,26,0.2);margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s 0.5s forwards}
+    /* ── HERO ── */
+    .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(155,26,26,0.12) 0%,rgba(200,168,75,0.04) 45%,transparent 70%);pointer-events:none}
+    .hero-eyebrow{font-size:0.7rem;font-weight:300;letter-spacing:0.35em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s 0.2s forwards}
+    .hero-title{font-family:'Amiri',serif;font-size:clamp(3rem,9vw,7.5rem);font-weight:700;line-height:1.1;color:var(--white);text-shadow:0 0 60px rgba(200,168,75,0.25),0 0 120px rgba(155,26,26,0.15);margin-bottom:1rem;opacity:0;animation:fadeUp 1s 0.4s forwards}
     .hero-title span{color:var(--gold);display:block}
-    .hero-subtitle{font-size:1rem;font-weight:300;color:var(--text-dim);max-width:480px;line-height:1.9;margin-bottom:3rem;opacity:0;animation:fadeUp 1s 0.7s forwards}
-    .hero-cta{display:inline-flex;align-items:center;gap:0.75rem;padding:0.85rem 2.5rem;border:1px solid var(--gold-dim);color:var(--gold);text-decoration:none;font-size:0.9rem;font-weight:600;letter-spacing:0.1em;transition:all 0.4s;position:relative;overflow:hidden;opacity:0;animation:fadeUp 1s 0.9s forwards}
-    .hero-cta::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,168,75,0.1),transparent);transform:translateX(100%);transition:transform 0.4s}
-    .hero-cta:hover::before{transform:translateX(0)}
-    .hero-cta:hover{border-color:var(--gold);box-shadow:0 0 30px rgba(200,168,75,0.15)}
-    .scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeIn 1s 1.5s forwards}
-    .scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold-dim),transparent);animation:scrollPulse 2s infinite}
+    .hero-tagline{font-family:'Amiri',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-style:italic;color:var(--text-dim);margin-bottom:3.5rem;line-height:1.7;opacity:0;animation:fadeUp 1s 0.6s forwards}
+    .hero-tagline strong{color:var(--gold)}
 
-    /* COUNTER */
-    .hero-stats{display:flex;gap:3rem;margin-bottom:3rem;opacity:0;animation:fadeUp 1s 0.8s forwards}
-    .stat{text-align:center}
-    .stat-num{font-family:'Amiri',serif;font-size:2rem;color:var(--gold);display:block;line-height:1}
-    .stat-label{font-size:0.65rem;letter-spacing:0.2em;color:var(--text-dim);text-transform:uppercase;margin-top:0.3rem}
+    /* ── 3 BUTTONS ── */
+    .hero-3btn{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp 1s 0.8s forwards;margin-bottom:4rem}
+    .btn-section{display:inline-flex;align-items:center;gap:0.6rem;padding:0.8rem 1.8rem;border:1px solid;font-size:0.85rem;font-weight:600;letter-spacing:0.08em;text-decoration:none;transition:all 0.35s;position:relative;overflow:hidden}
+    .btn-section::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.35s}
+    .btn-section:hover::before{opacity:1}
+    .btn-text{border-color:var(--gold-dim);color:var(--gold)}
+    .btn-text::before{background:rgba(200,168,75,0.08)}
+    .btn-text:hover{border-color:var(--gold);box-shadow:0 0 25px rgba(200,168,75,0.12)}
+    .btn-video{border-color:rgba(204,34,34,0.4);color:var(--red-bright)}
+    .btn-video::before{background:rgba(204,34,34,0.06)}
+    .btn-video:hover{border-color:var(--red-bright);box-shadow:0 0 25px rgba(204,34,34,0.12)}
+    .btn-ai{border-color:rgba(42,122,191,0.4);color:var(--blue-bright)}
+    .btn-ai::before{background:rgba(42,122,191,0.06)}
+    .btn-ai:hover{border-color:var(--blue-bright);box-shadow:0 0 25px rgba(42,122,191,0.12)}
 
-    /* MAIN */
-    main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:4rem 2rem 8rem}
-    .section-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem}
-    .section-label{font-size:0.7rem;font-weight:600;letter-spacing:0.35em;color:var(--red-bright);text-transform:uppercase;white-space:nowrap}
-    .section-line{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border))}
+    /* ── 3 PILLARS ── */
+    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);opacity:0;animation:fadeUp 1s 1s forwards;max-width:900px;margin:0 auto}
+    .pillar{background:var(--card);padding:2rem 1.5rem;text-align:center;transition:background 0.3s;cursor:pointer;text-decoration:none;color:inherit;display:block}
+    .pillar:hover{background:var(--card-hover)}
+    .pillar-icon{font-size:2rem;margin-bottom:1rem;display:block}
+    .pillar-name{font-family:'Amiri',serif;font-size:1.1rem;color:var(--white);margin-bottom:0.5rem}
+    .pillar-desc{font-size:0.75rem;color:var(--text-dim);line-height:1.7}
+    .pillar-count{margin-top:1rem;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid;display:inline-block}
+    .pillar-t .pillar-count{color:var(--gold);border-color:rgba(200,168,75,0.3)}
+    .pillar-v .pillar-count{color:var(--red-bright);border-color:rgba(204,34,34,0.3)}
+    .pillar-ai .pillar-count{color:var(--blue-bright);border-color:rgba(42,122,191,0.3)}
 
-    /* FEATURED */
-    .featured{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:5rem;border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:border-color 0.3s;text-decoration:none;color:inherit;display:grid}
-    .featured:hover{border-color:rgba(200,168,75,0.25)}
-    .featured-img-wrap{position:relative;height:520px;overflow:hidden}
-    .featured-img-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(155,26,26,0.4),rgba(6,6,8,0.5));opacity:0.8;transition:opacity 0.5s}
-    .featured:hover .featured-img-wrap::after{opacity:0.5}
-    .featured-img-wrap img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) contrast(1.1);transition:transform 0.8s ease}
-    .featured:hover .featured-img-wrap img{transform:scale(1.05)}
-    .featured-badge{position:absolute;top:1.5rem;right:1.5rem;z-index:2;padding:0.3rem 0.8rem;background:var(--red);color:var(--white);font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase}
-    .featured-content{padding:3rem;display:flex;flex-direction:column;justify-content:center;background:var(--card);position:relative}
-    .featured-content::before{content:'❝';position:absolute;top:2rem;left:2rem;font-size:4rem;color:var(--border);font-family:serif;line-height:1}
-    .featured-meta{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem}
-    .featured-cat{font-size:0.7rem;font-weight:700;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase}
-    .featured-dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
-    .featured-date{font-size:0.75rem;color:var(--text-dim)}
-    .featured-title{font-family:'Amiri',serif;font-size:1.9rem;line-height:1.4;color:var(--white);margin-bottom:1.2rem}
-    .featured-excerpt{font-size:0.95rem;line-height:2;color:var(--text-dim);margin-bottom:2rem}
-    .read-btn{display:inline-flex;align-items:center;gap:0.5rem;color:var(--gold);font-size:0.85rem;font-weight:600;letter-spacing:0.1em;border-bottom:1px solid rgba(200,168,75,0.3);padding-bottom:0.3rem;transition:all 0.3s;width:fit-content}
-    .featured:hover .read-btn{border-color:var(--gold);gap:0.8rem}
+    /* ── MAIN ── */
+    main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:5rem 2rem 8rem}
 
-    /* GRID */
-    .stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:5rem}
-    .story-card{background:var(--card);border:1px solid var(--border);overflow:hidden;cursor:pointer;transition:all 0.4s;position:relative;text-decoration:none;color:inherit;display:block}
+    /* ── SECTION HEADER ── */
+    .sec-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem}
+    .sec-label{font-size:0.68rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;white-space:nowrap}
+    .sec-label-t{color:var(--gold)}
+    .sec-label-v{color:var(--red-bright)}
+    .sec-label-ai{color:var(--blue-bright)}
+    .sec-line{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border))}
+    .sec-link{font-size:0.72rem;color:var(--text-dim);text-decoration:none;white-space:nowrap;transition:color 0.3s}
+    .sec-link:hover{color:var(--gold)}
+
+    /* ── FEATURED ── */
+    .featured{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:5rem;border:1px solid var(--border);overflow:hidden;text-decoration:none;color:inherit;transition:border-color 0.3s}
+    .featured:hover{border-color:rgba(200,168,75,0.22)}
+    .fi-wrap{position:relative;height:480px;overflow:hidden}
+    .fi-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(155,26,26,0.4),rgba(6,6,8,0.5));opacity:0.8;transition:opacity 0.5s}
+    .featured:hover .fi-wrap::after{opacity:0.5}
+    .fi-wrap img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) contrast(1.1);transition:transform 0.8s}
+    .featured:hover .fi-wrap img{transform:scale(1.04)}
+    .fi-badge{position:absolute;top:1.5rem;right:1.5rem;z-index:2;padding:0.25rem 0.7rem;background:var(--red);color:var(--white);font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase}
+    .fi-body{padding:2.5rem;display:flex;flex-direction:column;justify-content:center;background:var(--card)}
+    .fi-meta{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.2rem;font-size:0.7rem;color:var(--text-dim)}
+    .fi-cat{color:var(--gold);font-weight:700;letter-spacing:0.15em;text-transform:uppercase}
+    .fi-dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
+    .fi-title{font-family:'Amiri',serif;font-size:1.8rem;line-height:1.4;color:var(--white);margin-bottom:1rem}
+    .fi-excerpt{font-size:0.9rem;line-height:2;color:var(--text-dim);margin-bottom:2rem}
+    .fi-btns{display:flex;gap:0.75rem;flex-wrap:wrap}
+    .fi-btn{font-size:0.78rem;font-weight:600;letter-spacing:0.08em;padding:0.5rem 1.2rem;border:1px solid;text-decoration:none;transition:all 0.3s}
+    .fi-btn-read{color:var(--gold);border-color:rgba(200,168,75,0.35)}
+    .fi-btn-read:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
+    .fi-btn-watch{color:var(--red-bright);border-color:rgba(204,34,34,0.35)}
+    .fi-btn-watch:hover{border-color:var(--red-bright);background:rgba(204,34,34,0.08)}
+    .fi-btn-ai{color:var(--blue-bright);border-color:rgba(42,122,191,0.35)}
+    .fi-btn-ai:hover{border-color:var(--blue-bright);background:rgba(42,122,191,0.08)}
+
+    /* ── GRID ── */
+    .stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
+    .story-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all 0.35s;position:relative;text-decoration:none;color:inherit;display:block}
     .story-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--red),var(--gold));transform:scaleX(0);transition:transform 0.4s}
-    .story-card:hover{border-color:rgba(200,168,75,0.2);background:var(--card-hover);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+    .story-card:hover{border-color:rgba(200,168,75,0.18);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.45)}
     .story-card:hover::after{transform:scaleX(1)}
-    .card-img-wrap{overflow:hidden;height:200px;position:relative}
-    .card-img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(to top,var(--card),transparent)}
+    .card-img-wrap{overflow:hidden;height:190px;position:relative}
+    .card-img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70px;background:linear-gradient(to top,var(--card),transparent)}
     .card-img{width:100%;height:100%;object-fit:cover;filter:grayscale(50%) contrast(1.1);transition:all 0.5s;display:block}
     .story-card:hover .card-img{filter:grayscale(20%) contrast(1.15);transform:scale(1.04)}
-    .card-body{padding:1.5rem 1.5rem 0.5rem}
-    .card-tag{display:inline-block;font-size:0.6rem;font-weight:700;letter-spacing:0.25em;color:var(--red-bright);text-transform:uppercase;margin-bottom:0.75rem}
-    .card-title{font-family:'Amiri',serif;font-size:1.1rem;line-height:1.55;color:var(--white);margin-bottom:0.75rem}
-    .card-excerpt{font-size:0.82rem;line-height:1.8;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-    .card-footer{padding:1rem 1.5rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:0.5rem}
-    .card-date{font-size:0.7rem;color:var(--text-dim)}
-    .card-btns{display:flex;gap:0.5rem}
-    .card-read{font-size:0.68rem;color:var(--gold);font-weight:600;letter-spacing:0.05em;padding:0.3rem 0.7rem;border:1px solid rgba(200,168,75,0.3);text-decoration:none;transition:all 0.3s;background:none}
-    .card-read:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
-    .card-watch{font-size:0.68rem;color:var(--red-bright);font-weight:600;letter-spacing:0.05em;padding:0.3rem 0.7rem;border:1px solid rgba(204,34,34,0.3);text-decoration:none;transition:all 0.3s;background:none;cursor:pointer}
-    .card-watch:hover{border-color:var(--red-bright);background:rgba(204,34,34,0.08)}
+    .card-body{padding:1.3rem 1.3rem 0.5rem}
+    .card-tag{font-size:0.58rem;font-weight:700;letter-spacing:0.25em;color:var(--red-bright);text-transform:uppercase;margin-bottom:0.6rem;display:block}
+    .card-title{font-family:'Amiri',serif;font-size:1.05rem;line-height:1.5;color:var(--white);margin-bottom:0.6rem}
+    .card-excerpt{font-size:0.8rem;line-height:1.8;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .card-footer{padding:0.8rem 1.3rem 1.3rem;display:flex;align-items:center;justify-content:space-between}
+    .card-date{font-size:0.65rem;color:var(--text-dim)}
+    .card-btns{display:flex;gap:0.4rem}
+    .c-btn{font-size:0.62rem;font-weight:700;letter-spacing:0.05em;padding:0.25rem 0.55rem;border:1px solid;text-decoration:none;transition:all 0.3s}
+    .c-btn-r{color:var(--gold);border-color:rgba(200,168,75,0.3)}
+    .c-btn-r:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
+    .c-btn-v{color:var(--red-bright);border-color:rgba(204,34,34,0.3)}
+    .c-btn-v:hover{border-color:var(--red-bright);background:rgba(204,34,34,0.08)}
+    .c-btn-ai{color:var(--blue-bright);border-color:rgba(42,122,191,0.3)}
+    .c-btn-ai:hover{border-color:var(--blue-bright);background:rgba(42,122,191,0.08)}
 
-    /* QUOTE */
-    .quote-section{margin:5rem 0;padding:4rem;border:1px solid var(--border);position:relative;text-align:center;background:linear-gradient(135deg,rgba(155,26,26,0.04),transparent)}
-    .quote-section::before,.quote-section::after{content:'';position:absolute;width:60px;height:60px;border-color:var(--gold-dim);border-style:solid;opacity:0.3}
-    .quote-section::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
-    .quote-section::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
-    .quote-text{font-family:'Amiri',serif;font-size:1.6rem;font-style:italic;color:var(--white);line-height:1.8;margin-bottom:1.5rem}
-    .quote-attr{font-size:0.75rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase}
-    .ornament{text-align:center;margin:4rem 0;color:var(--gold-dim);font-size:1.2rem;letter-spacing:1rem;opacity:0.5}
+    /* ── VIDEO CARDS ── */
+    .videos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
+    .video-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all 0.35s;text-decoration:none;color:inherit;display:block}
+    .video-card:hover{border-color:rgba(204,34,34,0.2);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.45)}
+    .video-thumb{position:relative;height:175px;overflow:hidden;background:#000}
+    .video-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) brightness(0.7);transition:all 0.5s}
+    .video-card:hover .video-thumb img{filter:grayscale(10%) brightness(0.85);transform:scale(1.03)}
+    .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;background:rgba(204,34,34,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.3s;z-index:2}
+    .video-card:hover .play-btn{background:var(--red-bright);transform:translate(-50%,-50%) scale(1.1)}
+    .vid-duration{position:absolute;bottom:0.5rem;left:0.7rem;font-size:0.65rem;color:var(--white);background:rgba(0,0,0,0.7);padding:0.15rem 0.4rem;z-index:2}
+    .vid-body{padding:1rem 1.3rem 0.5rem}
+    .vid-tag{font-size:0.58rem;font-weight:700;letter-spacing:0.25em;color:var(--red-bright);text-transform:uppercase;margin-bottom:0.5rem;display:block}
+    .vid-title{font-family:'Amiri',serif;font-size:1rem;line-height:1.5;color:var(--white);margin-bottom:0.5rem}
+    .vid-desc{font-size:0.78rem;line-height:1.75;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .vid-footer{padding:0.6rem 1.3rem 1rem;display:flex;align-items:center;justify-content:space-between}
+    .vid-source{font-size:0.62rem;color:var(--text-dim)}
+    .vid-watch{font-size:0.65rem;color:var(--red-bright);font-weight:700}
 
-    /* FOOTER */
+    /* ── AI CARDS ── */
+    .ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
+    .ai-card{background:var(--card);border:1px solid rgba(42,122,191,0.15);overflow:hidden;transition:all 0.35s;text-decoration:none;color:inherit;display:block;position:relative}
+    .ai-card:hover{border-color:rgba(42,122,191,0.3);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.45)}
+    .ai-thumb{position:relative;height:175px;overflow:hidden}
+    .ai-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(60%) brightness(0.5);transition:all 0.5s}
+    .ai-card:hover .ai-thumb img{filter:grayscale(30%) brightness(0.65);transform:scale(1.03)}
+    .ai-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,74,122,0.4),rgba(6,6,8,0.6));z-index:1}
+    .coming-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;text-align:center}
+    .coming-badge span{display:block;font-size:0.6rem;letter-spacing:0.3em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:0.3rem}
+    .coming-badge strong{font-family:'Amiri',serif;font-size:1.1rem;color:var(--blue-bright)}
+    .ready-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:52px;height:52px;background:rgba(42,122,191,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+    .ai-glow{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--blue-bright),transparent);opacity:0.5}
+    .ai-body{padding:1rem 1.3rem 0.5rem}
+    .ai-tag{font-size:0.58rem;font-weight:700;letter-spacing:0.25em;color:var(--blue-bright);text-transform:uppercase;margin-bottom:0.5rem;display:block}
+    .ai-title{font-family:'Amiri',serif;font-size:1rem;line-height:1.5;color:var(--white);margin-bottom:0.5rem}
+    .ai-desc{font-size:0.78rem;line-height:1.75;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .ai-footer{padding:0.6rem 1.3rem 1rem;display:flex;align-items:center;justify-content:space-between}
+    .ai-label{font-size:0.62rem;color:var(--blue-bright);font-weight:600}
+    .ai-status{font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em}
+
+    /* ── SEE ALL BTN ── */
+    .see-all{display:flex;justify-content:center;margin-top:2rem}
+    .see-all a{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.5rem;border:1px solid var(--border);color:var(--text-dim);text-decoration:none;font-size:0.78rem;transition:all 0.3s}
+    .see-all a:hover{border-color:var(--gold-dim);color:var(--gold)}
+
+    /* ── DIVIDER ── */
+    .section-divider{border:none;border-top:1px solid var(--border);margin:5rem 0}
+    .ornament{text-align:center;color:var(--gold-dim);font-size:1rem;letter-spacing:1rem;opacity:0.4;margin:3rem 0}
+
+    /* ── QUOTE ── */
+    .quote-box{margin:4rem 0;padding:3.5rem;border:1px solid var(--border);text-align:center;background:linear-gradient(135deg,rgba(155,26,26,0.04),transparent);position:relative}
+    .quote-box::before,.quote-box::after{content:'';position:absolute;width:50px;height:50px;border-color:var(--gold-dim);border-style:solid;opacity:0.25}
+    .quote-box::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
+    .quote-box::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
+    .quote-text{font-family:'Amiri',serif;font-size:1.5rem;font-style:italic;color:var(--white);line-height:1.8;margin-bottom:1rem}
+    .quote-attr{font-size:0.7rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase}
+
+    /* ── FOOTER ── */
     footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:3rem 2rem;text-align:center}
-    .footer-logo{font-family:'Amiri',serif;font-size:2rem;color:var(--gold);margin-bottom:1rem;text-shadow:0 0 30px rgba(200,168,75,0.2)}
-    .footer-links{display:flex;justify-content:center;gap:2rem;margin:1.5rem 0;list-style:none}
-    .footer-links a{font-size:0.8rem;color:var(--text-dim);text-decoration:none;transition:color 0.3s}
-    .footer-links a:hover{color:var(--gold)}
-    .footer-text{font-size:0.8rem;color:var(--text-dim);line-height:1.8}
+    .footer-logo{font-family:'Amiri',serif;font-size:1.8rem;color:var(--gold);margin-bottom:0.5rem;text-shadow:0 0 20px rgba(200,168,75,0.15)}
+    .footer-tagline{font-size:0.75rem;color:var(--text-dim);margin-bottom:1.5rem;font-style:italic;font-family:'Amiri',serif}
+    .footer-nav{display:flex;justify-content:center;gap:2rem;list-style:none;margin-bottom:1.5rem}
+    .footer-nav a{font-size:0.78rem;color:var(--text-dim);text-decoration:none;transition:color 0.3s}
+    .footer-nav a:hover{color:var(--gold)}
+    .footer-copy{font-size:0.72rem;color:var(--text-dim)}
 
-    /* ANIMATIONS */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:0.6}}
-    @keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
-    .reveal{opacity:0;transform:translateY(40px);transition:opacity 0.8s ease,transform 0.8s ease}
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeIn{from{opacity:0}to{opacity:0.5}}
+    @keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:1}}
+    .reveal{opacity:0;transform:translateY(35px);transition:opacity 0.75s ease,transform 0.75s ease}
     .reveal.visible{opacity:1;transform:translateY(0)}
+    .scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeIn 1s 1.5s forwards}
+    .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold-dim),transparent);animation:scrollPulse 2s infinite}
 
-    @media(max-width:900px){.featured{grid-template-columns:1fr}.featured-img-wrap{height:300px}.stories-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:600px){.stories-grid{grid-template-columns:1fr}.featured-content{padding:2rem}.quote-section{padding:2.5rem 1.5rem}.nav-links{display:none}.hero-stats{gap:2rem}}
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px){.featured{grid-template-columns:1fr}.fi-wrap{height:280px}.stories-grid,.videos-grid,.ai-grid{grid-template-columns:1fr 1fr}.pillars{grid-template-columns:1fr}}
+    @media(max-width:600px){.stories-grid,.videos-grid,.ai-grid{grid-template-columns:1fr}.hero-3btn{flex-direction:column;align-items:center}.nav-links{display:none}.fi-body{padding:1.5rem}}
   </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
 
+<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">القصص الأسطورية</a>
+  <a href="index.html" class="nav-logo">القصص الأسطورية</a>
   <ul class="nav-links">
-    <li><a href="#stories">القصص</a></li>
-    <li><a href="#about">عن الموقع</a></li>
+    <li><a href="#text-section">📖 قصص مقروءة</a></li>
+    <li><a href="#video-section">🎬 قصص بالفيديو</a></li>
+    <li><a href="#ai-section">🤖 قصص ذكاء اصطناعي</a></li>
   </ul>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
-  <p class="hero-eyebrow">◆ عالم من الظلام والغموض ◆</p>
+  <p class="hero-eyebrow">◆ المنصة العربية الأولى للقصص الغامضة ◆</p>
   <h1 class="hero-title">القصص<span>الأسطورية</span></h1>
-  <p class="hero-subtitle">قصص تُقرأ... وقصص تُشاهد.<br>ادخل إلى عالم لن تخرج منه كما دخلت.</p>
-  <div class="hero-stats">
-    <div class="stat"><span class="stat-num">١٠</span><span class="stat-label">قصة حصرية</span></div>
-    <div class="stat"><span class="stat-num">📖+🎬</span><span class="stat-label">نص وفيديو</span></div>
-    <div class="stat"><span class="stat-num">∞</span><span class="stat-label">رعب مضمون</span></div>
+  <p class="hero-tagline">
+    قصص <strong>تُقرأ</strong> في الظلام...
+    قصص <strong>تُشاهد</strong> كأنك داخل الحكاية...
+    وقصص <strong>تُولَد</strong> من الذكاء الاصطناعي.
+  </p>
+
+  <div class="hero-3btn">
+    <a href="#text-section" class="btn-section btn-text">📖 ابدأ القراءة</a>
+    <a href="#video-section" class="btn-section btn-video">🎬 شاهد القصص</a>
+    <a href="#ai-section" class="btn-section btn-ai">🤖 قصص الذكاء الاصطناعي</a>
   </div>
-  <div style="display:flex;gap:1rem;opacity:0;animation:fadeUp 1s 1s forwards">
-    <a href="#stories" class="hero-cta">📖 ابدأ القراءة</a>
-    <a href="#videos" class="hero-cta" style="border-color:rgba(204,34,34,0.4);color:var(--red-bright)">🎬 شاهد القصص</a>
+
+  <div class="pillars reveal">
+    <a href="#text-section" class="pillar pillar-t">
+      <span class="pillar-icon">📖</span>
+      <p class="pillar-name">قصص مقروءة</p>
+      <p class="pillar-desc">قصص طويلة ومفصلة، مكتوبة بأسلوب مشوق يجعلك لا تتوقف عن القراءة</p>
+      <span class="pillar-count">١٠ قصص حصرية</span>
+    </a>
+    <a href="#video-section" class="pillar pillar-v">
+      <span class="pillar-icon">🎬</span>
+      <p class="pillar-name">قصص بالفيديو</p>
+      <p class="pillar-desc">أفضل فيديوهات قصص الرعب العربية، مختارة بعناية وموجودة في مكان واحد</p>
+      <span class="pillar-count">٦ فيديوهات مختارة</span>
+    </a>
+    <a href="#ai-section" class="pillar pillar-ai">
+      <span class="pillar-icon">🤖</span>
+      <p class="pillar-name">قصص الذكاء الاصطناعي</p>
+      <p class="pillar-desc">قصص أصيلة تُروى بأصوات وشخصيات مولَّدة بالذكاء الاصطناعي — قريباً</p>
+      <span class="pillar-count">٦ قصص قادمة</span>
+    </a>
   </div>
+
   <div class="scroll-indicator"><div class="scroll-line"></div></div>
 </section>
 
-<main id="stories">
+<!-- ════════ MAIN ════════ -->
+<main>
 
-  <div class="section-header reveal">
-    <span class="section-label">◆ قصة الأسبوع</span>
-    <div class="section-line"></div>
-  </div>
-
-  <a href="story.html?id=s1" class="featured reveal" style="display:grid">
-    <div class="featured-img-wrap">
-      <span class="featured-badge">★ مميزة</span>
-      <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=800&q=80&auto=format" alt="البيت المهجور">
+  <!-- ── SECTION 1: WRITTEN STORIES ── -->
+  <div id="text-section" style="padding-top:2rem">
+    <div class="sec-header reveal">
+      <span class="sec-label sec-label-t">📖 قصص مقروءة</span>
+      <div class="sec-line"></div>
+      <a href="#" class="sec-link">كل القصص ←</a>
     </div>
-    <div class="featured-content">
-      <div class="featured-meta">
-        <span class="featured-cat">رعب نفسي</span>
-        <div class="featured-dot"></div>
-        <span class="featured-date">١٦ مايو ٢٠٢٦</span>
-        <div class="featured-dot"></div>
-        <span class="featured-date">١٢ دقيقة</span>
+
+    <!-- FEATURED -->
+    <a href="story.html?id=s1" class="featured reveal">
+      <div class="fi-wrap">
+        <span class="fi-badge">★ قصة الأسبوع</span>
+        <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=800&q=80&auto=format" alt="">
       </div>
-      <h2 class="featured-title">البيت الذي عاد إليه صاحبه بعد موته</h2>
-      <p class="featured-excerpt">قبل أن يدخل ياسين المنزل، قال له الجار العجوز شيئاً واحداً فقط: "لا تنظر في المرآة بعد منتصف الليل." ابتسم ياسين... لم يكن يؤمن بهذه الخرافات. لكن الليلة الأولى غيّرت كل شيء.</p>
-      <span class="read-btn">اقرأ القصة كاملة ←</span>
+      <div class="fi-body">
+        <div class="fi-meta">
+          <span class="fi-cat">رعب نفسي</span>
+          <div class="fi-dot"></div>
+          <span>١٦ مايو ٢٠٢٦</span>
+          <div class="fi-dot"></div>
+          <span>١٢ دقيقة</span>
+        </div>
+        <h2 class="fi-title">البيت الذي عاد إليه صاحبه بعد موته</h2>
+        <p class="fi-excerpt">قبل أن يدخل ياسين المنزل، قال له الجار العجوز: "لا تنظر في المرآة بعد منتصف الليل." ابتسم ياسين... لكن الليلة الأولى غيّرت كل شيء.</p>
+        <div class="fi-btns">
+          <span class="fi-btn fi-btn-read">📖 اقرأ القصة</span>
+          <span class="fi-btn fi-btn-watch">🎬 شاهد الفيديو</span>
+          <span class="fi-btn fi-btn-ai">🤖 نسخة AI</span>
+        </div>
+      </div>
+    </a>
+
+    <!-- GRID -->
+    <div class="stories-grid">
+      <a href="story.html?id=s2" class="story-card reveal">
+        <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=600&q=70&auto=format" alt=""></div>
+        <div class="card-body"><span class="card-tag">◆ غموض</span><h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3><p class="card-excerpt">سائق شاحنات محترف منذ عشرين سنة دخل طريقاً غير موجود... واختفى خلفه.</p></div>
+        <div class="card-footer"><span class="card-date">١٦ مايو</span><div class="card-btns"><a href="story.html?id=s2" class="c-btn c-btn-r">📖</a><a href="videos.html?id=yv2" class="c-btn c-btn-v">🎬</a><a href="ai-videos.html?id=ai2" class="c-btn c-btn-ai">🤖</a></div></div>
+      </a>
+      <a href="story.html?id=s3" class="story-card reveal">
+        <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=600&q=70&auto=format" alt=""></div>
+        <div class="card-body"><span class="card-tag">◆ رعب</span><h3 class="card-title">صوت أمي في الهاتف</h3><p class="card-excerpt">اتصلت به في الساعة 3:17 صباحاً... أمه التي دفنها قبل ثلاثة أشهر.</p></div>
+        <div class="card-footer"><span class="card-date">١٤ مايو</span><div class="card-btns"><a href="story.html?id=s3" class="c-btn c-btn-r">📖</a><a href="videos.html?id=yv3" class="c-btn c-btn-v">🎬</a><a href="ai-videos.html?id=ai3" class="c-btn c-btn-ai">🤖</a></div></div>
+      </a>
+      <a href="story.html?id=s4" class="story-card reveal">
+        <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=70&auto=format" alt=""></div>
+        <div class="card-body"><span class="card-tag">◆ إثارة</span><h3 class="card-title">الطفل الذي يتحدث مع الجدار</h3><p class="card-excerpt">ابنه يتحدث كل مساء مع "الرجل" في الزاوية. أرسل له رسائل لم يستطع أحد تجاهلها.</p></div>
+        <div class="card-footer"><span class="card-date">١٢ مايو</span><div class="card-btns"><a href="story.html?id=s4" class="c-btn c-btn-r">📖</a><a href="videos.html?id=yv4" class="c-btn c-btn-v">🎬</a><a href="ai-videos.html?id=ai4" class="c-btn c-btn-ai">🤖</a></div></div>
+      </a>
+      <a href="story.html?id=s6" class="story-card reveal">
+        <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=70&auto=format" alt=""></div>
+        <div class="card-body"><span class="card-tag">◆ غموض</span><h3 class="card-title">الغرفة 207</h3><p class="card-excerpt">قال الموظف: "أي غرفة إلا 207." ثم أضاف: "إلا أنت."</p></div>
+        <div class="card-footer"><span class="card-date">٩ مايو</span><div class="card-btns"><a href="story.html?id=s6" class="c-btn c-btn-r">📖</a><a href="videos.html?id=yv5" class="c-btn c-btn-v">🎬</a><a href="ai-videos.html?id=ai6" class="c-btn c-btn-ai">🤖</a></div></div>
+      </a>
+      <a href="story.html?id=s7" class="story-card reveal">
+        <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=70&auto=format" alt=""></div>
+        <div class="card-body"><span class="card-tag">◆ رعب</span><h3 class="card-title">آخر تسجيل</h3><p class="card-excerpt">هاتف قديم. تسجيل واحد. رجل يبكي: "لا تفتح الباب مهما حدث." ثم ثلاث طرقات.</p></div>
+        <div class="card-footer"><span class="card-date">٧ مايو</span><div class="card-btns"><a href="story.html?id=s7" class="c-btn c-btn-r">📖</a><a href="videos.html?id=yv6" class="c-btn c-btn-v">🎬</a><a href="ai-videos.html?id=ai5" class="c-btn c-btn-ai">🤖</a></div></div>
+      </a>
+      <a href="story.html?id=s10" class="story-card reveal">
+        <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=70&auto=format" alt=""></div>
+        <div class="card-body"><span class="card-tag">◆ رعب نفسي</span><h3 class="card-title">رسالة كتبتها قبل أن أموت</h3><p class="card-excerpt">استيقظ ووجد رسالة بخطه: "لا تنظر خلفك الآن. اقرأ أولاً."</p></div>
+        <div class="card-footer"><span class="card-date">١ مايو</span><div class="card-btns"><a href="story.html?id=s10" class="c-btn c-btn-r">📖</a><a href="videos.html" class="c-btn c-btn-v">🎬</a><a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a></div></div>
+      </a>
     </div>
-  </a>
-
-  <div class="section-header reveal" style="margin-top:5rem">
-    <span class="section-label">◆ أحدث القصص</span>
-    <div class="section-line"></div>
+    <div class="see-all"><a href="story.html?id=s1">شاهد كل القصص المكتوبة ←</a></div>
   </div>
 
-  <div class="stories-grid">
+  <hr class="section-divider">
 
-    <a href="story.html?id=s2" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ غموض</span>
-        <h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3>
-        <p class="card-excerpt">سائق شاحنات محترف منذ عشرين سنة. يعرف كل طريق. لكنه لم يتوقع أن يجد لافتة تشير إلى طريق غير موجود... ويختفي خلفه بعد دخوله.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">١٦ مايو</span><div class="card-btns"><a href="story.html?id=s2" class="card-read">📖 اقرأ</a><a href="story.html?id=s2#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
+  <!-- ── SECTION 2: YOUTUBE VIDEOS ── -->
+  <div id="video-section">
+    <div class="sec-header reveal">
+      <span class="sec-label sec-label-v">🎬 قصص بالفيديو</span>
+      <div class="sec-line"></div>
+      <a href="videos.html" class="sec-link">كل الفيديوهات ←</a>
+    </div>
 
-    <a href="story.html?id=s3" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ رعب</span>
-        <h3 class="card-title">صوت أمي في الهاتف</h3>
-        <p class="card-excerpt">اتصلت به في الساعة 3:17 صباحاً. بصوتها تماماً. بنبرتها، بطريقتها، بحنانها. أمه... التي دفنها قبل ثلاثة أشهر.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">١٤ مايو</span><div class="card-btns"><a href="story.html?id=s3" class="card-read">📖 اقرأ</a><a href="story.html?id=s3#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s4" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ إثارة</span>
-        <h3 class="card-title">الطفل الذي يتحدث مع الجدار</h3>
-        <p class="card-excerpt">ابنه كريم يجلس كل مساء أمام زاوية الغرفة ويتحدث مع "الرجل". قال له: "يريد أن يعرف لماذا لم يأتِ أحد من أصدقائه حين كان مريضاً."</p>
-      </div>
-      <div class="card-footer"><span class="card-date">١٢ مايو</span><div class="card-btns"><a href="story.html?id=s4" class="card-read">📖 اقرأ</a><a href="story.html?id=s4#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s5" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1578321272176-b7bbc0679853?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ رعب</span>
-        <h3 class="card-title">الصورة التي تتغير</h3>
-        <p class="card-excerpt">صورة قديمة في خزانة المنزل المستأجر. في اليوم الأول ينظر الأب إلى الكاميرا. في الثاني ينظر إليه. في السابع... هو في الصورة.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">١٠ مايو</span><div class="card-btns"><a href="story.html?id=s5" class="card-read">📖 اقرأ</a><a href="story.html?id=s5#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s6" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ غموض</span>
-        <h3 class="card-title">الغرفة 207</h3>
-        <p class="card-excerpt">قال موظف الاستقبال: "أي غرفة إلا 207." سأله لماذا. قال: "من يبيت فيها لا يستيقظ صباحاً." ثم أضاف: "إلا أنت."</p>
-      </div>
-      <div class="card-footer"><span class="card-date">٩ مايو</span><div class="card-btns"><a href="story.html?id=s6" class="card-read">📖 اقرأ</a><a href="story.html?id=s6#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s7" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ رعب</span>
-        <h3 class="card-title">آخر تسجيل</h3>
-        <p class="card-excerpt">هاتف قديم في محل مستعمل. فيه تسجيل واحد. رجل يبكي ويقول: "لا تفتح الباب مهما حدث." ثم ثلاث طرقات. ثم صمت أبدي.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">٧ مايو</span><div class="card-btns"><a href="story.html?id=s7" class="card-read">📖 اقرأ</a><a href="story.html?id=s7#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s8" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1509909756405-be0199881695?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ إثارة</span>
-        <h3 class="card-title">الرجل الذي يمشي خلفك دائماً</h3>
-        <p class="card-excerpt">أربعة أيام يراه في كل مكان. استدار ليواجهه. كان على بعد خطوة. قال بهدوء تام: "أنت تعرفني." وفي تلك اللحظة... تذكر.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">٥ مايو</span><div class="card-btns"><a href="story.html?id=s8" class="card-read">📖 اقرأ</a><a href="story.html?id=s8#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s9" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ غموض</span>
-        <h3 class="card-title">المنزل الذي لا يتركك تخرج</h3>
-        <p class="card-excerpt">دخل منزل عمه المتوفى لساعة. حاول الخروج. الباب يعود به إلى نفس الغرفة. النافذة تطل على نفس الغرفة. ووجد في الدرج رسالة عمه.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">٣ مايو</span><div class="card-btns"><a href="story.html?id=s9" class="card-read">📖 اقرأ</a><a href="story.html?id=s9#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
-    <a href="story.html?id=s10" class="story-card reveal">
-      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=70&auto=format" alt=""></div>
-      <div class="card-body">
-        <span class="card-tag">◆ رعب نفسي</span>
-        <h3 class="card-title">رسالة كتبتها قبل أن أموت</h3>
-        <p class="card-excerpt">استيقظ ووجد على مكتبه رسالة بخطه: "لا تنظر خلفك الآن. اقرأ أولاً." كل يوم رسالة جديدة. كل رسالة تكشف ليلة لا يتذكرها.</p>
-      </div>
-      <div class="card-footer"><span class="card-date">١ مايو</span><div class="card-btns"><a href="story.html?id=s10" class="card-read">📖 اقرأ</a><a href="story.html?id=s10#video" class="card-watch">🎬 شاهد</a></div></div>
-    </a>
-
+    <div class="videos-grid" id="yt-grid"></div>
+    <div class="see-all"><a href="videos.html">شاهد كل الفيديوهات ←</a></div>
   </div>
 
-  <div class="quote-section reveal" id="about">
-    <p class="quote-text">"أكثر الأشياء رعباً ليست تلك التي نراها...<br>بل تلك التي نشعر بها في الظلام"</p>
+  <hr class="section-divider">
+
+  <!-- ── SECTION 3: AI VIDEOS ── -->
+  <div id="ai-section">
+    <div class="sec-header reveal">
+      <span class="sec-label sec-label-ai">🤖 قصص الذكاء الاصطناعي</span>
+      <div class="sec-line"></div>
+      <a href="ai-videos.html" class="sec-link">كل القصص ←</a>
+    </div>
+
+    <div class="ai-grid" id="ai-grid"></div>
+    <div class="see-all"><a href="ai-videos.html">اكتشف قصص الذكاء الاصطناعي ←</a></div>
+  </div>
+
+  <div class="ornament">✦ ✦ ✦</div>
+
+  <div class="quote-box reveal">
+    <p class="quote-text">"القصة الحقيقية ليست ما يحدث...<br>بل ما تشعر به بعد أن تنتهي."</p>
     <span class="quote-attr">— القصص الأسطورية</span>
   </div>
-  <div class="ornament">✦ ✦ ✦</div>
 
 </main>
 
 <footer>
   <div class="footer-logo">القصص الأسطورية</div>
-  <ul class="footer-links">
-    <li><a href="#">الرئيسية</a></li>
-    <li><a href="#stories">القصص</a></li>
+  <p class="footer-tagline">قصص تُقرأ... قصص تُشاهد... وقصص تُولَد من الخيال.</p>
+  <ul class="footer-nav">
+    <li><a href="#text-section">📖 قصص مقروءة</a></li>
+    <li><a href="#video-section">🎬 قصص بالفيديو</a></li>
+    <li><a href="#ai-section">🤖 ذكاء اصطناعي</a></li>
   </ul>
-  <p class="footer-text">© ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة</p>
+  <p class="footer-copy">© ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة</p>
 </footer>
 
+<script src="videos-data.js"></script>
 <script>
-const canvas=document.getElementById('bg-canvas');
-const ctx=canvas.getContext('2d');
-let W,H,particles=[];
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-function Particle(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.2+0.3;this.vx=(Math.random()-0.5)*0.15;this.vy=(Math.random()-0.5)*0.15;this.alpha=Math.random()*0.4+0.05;this.color=Math.random()>0.7?`rgba(200,168,75,${this.alpha})`:`rgba(155,26,26,${this.alpha})`;}
-function init(){resize();particles=Array.from({length:120},()=>new Particle());}
-function animate(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.color;ctx.fill();});requestAnimationFrame(animate);}
-init();animate();window.addEventListener('resize',resize);
-const observer=new IntersectionObserver(entries=>{entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*80);observer.unobserve(e.target);}});},{threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+/* PARTICLES */
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H,P=[];
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.1+0.3;this.vx=(Math.random()-.5)*.14;this.vy=(Math.random()-.5)*.14;this.a=Math.random()*.35+.05;const c=Math.random();this.col=c>.7?`rgba(200,168,75,${this.a})`:c>.4?`rgba(204,34,34,${this.a})`:`rgba(42,122,191,${this.a})`;}
+function init(){resize();P=Array.from({length:130},()=>new Pt());}
+function draw(){ctx.clearRect(0,0,W,H);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.col;ctx.fill();});requestAnimationFrame(draw);}
+init();draw();window.addEventListener('resize',resize);
+
+/* REVEAL */
+const obs=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);obs.unobserve(e.target);}});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+/* BUILD YOUTUBE GRID */
+const ytGrid=document.getElementById('yt-grid');
+YOUTUBE_VIDEOS.slice(0,6).forEach(v=>{
+  ytGrid.innerHTML+=`
+  <a href="videos.html?id=${v.id}" class="video-card">
+    <div class="video-thumb">
+      <img src="https://img.youtube.com/vi/${v.ytId}/maxresdefault.jpg" alt="${v.title}" onerror="this.src='https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=600&q=60&auto=format'">
+      <div class="play-btn">▶</div>
+      <span class="vid-duration">${v.duration}</span>
+    </div>
+    <div class="vid-body"><span class="vid-tag">◆ ${v.cat}</span><h3 class="vid-title">${v.title}</h3><p class="vid-desc">${v.desc}</p></div>
+    <div class="vid-footer"><span class="vid-source">📺 ${v.source}</span><span class="vid-watch">شاهد الآن ←</span></div>
+  </a>`;
+});
+
+/* BUILD AI GRID */
+const aiGrid=document.getElementById('ai-grid');
+AI_VIDEOS.slice(0,6).forEach(v=>{
+  const isReady=v.status==='ready';
+  aiGrid.innerHTML+=`
+  <a href="ai-videos.html?id=${v.id}" class="ai-card">
+    <div class="ai-thumb">
+      <img src="${v.thumb}" alt="${v.title}">
+      <div class="ai-overlay"></div>
+      ${isReady
+        ?`<div class="ready-badge">▶</div>`
+        :`<div class="coming-badge"><span>قريباً</span><strong>جاري الإنتاج</strong></div>`
+      }
+      <div class="ai-glow"></div>
+    </div>
+    <div class="ai-body"><span class="ai-tag">🤖 ذكاء اصطناعي · ${v.cat}</span><h3 class="ai-title">${v.title}</h3><p class="ai-desc">${v.desc}</p></div>
+    <div class="ai-footer"><span class="ai-label">صوت AI + شخصية متحركة</span><span class="ai-status">${isReady?'متاح الآن':'قريباً'}</span></div>
+  </a>`;
+});
 </script>
 </body>
 </html>

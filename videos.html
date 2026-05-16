@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قصص بالفيديو — القصص الأسطورية</title>
+  <meta name="description" content="قصص رعب وغموض بالفيديو من القصص الأسطورية">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#060608; --card:#0f0f14; --red:#9b1a1a; --red-bright:#cc2222;
+      --gold:#c8a84b; --gold-dim:#8a7030; --text:#d8d0c8; --text-dim:#7a7268;
+      --white:#f0ece4; --border:#1e1e28;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Cairo',serif;min-height:100vh;overflow-x:hidden}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,168,75,0.08)}
+    .nav-logo{font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);text-decoration:none;text-shadow:0 0 20px rgba(200,168,75,0.3)}
+    .nav-links{display:flex;gap:2rem;align-items:center}
+    .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.8rem;font-weight:300;transition:color 0.3s;letter-spacing:0.05em}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold)}
+    .nav-links a.active{color:var(--red-bright)}
+
+    /* PAGE HERO */
+    .page-hero{padding:120px 2rem 60px;text-align:center;position:relative;overflow:hidden}
+    .page-hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(155,26,26,0.12) 0%,transparent 70%);pointer-events:none}
+    .hero-tag{font-size:0.65rem;font-weight:700;letter-spacing:0.4em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1rem;display:block}
+    .hero-title{font-family:'Amiri',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--white);line-height:1.3;margin-bottom:1rem}
+    .hero-sub{font-size:0.9rem;color:var(--text-dim);max-width:500px;margin:0 auto;line-height:1.8}
+
+    /* FILTER */
+    .filter-bar{max-width:1200px;margin:0 auto;padding:0 2rem 3rem;display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center}
+    .filter-btn{padding:0.45rem 1.2rem;border:1px solid var(--border);background:none;color:var(--text-dim);font-family:'Cairo',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.3s;letter-spacing:0.05em}
+    .filter-btn:hover,.filter-btn.active{border-color:var(--red-bright);color:var(--red-bright);background:rgba(155,26,26,0.06)}
+
+    /* VIDEO GRID */
+    .videos-grid{max-width:1200px;margin:0 auto;padding:0 2rem 6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2rem}
+    .video-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all 0.4s;display:flex;flex-direction:column}
+    .video-card:hover{border-color:rgba(155,26,26,0.3);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+
+    /* THUMBNAIL WRAPPER */
+    .thumb-wrap{position:relative;padding-bottom:56.25%;background:#0a0a0f;overflow:hidden;cursor:pointer}
+    .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:all 0.5s}
+    .thumb-wrap:hover .thumb-img{filter:grayscale(0%);transform:scale(1.04)}
+    .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:rgba(155,26,26,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:all 0.3s;backdrop-filter:blur(4px)}
+    .thumb-wrap:hover .play-btn{background:var(--red-bright);transform:translate(-50%,-50%) scale(1.1)}
+    .duration-badge{position:absolute;bottom:0.75rem;left:0.75rem;background:rgba(6,6,8,0.85);color:var(--text);font-size:0.72rem;padding:0.2rem 0.55rem;font-weight:600;letter-spacing:0.05em;backdrop-filter:blur(4px)}
+
+    /* IFRAME PLAYER (hidden by default) */
+    .iframe-wrap{position:absolute;inset:0;display:none}
+    .iframe-wrap iframe{width:100%;height:100%;border:none}
+    .iframe-wrap.active{display:block}
+
+    /* VIDEO BODY */
+    .video-body{padding:1.25rem 1.5rem 1.5rem;flex:1;display:flex;flex-direction:column;gap:0.75rem}
+    .video-cat{font-size:0.6rem;font-weight:700;letter-spacing:0.3em;color:var(--red-bright);text-transform:uppercase}
+    .video-title{font-family:'Amiri',serif;font-size:1.1rem;color:var(--white);line-height:1.5;flex:1}
+    .video-desc{font-size:0.82rem;color:var(--text-dim);line-height:1.7}
+    .video-source{font-size:0.7rem;color:var(--text-dim);display:flex;align-items:center;gap:0.5rem;border-top:1px solid var(--border);padding-top:0.75rem;margin-top:auto}
+    .source-dot{width:6px;height:6px;border-radius:50%;background:var(--red-bright);flex-shrink:0}
+    .watch-btn{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.65rem 1.2rem;background:rgba(155,26,26,0.1);border:1px solid rgba(155,26,26,0.25);color:var(--red-bright);font-family:'Cairo',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none;margin-top:0.25rem;letter-spacing:0.05em}
+    .watch-btn:hover{background:var(--red-bright);color:var(--white);border-color:var(--red-bright)}
+
+    /* MODAL PLAYER */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
+    .modal-overlay.open{opacity:1;pointer-events:all}
+    .modal-inner{width:100%;max-width:900px;position:relative}
+    .modal-close{position:absolute;top:-3rem;left:0;background:none;border:1px solid var(--border);color:var(--text-dim);width:40px;height:40px;font-size:1.2rem;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+    .modal-close:hover{border-color:var(--gold-dim);color:var(--gold)}
+    .modal-video{position:relative;padding-bottom:56.25%;background:#000}
+    .modal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .modal-title{color:var(--white);font-family:'Amiri',serif;font-size:1.2rem;margin-top:1rem;text-align:center}
+
+    /* EMPTY STATE */
+    .empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim);font-family:'Amiri',serif;font-size:1.1rem}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center}
+    .footer-logo{font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold);margin-bottom:0.5rem}
+    .footer-text{font-size:0.75rem;color:var(--text-dim)}
+
+    @media(max-width:768px){
+      .nav-links{display:none}
+      .videos-grid{grid-template-columns:1fr;padding:0 1.25rem 4rem}
+      .page-hero{padding:100px 1.5rem 40px}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">القصص الأسطورية</a>
+  <div class="nav-links">
+    <a href="index.html#stories">📖 قصص مقروءة</a>
+    <a href="videos.html" class="active">🎬 قصص بالفيديو</a>
+    <a href="ai-videos.html">🤖 قصص الذكاء الاصطناعي</a>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <span class="hero-tag">🎬 القسم الثاني</span>
+  <h1 class="hero-title">قصص بالفيديو</h1>
+  <p class="hero-sub">قصص رعب وغموض مُختارة بعناية من يوتيوب — شاهدها مباشرةً دون مغادرة الموقع</p>
+</div>
+
+<div class="filter-bar" id="filter-bar">
+  <button class="filter-btn active" data-cat="all" onclick="filterVideos('all',this)">الكل</button>
+  <button class="filter-btn" data-cat="رعب" onclick="filterVideos('رعب',this)">رعب</button>
+  <button class="filter-btn" data-cat="غموض" onclick="filterVideos('غموض',this)">غموض</button>
+  <button class="filter-btn" data-cat="رعب نفسي" onclick="filterVideos('رعب نفسي',this)">رعب نفسي</button>
+  <button class="filter-btn" data-cat="إثارة" onclick="filterVideos('إثارة',this)">إثارة</button>
+</div>
+
+<div class="videos-grid" id="videos-grid"></div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-video">
+      <iframe id="modal-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <p class="modal-title" id="modal-title"></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">القصص الأسطورية</div>
+  <p class="footer-text">© ٢٠٢٦ — جميع الحقوق محفوظة</p>
+</footer>
+
+<script src="videos-data.js"></script>
+<script>
+let currentCat = 'all';
+
+function getThumb(ytId) {
+  return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+}
+
+function renderVideos(cat) {
+  const grid = document.getElementById('videos-grid');
+  const filtered = cat === 'all' ? YOUTUBE_VIDEOS : YOUTUBE_VIDEOS.filter(v => v.cat === cat);
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="empty-state">لا توجد مقاطع في هذا التصنيف حتى الآن</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(v => `
+    <div class="video-card" data-cat="${v.cat}" data-id="${v.id}">
+      <div class="thumb-wrap" onclick="openModal('${v.ytId}','${v.title.replace(/'/g,"\\'")}')">
+        <img class="thumb-img" src="${getThumb(v.ytId)}" alt="${v.title}" loading="lazy" onerror="this.style.display='none'">
+        <div class="play-btn">▶</div>
+        <span class="duration-badge">${v.duration}</span>
+      </div>
+      <div class="video-body">
+        <span class="video-cat">◆ ${v.cat}</span>
+        <p class="video-title">${v.title}</p>
+        <p class="video-desc">${v.desc}</p>
+        <div class="video-source">
+          <div class="source-dot"></div>
+          <span>المصدر: ${v.source}</span>
+        </div>
+        <button class="watch-btn" onclick="openModal('${v.ytId}','${v.title.replace(/'/g,"\\'")}')">▶ شاهد الآن</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterVideos(cat, btn) {
+  currentCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVideos(cat);
+}
+
+function openModal(ytId, title) {
+  const modal = document.getElementById('modal');
+  document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
+  document.getElementById('modal-title').textContent = title;
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal') && !e.target.classList.contains('modal-close')) return;
+  const modal = document.getElementById('modal');
+  modal.classList.remove('open');
+  document.getElementById('modal-iframe').src = '';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+renderVideos('all');
+</script>
+</body>
+</html>
