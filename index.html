@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     :root {
       --bg: #060608;
       --bg2: #0d0d12;
@@ -24,761 +23,124 @@
       --white: #f0ece4;
       --border: #1e1e28;
     }
-
     html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Cairo', 'Amiri', serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ─── CANVAS BG ─── */
-    #bg-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.4;
-    }
-
-    /* ─── NAV ─── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      padding: 0 2rem;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: linear-gradient(to bottom, rgba(6,6,8,0.95), transparent);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(200,168,75,0.08);
-    }
-
-    .nav-logo {
-      font-family: 'Amiri', serif;
-      font-size: 1.4rem;
-      color: var(--gold);
-      text-decoration: none;
-      letter-spacing: 0.05em;
-      text-shadow: 0 0 30px rgba(200,168,75,0.4);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-dim);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 300;
-      transition: color 0.3s;
-      letter-spacing: 0.03em;
-    }
-
-    .nav-links a:hover { color: var(--gold); }
-
-    /* ─── HERO ─── */
-    .hero {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 6rem 2rem 4rem;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 50% 40%,
-        rgba(155,26,26,0.12) 0%,
-        rgba(200,168,75,0.04) 40%,
-        transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-eyebrow {
-      font-size: 0.75rem;
-      font-weight: 300;
-      letter-spacing: 0.3em;
-      color: var(--red-bright);
-      text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 1s 0.3s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Amiri', serif;
-      font-size: clamp(3.5rem, 10vw, 8rem);
-      font-weight: 700;
-      line-height: 1.1;
-      color: var(--white);
-      text-shadow:
-        0 0 60px rgba(200,168,75,0.3),
-        0 0 120px rgba(155,26,26,0.2);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 1s 0.5s forwards;
-    }
-
-    .hero-title span {
-      color: var(--gold);
-      display: block;
-    }
-
-    .hero-subtitle {
-      font-size: 1rem;
-      font-weight: 300;
-      color: var(--text-dim);
-      max-width: 480px;
-      line-height: 1.9;
-      margin-bottom: 3rem;
-      opacity: 0;
-      animation: fadeUp 1s 0.7s forwards;
-    }
-
-    .hero-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.85rem 2.5rem;
-      border: 1px solid var(--gold-dim);
-      color: var(--gold);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      transition: all 0.4s;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      animation: fadeUp 1s 0.9s forwards;
-    }
-
-    .hero-cta::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(200,168,75,0.1), transparent);
-      transform: translateX(100%);
-      transition: transform 0.4s;
-    }
-
-    .hero-cta:hover::before { transform: translateX(0); }
-    .hero-cta:hover {
-      border-color: var(--gold);
-      box-shadow: 0 0 30px rgba(200,168,75,0.15), inset 0 0 30px rgba(200,168,75,0.05);
-    }
-
-    .scroll-indicator {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      opacity: 0;
-      animation: fadeIn 1s 1.5s forwards;
-    }
-
-    .scroll-line {
-      width: 1px;
-      height: 48px;
-      background: linear-gradient(to bottom, var(--gold-dim), transparent);
-      animation: scrollPulse 2s infinite;
-    }
-
-    /* ─── SECTIONS ─── */
-    main {
-      position: relative;
-      z-index: 1;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 4rem 2rem 8rem;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-    }
-
-    .section-label {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.35em;
-      color: var(--red-bright);
-      text-transform: uppercase;
-    }
-
-    .section-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to left, transparent, var(--border));
-    }
-
-    .section-title {
-      font-family: 'Amiri', serif;
-      font-size: 2rem;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-    }
-
-    /* ─── FEATURED STORY ─── */
-    .featured {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      margin-bottom: 5rem;
-      border: 1px solid var(--border);
-      overflow: hidden;
-      transition: border-color 0.3s;
-      cursor: pointer;
-    }
-
-    .featured:hover {
-      border-color: rgba(200,168,75,0.2);
-    }
-
-    .featured:hover .featured-img-wrap::after {
-      opacity: 0.6;
-    }
-
-    .featured-img-wrap {
-      position: relative;
-      height: 520px;
-      overflow: hidden;
-    }
-
-    .featured-img-wrap::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(155,26,26,0.4), rgba(6,6,8,0.6));
-      opacity: 0.8;
-      transition: opacity 0.5s;
-    }
-
-    .featured-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: grayscale(40%) contrast(1.1);
-      transition: transform 0.8s ease;
-    }
-
-    .featured:hover .featured-img-wrap img {
-      transform: scale(1.05);
-    }
-
-    .featured-badge {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      z-index: 2;
-      padding: 0.3rem 0.8rem;
-      background: var(--red);
-      color: var(--white);
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    .featured-content {
-      padding: 3rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background: var(--card);
-      position: relative;
-    }
-
-    .featured-content::before {
-      content: '❝';
-      position: absolute;
-      top: 2rem;
-      left: 2rem;
-      font-size: 4rem;
-      color: var(--border);
-      font-family: serif;
-      line-height: 1;
-    }
-
-    .featured-meta {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .featured-cat {
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-
-    .featured-dot {
-      width: 3px;
-      height: 3px;
-      border-radius: 50%;
-      background: var(--text-dim);
-    }
-
-    .featured-date {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-
-    .featured-title {
-      font-family: 'Amiri', serif;
-      font-size: 1.9rem;
-      line-height: 1.4;
-      color: var(--white);
-      margin-bottom: 1.2rem;
-    }
-
-    .featured-excerpt {
-      font-size: 0.95rem;
-      line-height: 2;
-      color: var(--text-dim);
-      margin-bottom: 2rem;
-    }
-
-    .read-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--gold);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      border-bottom: 1px solid rgba(200,168,75,0.3);
-      padding-bottom: 0.3rem;
-      transition: all 0.3s;
-      width: fit-content;
-    }
-
-    .read-btn:hover {
-      border-color: var(--gold);
-      gap: 0.8rem;
-    }
-
-    /* ─── STORIES GRID ─── */
-    .stories-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      margin-bottom: 5rem;
-    }
-
-    .story-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.4s;
-      position: relative;
-    }
-
-    .story-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(to right, var(--red), var(--gold));
-      transform: scaleX(0);
-      transition: transform 0.4s;
-    }
-
-    .story-card:hover {
-      border-color: rgba(200,168,75,0.15);
-      background: var(--card-hover);
-      transform: translateY(-4px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    }
-
-    .story-card:hover::after { transform: scaleX(1); }
-
-    .card-img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      filter: grayscale(50%) contrast(1.1);
-      transition: all 0.5s;
-      display: block;
-    }
-
-    .story-card:hover .card-img {
-      filter: grayscale(20%) contrast(1.15);
-      transform: scale(1.03);
-    }
-
-    .card-img-wrap {
-      overflow: hidden;
-      height: 200px;
-      position: relative;
-    }
-
-    .card-img-wrap::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: linear-gradient(to top, var(--card), transparent);
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-
-    .card-tag {
-      display: inline-block;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      color: var(--red-bright);
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-    }
-
-    .card-title {
-      font-family: 'Amiri', serif;
-      font-size: 1.15rem;
-      line-height: 1.5;
-      color: var(--white);
-      margin-bottom: 0.75rem;
-    }
-
-    .card-excerpt {
-      font-size: 0.82rem;
-      line-height: 1.8;
-      color: var(--text-dim);
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .card-footer {
-      padding: 0 1.5rem 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .card-date {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-    }
-
-    .card-read {
-      font-size: 0.7rem;
-      color: var(--gold);
-      font-weight: 600;
-      letter-spacing: 0.1em;
-    }
-
-    /* ─── DIVIDER ─── */
-    .ornament {
-      text-align: center;
-      margin: 4rem 0;
-      color: var(--gold-dim);
-      font-size: 1.2rem;
-      letter-spacing: 1rem;
-      opacity: 0.5;
-    }
-
-    /* ─── QUOTE SECTION ─── */
-    .quote-section {
-      margin: 5rem 0;
-      padding: 4rem;
-      border: 1px solid var(--border);
-      position: relative;
-      text-align: center;
-      background: linear-gradient(135deg, rgba(155,26,26,0.04), transparent);
-    }
-
-    .quote-section::before,
-    .quote-section::after {
-      content: '';
-      position: absolute;
-      width: 60px;
-      height: 60px;
-      border-color: var(--gold-dim);
-      border-style: solid;
-      opacity: 0.3;
-    }
-
-    .quote-section::before {
-      top: -1px; right: -1px;
-      border-width: 1px 1px 0 0;
-    }
-
-    .quote-section::after {
-      bottom: -1px; left: -1px;
-      border-width: 0 0 1px 1px;
-    }
-
-    .quote-text {
-      font-family: 'Amiri', serif;
-      font-size: 1.6rem;
-      font-style: italic;
-      color: var(--white);
-      line-height: 1.8;
-      margin-bottom: 1.5rem;
-    }
-
-    .quote-attr {
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      color: var(--gold-dim);
-      text-transform: uppercase;
-    }
-
-    /* ─── FOOTER ─── */
-    footer {
-      position: relative;
-      z-index: 1;
-      border-top: 1px solid var(--border);
-      padding: 3rem 2rem;
-      text-align: center;
-    }
-
-    .footer-logo {
-      font-family: 'Amiri', serif;
-      font-size: 2rem;
-      color: var(--gold);
-      margin-bottom: 1rem;
-      text-shadow: 0 0 30px rgba(200,168,75,0.2);
-    }
-
-    .footer-text {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      line-height: 1.8;
-    }
-
-    .footer-links {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 1.5rem 0;
-      list-style: none;
-    }
-
-    .footer-links a {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-
-    .footer-links a:hover { color: var(--gold); }
-
-    /* ─── STORY PAGE (MODAL) ─── */
-    .story-modal {
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: var(--bg);
-      overflow-y: auto;
-      transform: translateY(100%);
-      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    .story-modal.open {
-      transform: translateY(0);
-    }
-
-    .modal-close {
-      position: fixed;
-      top: 1.5rem;
-      left: 1.5rem;
-      z-index: 210;
-      background: rgba(6,6,8,0.8);
-      border: 1px solid var(--border);
-      color: var(--text);
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.2rem;
-      transition: all 0.3s;
-      backdrop-filter: blur(8px);
-    }
-
-    .modal-close:hover {
-      border-color: var(--gold-dim);
-      color: var(--gold);
-    }
-
-    .story-hero {
-      height: 60vh;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .story-hero img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: grayscale(40%) contrast(1.1);
-    }
-
-    .story-hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top,
-        var(--bg) 0%,
-        rgba(6,6,8,0.6) 50%,
-        rgba(6,6,8,0.3) 100%);
-    }
-
-    .story-hero-content {
-      position: absolute;
-      bottom: 3rem;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100%;
-      max-width: 760px;
-      padding: 0 2rem;
-      text-align: center;
-      z-index: 1;
-    }
-
-    .story-cat-label {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.3em;
-      color: var(--red-bright);
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
-
-    .story-main-title {
-      font-family: 'Amiri', serif;
-      font-size: clamp(1.8rem, 5vw, 3.2rem);
-      color: var(--white);
-      line-height: 1.3;
-      text-shadow: 0 4px 30px rgba(0,0,0,0.8);
-    }
-
-    .story-body-wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 4rem 2rem 8rem;
-    }
-
-    .story-meta-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-
-    .story-body {
-      font-family: 'Amiri', serif;
-      font-size: 1.2rem;
-      line-height: 2.2;
-      color: var(--text);
-      text-align: justify;
-    }
-
-    .story-body p {
-      margin-bottom: 1.8rem;
-    }
-
-    .story-body p:first-child::first-letter {
-      font-size: 4rem;
-      float: right;
-      line-height: 1;
-      margin-left: 0.5rem;
-      margin-top: 0.2rem;
-      color: var(--gold);
-      font-family: 'Amiri', serif;
-    }
-
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 0.6; }
-    }
-
-    @keyframes scrollPulse {
-      0%, 100% { opacity: 0.3; transform: scaleY(1); }
-      50%       { opacity: 1;   transform: scaleY(1.2); }
-    }
-
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 900px) {
-      .featured { grid-template-columns: 1fr; }
-      .featured-img-wrap { height: 300px; }
-      .stories-grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (max-width: 600px) {
-      .stories-grid { grid-template-columns: 1fr; }
-      .featured-content { padding: 2rem; }
-      .quote-section { padding: 2.5rem 1.5rem; }
-      .nav-links { display: none; }
-    }
+    body { background: var(--bg); color: var(--text); font-family: 'Cairo', serif; min-height: 100vh; overflow-x: hidden; }
+    #bg-canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; opacity:0.4; }
+
+    /* NAV */
+    nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:0 2rem; height:64px; display:flex; align-items:center; justify-content:space-between; background:linear-gradient(to bottom,rgba(6,6,8,0.97),transparent); backdrop-filter:blur(8px); border-bottom:1px solid rgba(200,168,75,0.08); }
+    .nav-logo { font-family:'Amiri',serif; font-size:1.4rem; color:var(--gold); text-decoration:none; text-shadow:0 0 30px rgba(200,168,75,0.4); }
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a { color:var(--text-dim); text-decoration:none; font-size:0.9rem; font-weight:300; transition:color 0.3s; }
+    .nav-links a:hover { color:var(--gold); }
+
+    /* HERO */
+    .hero { position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:6rem 2rem 4rem; overflow:hidden; }
+    .hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(155,26,26,0.14) 0%,rgba(200,168,75,0.05) 40%,transparent 70%); pointer-events:none; }
+    .hero-eyebrow { font-size:0.75rem; font-weight:300; letter-spacing:0.3em; color:var(--red-bright); text-transform:uppercase; margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s 0.3s forwards; }
+    .hero-title { font-family:'Amiri',serif; font-size:clamp(3.5rem,10vw,8rem); font-weight:700; line-height:1.1; color:var(--white); text-shadow:0 0 60px rgba(200,168,75,0.3),0 0 120px rgba(155,26,26,0.2); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s 0.5s forwards; }
+    .hero-title span { color:var(--gold); display:block; }
+    .hero-subtitle { font-size:1rem; font-weight:300; color:var(--text-dim); max-width:480px; line-height:1.9; margin-bottom:3rem; opacity:0; animation:fadeUp 1s 0.7s forwards; }
+    .hero-cta { display:inline-flex; align-items:center; gap:0.75rem; padding:0.85rem 2.5rem; border:1px solid var(--gold-dim); color:var(--gold); text-decoration:none; font-size:0.9rem; font-weight:600; letter-spacing:0.1em; transition:all 0.4s; position:relative; overflow:hidden; opacity:0; animation:fadeUp 1s 0.9s forwards; }
+    .hero-cta::before { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(200,168,75,0.1),transparent); transform:translateX(100%); transition:transform 0.4s; }
+    .hero-cta:hover::before { transform:translateX(0); }
+    .hero-cta:hover { border-color:var(--gold); box-shadow:0 0 30px rgba(200,168,75,0.15); }
+    .scroll-indicator { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); opacity:0; animation:fadeIn 1s 1.5s forwards; }
+    .scroll-line { width:1px; height:48px; background:linear-gradient(to bottom,var(--gold-dim),transparent); animation:scrollPulse 2s infinite; }
+
+    /* MAIN */
+    main { position:relative; z-index:1; max-width:1200px; margin:0 auto; padding:4rem 2rem 8rem; }
+    .section-header { display:flex; align-items:center; gap:1.5rem; margin-bottom:3rem; }
+    .section-label { font-size:0.7rem; font-weight:600; letter-spacing:0.35em; color:var(--red-bright); text-transform:uppercase; white-space:nowrap; }
+    .section-line { flex:1; height:1px; background:linear-gradient(to left,transparent,var(--border)); }
+
+    /* FEATURED */
+    .featured { display:grid; grid-template-columns:1fr 1fr; gap:0; margin-bottom:5rem; border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:border-color 0.3s; }
+    .featured:hover { border-color:rgba(200,168,75,0.25); }
+    .featured-img-wrap { position:relative; height:520px; overflow:hidden; }
+    .featured-img-wrap::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(155,26,26,0.4),rgba(6,6,8,0.5)); opacity:0.8; transition:opacity 0.5s; }
+    .featured:hover .featured-img-wrap::after { opacity:0.5; }
+    .featured-img-wrap img { width:100%; height:100%; object-fit:cover; filter:grayscale(40%) contrast(1.1); transition:transform 0.8s ease; }
+    .featured:hover .featured-img-wrap img { transform:scale(1.05); }
+    .featured-badge { position:absolute; top:1.5rem; right:1.5rem; z-index:2; padding:0.3rem 0.8rem; background:var(--red); color:var(--white); font-size:0.65rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; }
+    .featured-content { padding:3rem; display:flex; flex-direction:column; justify-content:center; background:var(--card); position:relative; }
+    .featured-content::before { content:'❝'; position:absolute; top:2rem; left:2rem; font-size:4rem; color:var(--border); font-family:serif; line-height:1; }
+    .featured-meta { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+    .featured-cat { font-size:0.7rem; font-weight:700; letter-spacing:0.2em; color:var(--gold); text-transform:uppercase; }
+    .featured-dot { width:3px; height:3px; border-radius:50%; background:var(--text-dim); }
+    .featured-date { font-size:0.75rem; color:var(--text-dim); }
+    .featured-title { font-family:'Amiri',serif; font-size:1.9rem; line-height:1.4; color:var(--white); margin-bottom:1.2rem; }
+    .featured-excerpt { font-size:0.95rem; line-height:2; color:var(--text-dim); margin-bottom:2rem; }
+    .read-btn { display:inline-flex; align-items:center; gap:0.5rem; color:var(--gold); text-decoration:none; font-size:0.85rem; font-weight:600; letter-spacing:0.1em; border-bottom:1px solid rgba(200,168,75,0.3); padding-bottom:0.3rem; transition:all 0.3s; width:fit-content; }
+    .read-btn:hover { border-color:var(--gold); gap:0.8rem; }
+
+    /* GRID */
+    .stories-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-bottom:5rem; }
+    .story-card { background:var(--card); border:1px solid var(--border); overflow:hidden; cursor:pointer; transition:all 0.4s; position:relative; }
+    .story-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(to right,var(--red),var(--gold)); transform:scaleX(0); transition:transform 0.4s; }
+    .story-card:hover { border-color:rgba(200,168,75,0.2); background:var(--card-hover); transform:translateY(-4px); box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+    .story-card:hover::after { transform:scaleX(1); }
+    .card-img-wrap { overflow:hidden; height:200px; position:relative; }
+    .card-img-wrap::after { content:''; position:absolute; bottom:0; left:0; right:0; height:80px; background:linear-gradient(to top,var(--card),transparent); }
+    .card-img { width:100%; height:100%; object-fit:cover; filter:grayscale(50%) contrast(1.1); transition:all 0.5s; display:block; }
+    .story-card:hover .card-img { filter:grayscale(20%) contrast(1.15); transform:scale(1.04); }
+    .card-body { padding:1.5rem 1.5rem 0.5rem; }
+    .card-tag { display:inline-block; font-size:0.6rem; font-weight:700; letter-spacing:0.25em; color:var(--red-bright); text-transform:uppercase; margin-bottom:0.75rem; }
+    .card-title { font-family:'Amiri',serif; font-size:1.1rem; line-height:1.55; color:var(--white); margin-bottom:0.75rem; }
+    .card-excerpt { font-size:0.82rem; line-height:1.8; color:var(--text-dim); display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+    .card-footer { padding:1rem 1.5rem 1.5rem; display:flex; align-items:center; justify-content:space-between; }
+    .card-date { font-size:0.7rem; color:var(--text-dim); }
+    .card-read { font-size:0.7rem; color:var(--gold); font-weight:600; letter-spacing:0.1em; }
+
+    /* QUOTE */
+    .quote-section { margin:5rem 0; padding:4rem; border:1px solid var(--border); position:relative; text-align:center; background:linear-gradient(135deg,rgba(155,26,26,0.04),transparent); }
+    .quote-section::before,.quote-section::after { content:''; position:absolute; width:60px; height:60px; border-color:var(--gold-dim); border-style:solid; opacity:0.3; }
+    .quote-section::before { top:-1px; right:-1px; border-width:1px 1px 0 0; }
+    .quote-section::after { bottom:-1px; left:-1px; border-width:0 0 1px 1px; }
+    .quote-text { font-family:'Amiri',serif; font-size:1.6rem; font-style:italic; color:var(--white); line-height:1.8; margin-bottom:1.5rem; }
+    .quote-attr { font-size:0.75rem; letter-spacing:0.2em; color:var(--gold-dim); text-transform:uppercase; }
+    .ornament { text-align:center; margin:4rem 0; color:var(--gold-dim); font-size:1.2rem; letter-spacing:1rem; opacity:0.5; }
+
+    /* FOOTER */
+    footer { position:relative; z-index:1; border-top:1px solid var(--border); padding:3rem 2rem; text-align:center; }
+    .footer-logo { font-family:'Amiri',serif; font-size:2rem; color:var(--gold); margin-bottom:1rem; text-shadow:0 0 30px rgba(200,168,75,0.2); }
+    .footer-links { display:flex; justify-content:center; gap:2rem; margin:1.5rem 0; list-style:none; }
+    .footer-links a { font-size:0.8rem; color:var(--text-dim); text-decoration:none; transition:color 0.3s; }
+    .footer-links a:hover { color:var(--gold); }
+    .footer-text { font-size:0.8rem; color:var(--text-dim); line-height:1.8; }
+
+    /* MODAL */
+    .story-modal { position:fixed; inset:0; z-index:200; background:var(--bg); overflow-y:auto; transform:translateY(100%); transition:transform 0.5s cubic-bezier(0.16,1,0.3,1); }
+    .story-modal.open { transform:translateY(0); }
+    .modal-close { position:fixed; top:1.5rem; left:1.5rem; z-index:210; background:rgba(6,6,8,0.85); border:1px solid var(--border); color:var(--text); width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:1.2rem; transition:all 0.3s; backdrop-filter:blur(8px); }
+    .modal-close:hover { border-color:var(--gold-dim); color:var(--gold); }
+    .story-hero { height:60vh; position:relative; overflow:hidden; }
+    .story-hero img { width:100%; height:100%; object-fit:cover; filter:grayscale(40%) contrast(1.1); }
+    .story-hero::after { content:''; position:absolute; inset:0; background:linear-gradient(to top,var(--bg) 0%,rgba(6,6,8,0.6) 50%,rgba(6,6,8,0.3) 100%); }
+    .story-hero-content { position:absolute; bottom:3rem; left:50%; transform:translateX(-50%); width:100%; max-width:760px; padding:0 2rem; text-align:center; z-index:1; }
+    .story-cat-label { font-size:0.65rem; font-weight:700; letter-spacing:0.3em; color:var(--red-bright); text-transform:uppercase; margin-bottom:1rem; }
+    .story-main-title { font-family:'Amiri',serif; font-size:clamp(1.8rem,5vw,3.2rem); color:var(--white); line-height:1.3; text-shadow:0 4px 30px rgba(0,0,0,0.8); }
+    .story-body-wrap { max-width:760px; margin:0 auto; padding:4rem 2rem 8rem; }
+    .story-meta-bar { display:flex; align-items:center; justify-content:center; gap:1.5rem; margin-bottom:3rem; padding-bottom:2rem; border-bottom:1px solid var(--border); font-size:0.75rem; color:var(--text-dim); }
+    .story-body { font-family:'Amiri',serif; font-size:1.2rem; line-height:2.3; color:var(--text); text-align:justify; }
+    .story-body p { margin-bottom:1.8rem; }
+    .story-body p:first-child::first-letter { font-size:4rem; float:right; line-height:1; margin-left:0.5rem; margin-top:0.2rem; color:var(--gold); font-family:'Amiri',serif; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:0.6} }
+    @keyframes scrollPulse { 0%,100%{opacity:0.3;transform:scaleY(1)} 50%{opacity:1;transform:scaleY(1.2)} }
+    .reveal { opacity:0; transform:translateY(40px); transition:opacity 0.8s ease,transform 0.8s ease; }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    @media(max-width:900px){ .featured{grid-template-columns:1fr} .featured-img-wrap{height:300px} .stories-grid{grid-template-columns:1fr 1fr} }
+    @media(max-width:600px){ .stories-grid{grid-template-columns:1fr} .featured-content{padding:2rem} .quote-section{padding:2.5rem 1.5rem} .nav-links{display:none} }
   </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
 
-<!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">القصص الأسطورية</a>
   <ul class="nav-links">
@@ -787,281 +149,316 @@
   </ul>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
   <p class="hero-eyebrow">◆ عالم من الظلام والغموض ◆</p>
-  <h1 class="hero-title">
-    القصص
-    <span>الأسطورية</span>
-  </h1>
-  <p class="hero-subtitle">
-    قصص تسكن الذاكرة، وتسكنك بعد أن تنتهي من قراءتها.<br>
-    ادخل إلى عالم لن تخرج منه كما دخلت.
-  </p>
+  <h1 class="hero-title">القصص<span>الأسطورية</span></h1>
+  <p class="hero-subtitle">قصص تسكن الذاكرة، وتسكنك بعد أن تنتهي من قراءتها.<br>ادخل إلى عالم لن تخرج منه كما دخلت.</p>
   <a href="#stories" class="hero-cta">اكتشف القصص ←</a>
-
-  <div class="scroll-indicator">
-    <div class="scroll-line"></div>
-  </div>
+  <div class="scroll-indicator"><div class="scroll-line"></div></div>
 </section>
 
-<!-- MAIN -->
 <main id="stories">
 
-  <!-- SECTION HEADER -->
   <div class="section-header reveal">
-    <span class="section-label">◆ قصة مميزة</span>
+    <span class="section-label">◆ قصة الأسبوع</span>
     <div class="section-line"></div>
   </div>
 
-  <!-- FEATURED STORY -->
-  <article class="featured reveal" onclick="openStory('story1')">
+  <article class="featured reveal" onclick="openStory('s1')">
     <div class="featured-img-wrap">
       <span class="featured-badge">★ مميزة</span>
-      <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=800&q=80&auto=format" alt="البيت المهجور">
+      <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=800&q=80&auto=format" alt="">
     </div>
     <div class="featured-content">
       <div class="featured-meta">
-        <span class="featured-cat">رعب</span>
+        <span class="featured-cat">رعب نفسي</span>
         <div class="featured-dot"></div>
         <span class="featured-date">١٦ مايو ٢٠٢٦</span>
       </div>
-      <h2 class="featured-title">
-        البيت الذي عاد إليه صاحبه بعد موته...
-        قصة مرعبة لن تنساها
-      </h2>
-      <p class="featured-excerpt">
-        في أحد أحياء مدينة صغيرة وهادئة، كان هناك منزل قديم مهجور منذ سنوات.
-        الجيران كانوا يتجنبون الاقتراب منه، ليس لأنه مخيف فقط...
-        بل لأن قصته لم تكن عادية.
-      </p>
+      <h2 class="featured-title">البيت الذي عاد إليه صاحبه بعد موته</h2>
+      <p class="featured-excerpt">قبل أن يدخل ياسين المنزل، قال له الجار العجوز شيئاً واحداً فقط: "لا تنظر في المرآة بعد منتصف الليل." ابتسم ياسين... لم يكن يؤمن بهذه الخرافات.</p>
       <a class="read-btn">اقرأ القصة كاملة ←</a>
     </div>
   </article>
 
-  <!-- MORE STORIES HEADER -->
-  <div class="section-header reveal" style="margin-top: 5rem;">
-    <span class="section-label">◆ المزيد من القصص</span>
+  <div class="section-header reveal" style="margin-top:5rem">
+    <span class="section-label">◆ أحدث القصص</span>
     <div class="section-line"></div>
   </div>
 
-  <!-- STORIES GRID -->
   <div class="stories-grid">
 
-    <article class="story-card reveal" onclick="openStory('story2')">
-      <div class="card-img-wrap">
-        <img class="card-img" src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&q=70&auto=format" alt="الطريق">
-      </div>
+    <article class="story-card reveal" onclick="openStory('s2')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=600&q=70&auto=format" alt=""></div>
       <div class="card-body">
         <span class="card-tag">◆ غموض</span>
         <h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3>
-        <p class="card-excerpt">
-          كنا نقود في منتصف الليل عندما وجدنا طريقاً لم يكن موجوداً على أي خريطة...
-          قررنا السير فيه. لم نخرج منه حتى الصباح.
-        </p>
+        <p class="card-excerpt">كان ريان يعمل سائق شاحنات منذ عشرين سنة. اعتاد الطرق الطويلة والمدن البعيدة... لكنه لم يعتد على طريق يختفي خلفه كلما حاول الرجوع.</p>
       </div>
-      <div class="card-footer">
-        <span class="card-date">١٦ مايو ٢٠٢٦</span>
-        <span class="card-read">اقرأ ←</span>
-      </div>
+      <div class="card-footer"><span class="card-date">١٦ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
     </article>
 
-    <article class="story-card reveal" onclick="openStory('story3')">
-      <div class="card-img-wrap">
-        <img class="card-img" src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=600&q=70&auto=format" alt="الغابة">
-      </div>
+    <article class="story-card reveal" onclick="openStory('s3')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=600&q=70&auto=format" alt=""></div>
       <div class="card-body">
         <span class="card-tag">◆ رعب</span>
-        <h3 class="card-title">الصوت الذي يأتي من داخل الجدران</h3>
-        <p class="card-excerpt">
-          بدأ كل شيء في ليلة شتائية بارد. صوت خفيف، كطرق بعيد من داخل الحائط.
-          أولاً ظننته خيالاً. لكن الصوت لم يتوقف.
-        </p>
+        <h3 class="card-title">صوت أمي في الهاتف</h3>
+        <p class="card-excerpt">اتصلت بي أمي في الساعة 3:17 صباحاً... أمي التي دفناها قبل ثلاثة أشهر. رددت وقلت: "من أنت؟" قالت بهدوء: "أنا أمك يا حبيبي... لماذا تركتني وحدي هناك؟"</p>
       </div>
-      <div class="card-footer">
-        <span class="card-date">١٤ مايو ٢٠٢٦</span>
-        <span class="card-read">اقرأ ←</span>
-      </div>
+      <div class="card-footer"><span class="card-date">١٤ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
     </article>
 
-    <article class="story-card reveal" onclick="openStory('story4')">
-      <div class="card-img-wrap">
-        <img class="card-img" src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=70&auto=format" alt="الظل">
-      </div>
+    <article class="story-card reveal" onclick="openStory('s4')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=70&auto=format" alt=""></div>
       <div class="card-body">
         <span class="card-tag">◆ إثارة</span>
-        <h3 class="card-title">الظل الذي لا صاحب له</h3>
-        <p class="card-excerpt">
-          رأيته لأول مرة في المرآة. ظل يتحرك بينما أنا واقف.
-          أغمضت عيني. لما فتحتهما... لم يكن في المرآة سواه.
-        </p>
+        <h3 class="card-title">الطفل الذي يتحدث مع الجدار</h3>
+        <p class="card-excerpt">منذ انتقلنا إلى المنزل الجديد، وابني كريم يجلس أمام زاوية الغرفة ويتحدث. سألته: "مع من تتكلم؟" قال: "مع الرجل الذي يقول إنك جلست في مكانه."</p>
       </div>
-      <div class="card-footer">
-        <span class="card-date">١٢ مايو ٢٠٢٦</span>
-        <span class="card-read">اقرأ ←</span>
+      <div class="card-footer"><span class="card-date">١٢ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('s5')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=70&auto=format" alt=""></div>
+      <div class="card-body">
+        <span class="card-tag">◆ رعب</span>
+        <h3 class="card-title">الصورة التي تتغير</h3>
+        <p class="card-excerpt">وجدت صورة قديمة في خزانة المنزل المستأجر. عائلة سعيدة، أب وأم وثلاثة أطفال. وضعتها على الطاولة... في اليوم التالي، كان الأب في الصورة يحدق نحوي. لم يكن كذلك من قبل.</p>
       </div>
+      <div class="card-footer"><span class="card-date">١٠ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('s6')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1445991842772-097fea258e7b?w=600&q=70&auto=format" alt=""></div>
+      <div class="card-body">
+        <span class="card-tag">◆ غموض</span>
+        <h3 class="card-title">الغرفة 207</h3>
+        <p class="card-excerpt">طلبت غرفة في الفندق. قال لي موظف الاستقبال بصوت خافت: "أي غرفة إلا 207." سألته لماذا. التفت حوله وقال: "لأن من يبيت فيها... لا يستيقظ صباحاً." ثم ابتسم ابتسامة غريبة وأضاف: "إلا أنت."</p>
+      </div>
+      <div class="card-footer"><span class="card-date">٩ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('s7')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1518972559570-7cc1309f3229?w=600&q=70&auto=format" alt=""></div>
+      <div class="card-body">
+        <span class="card-tag">◆ رعب نفسي</span>
+        <h3 class="card-title">آخر تسجيل</h3>
+        <p class="card-excerpt">وجدت هاتفاً قديماً في محل مستعمل. فيه تسجيل صوتي واحد. مدته ثلاث دقائق. سمعت صوت رجل يبكي ويقول: "لا تفتح الباب... مهما سمعت... لا تفتحه." ثم صوت طرق على الباب... ثم صمت.</p>
+      </div>
+      <div class="card-footer"><span class="card-date">٧ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('s8')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=600&q=70&auto=format" alt=""></div>
+      <div class="card-body">
+        <span class="card-tag">◆ رعب</span>
+        <h3 class="card-title">الرجل الذي يمشي خلفك دائماً</h3>
+        <p class="card-excerpt">لاحظت أن هناك رجلاً يمشي خلفي في الشارع منذ أيام. في كل مكان أذهب إليه. اليوم استدرت فجأة لأواجهه... كان على بعد خطوة واحدة مني. نظر إلي وقال: "أنت تعرفني."</p>
+      </div>
+      <div class="card-footer"><span class="card-date">٥ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('s9')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=600&q=70&auto=format" alt=""></div>
+      <div class="card-body">
+        <span class="card-tag">◆ غموض</span>
+        <h3 class="card-title">المنزل الذي لا يتركك تخرج</h3>
+        <p class="card-excerpt">دخلت المنزل القديم لأفتش فيه بعد أن ورثته من عمي. قررت المغادرة بعد ساعة. فتحت الباب... نفس الغرفة. فتحت نافذة... نفس الغرفة. صرخت... رجع صوتي من الجدران: "لا أحد يخرج."</p>
+      </div>
+      <div class="card-footer"><span class="card-date">٣ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
+    </article>
+
+    <article class="story-card reveal" onclick="openStory('s10')">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=600&q=70&auto=format" alt=""></div>
+      <div class="card-body">
+        <span class="card-tag">◆ رعب نفسي</span>
+        <h3 class="card-title">رسالة كتبتها قبل أن أموت</h3>
+        <p class="card-excerpt">استيقظت اليوم ووجدت رسالة على مكتبي بخط يدي. كتب فيها: "إذا قرأت هذا، فأنت لا تعرف ما حدث الليلة الماضية. لا تنظر خلفك الآن." نظرت خلفي.</p>
+      </div>
+      <div class="card-footer"><span class="card-date">١ مايو ٢٠٢٦</span><span class="card-read">اقرأ ←</span></div>
     </article>
 
   </div>
 
-  <!-- QUOTE -->
   <div class="quote-section reveal" id="about">
-    <p class="quote-text">
-      "أكثر الأشياء رعباً ليست تلك التي نراها،<br>
-      بل تلك التي نشعر بها في الظلام"
-    </p>
+    <p class="quote-text">"أكثر الأشياء رعباً ليست تلك التي نراها...<br>بل تلك التي نشعر بها في الظلام"</p>
     <span class="quote-attr">— القصص الأسطورية</span>
   </div>
-
   <div class="ornament">✦ ✦ ✦</div>
 
 </main>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">القصص الأسطورية</div>
   <ul class="footer-links">
     <li><a href="#">الرئيسية</a></li>
-    <li><a href="#">القصص</a></li>
-    <li><a href="#">تواصل معنا</a></li>
+    <li><a href="#stories">القصص</a></li>
   </ul>
-  <p class="footer-text">
-    © ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة
-  </p>
+  <p class="footer-text">© ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة</p>
 </footer>
 
-<!-- STORY MODAL -->
 <div class="story-modal" id="story-modal">
   <button class="modal-close" onclick="closeStory()">✕</button>
   <div id="modal-content"></div>
 </div>
 
 <script>
-/* ─── PARTICLE CANVAS ─── */
+/* PARTICLES */
 const canvas = document.getElementById('bg-canvas');
 const ctx = canvas.getContext('2d');
 let W, H, particles = [];
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+function Particle(){ this.x=Math.random()*W; this.y=Math.random()*H; this.r=Math.random()*1.2+0.3; this.vx=(Math.random()-0.5)*0.15; this.vy=(Math.random()-0.5)*0.15; this.alpha=Math.random()*0.4+0.05; this.color=Math.random()>0.7?`rgba(200,168,75,${this.alpha})`:`rgba(155,26,26,${this.alpha})`; }
+function init(){ resize(); particles=Array.from({length:120},()=>new Particle()); }
+function animate(){ ctx.clearRect(0,0,W,H); particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fillStyle=p.color; ctx.fill(); }); requestAnimationFrame(animate); }
+init(); animate(); window.addEventListener('resize',resize);
 
-function resize() {
-  W = canvas.width  = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
+/* REVEAL */
+const observer=new IntersectionObserver(entries=>{ entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*80); observer.unobserve(e.target); } }); },{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
 
-function Particle() {
-  this.x = Math.random() * W;
-  this.y = Math.random() * H;
-  this.r = Math.random() * 1.2 + 0.3;
-  this.vx = (Math.random() - 0.5) * 0.15;
-  this.vy = (Math.random() - 0.5) * 0.15;
-  this.alpha = Math.random() * 0.4 + 0.05;
-  this.color = Math.random() > 0.7
-    ? `rgba(200,168,75,${this.alpha})`
-    : `rgba(155,26,26,${this.alpha})`;
-}
-
-function init() {
-  resize();
-  particles = Array.from({length: 120}, () => new Particle());
-}
-
-function animate() {
-  ctx.clearRect(0, 0, W, H);
-  particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = W;
-    if (p.x > W) p.x = 0;
-    if (p.y < 0) p.y = H;
-    if (p.y > H) p.y = 0;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.color;
-    ctx.fill();
-  });
-  requestAnimationFrame(animate);
-}
-
-init();
-animate();
-window.addEventListener('resize', resize);
-
-/* ─── SCROLL REVEAL ─── */
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach((e, i) => {
-    if (e.isIntersecting) {
-      setTimeout(() => e.target.classList.add('visible'), i * 100);
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.1 });
-reveals.forEach(el => observer.observe(el));
-
-/* ─── STORY DATA ─── */
+/* STORIES */
 const stories = {
-  story1: {
-    title: 'البيت الذي عاد إليه صاحبه بعد موته... قصة مرعبة لن تنساها',
-    cat: 'رعب',
-    date: '١٦ مايو ٢٠٢٦',
+  s1: {
+    title: 'البيت الذي عاد إليه صاحبه بعد موته',
+    cat: 'رعب نفسي', date: '١٦ مايو ٢٠٢٦',
     img: 'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=1200&q=80&auto=format',
     body: `
-      <p>في أحد أحياء مدينة صغيرة وهادئة، كان هناك منزل قديم مهجور منذ سنوات. الجيران كانوا يتجنبون الاقتراب منه، ليس لأنه مخيف فقط... بل لأن قصته لم تكن عادية.</p>
-      <p>"كان المنزل يعود لرجل يُدعى سليم. رجل هادئ، يعيش بمفرده، لا يختلط بالناس كثيراً. لكن في أحد الأيام... اختفى فجأة."</p>
-      <p>لا صوت، لا أثر، لا رسالة. وكأنه تبخّر. بعد أيام من البحث، عثرت الشرطة على جثته في غابة بعيدة عن المنزل. تم دفنه، وانتهت القصة... أو هكذا ظن الجميع.</p>
-      <p>مرت سنوات، وبقي المنزل مُقفلاً. حتى جاء ذلك اليوم الذي رأى فيه الجار العجوز ضوءاً يتحرك خلف نوافذ المنزل. قال لنفسه ربما أحد اللصوص. لكن الأمر تكرر في الليالي التالية.</p>
-      <p>وفي صباح يوم بارد، وجد الجيران باب المنزل مفتوحاً. دخلوا بحذر. كانت الأثاث في أماكنها، الغبار يغطي كل شيء... إلا طاولة المطبخ. كانت نظيفة، وعليها كوب قهوة لا يزال دافئاً.</p>
-      <p>فتش الجيران المنزل بالكامل. لم يجدوا أحداً. لكن أحد الأطفال توقف أمام المرآة القديمة في الممر وقال بصوت خافت: "الرجل الذي في المرآة يبتسم لي."</p>
-      <p>التفت الكبار نحو المرآة. لم يروا شيئاً. لكن الطفل أصرّ: "إنه يقول إنه سعيد بعودته."</p>
-      <p>غادر الجميع المنزل بسرعة. ولم يعد أحد يقترب منه... لكن كل ليلة، يرون الضوء يتحرك خلف النوافذ.</p>
-    `
+<p>قبل أن يدخل ياسين المنزل، قال له الجار العجوز شيئاً واحداً فقط: "لا تنظر في المرآة بعد منتصف الليل." ابتسم ياسين... لم يكن يؤمن بهذه الخرافات.</p>
+<p>في الليلة الأولى، كل شيء كان هادئاً... أكثر من اللازم. لكن عند الساعة 2:30 صباحاً، استيقظ على صوت خافت. خطوات. في الطابق العلوي. تجمد في مكانه. تذكر أن المنزل لا يوجد به أحد سواه.</p>
+<p>حاول إقناع نفسه: "ربما مجرد صوت الرياح." لكن الصوت عاد... أثقل هذه المرة... كأن شخصاً يمشي ببطء وثقة. قرر أن يصعد. كل درجة من السلم كانت تصدر صريراً مخيفاً. قلبه كان ينبض بسرعة.</p>
+<p>عندما وصل إلى الأعلى... كان الممر مظلماً. لكن في آخره... كان هناك باب مفتوح قليلاً. ومن داخله... يخرج ضوء خافت مرتجف.</p>
+<p>اقترب ببطء... ودفع الباب. الغرفة كانت فارغة... إلا من مرآة قديمة مغطاة بغبار السنين. نظر إليها... ورأى انعكاسه. رفع يده... لكن الانعكاس بقي ثابتاً. ثم... ابتسم. لكن ياسين... لم يبتسم.</p>
+<p>هرب من الغرفة وقضى بقية الليل مستيقظاً. في الصباح، سأل الجار العجوز: "من كان يسكن هذا المنزل؟" تنهد الرجل وقال: "سليم. رجل هادئ. في أحد الأيام... اختفى فجأة."</p>
+<p>"وجدوه؟" سأل ياسين. "وجدوا جثة..." قال الجار. "لكنها لم تكن واضحة الوجه. دفنوه وانتهت القصة." صمت ثم أضاف: "المشكلة... أن سليم... كان يشبهك تماماً."</p>
+<p>في تلك الليلة، دخل ياسين الغرفة مرة أخرى بشجاعة. فتح المرآة ونظر. هذه المرة... لم ير انعكاسه. بل رأى رجلاً واقفاً خلفه يبتسم. التفت بسرعة... لم يكن هناك أحد. عاد للمرآة... الرجل لا يزال هناك. يومئ برأسه ببطء... كمن يقول: "أهلاً بك في بيتك."</p>
+`
   },
-  story2: {
+  s2: {
     title: 'الطريق الذي لا يظهر على الخريطة',
-    cat: 'غموض',
-    date: '١٦ مايو ٢٠٢٦',
+    cat: 'غموض', date: '١٦ مايو ٢٠٢٦',
     img: 'https://images.unsplash.com/photo-1515879218367-8466d910aaa4?w=1200&q=80&auto=format',
     body: `
-      <p>كنا نقود في منتصف الليل، أنا وصديقي، على الطريق السريع الصحراوي عندما ظهر أمامنا انعطاف لم يكن على أي خريطة. لافتة صدئة تقول: "طريق الواحة — ٤ كم".</p>
-      <p>قال صديقي: "ربما طريق قديم لا يظهر على التطبيق." قررنا أن نكمل. أردنا الوصول قبل الفجر.</p>
-      <p>أربعة كيلومترات مرت. ثم ثمانية. ثم الكيلومتر السادس عشر. لا واحة، لا نهاية للطريق، فقط الظلام والرمال من الجانبين.</p>
-      <p>حين أردنا الرجوع، وجدنا أن الطريق خلفنا اختفى. لم يكن هناك إلا رمال ممتدة كما لو أننا لم نمر من هناك أصلاً.</p>
-      <p>واصلنا السير إلى الأمام. لم يكن هناك خيار آخر. وعند الفجر بالضبط، وجدنا أنفسنا على الطريق السريع الرئيسي مجدداً. في نفس النقطة التي انعطفنا منها.</p>
-      <p>الغريب أن الرحلة التي استغرقت ساعات، لم تستهلك من الوقود سوى كميات قليلة جداً. وعندما بحثنا عن تلك اللافتة الصدئة في اليوم التالي، لم نجدها.</p>
-    `
+<p>كان ريان يعمل سائق شاحنات منذ عشرين سنة. اعتاد الطرق الطويلة، والليالي الوحيدة، والأماكن المهجورة... لكنه لم يعتد على ما حدث تلك الليلة.</p>
+<p>كان يقود على الطريق الصحراوي الطويل عندما ظهرت لافتة صدئة على الجانب الأيمن: "طريق الواحة — ٤ كم." لم يكن هذا الطريق موجوداً على خريطته. لكن كانت الساعة متأخرة، وأراد اختصار المسافة.</p>
+<p>أربعة كيلومترات مرت. ثم ثمانية. ثم اثنا عشر. لا واحة، لا نهاية للطريق... فقط الأسفلت الأسود والرمال من الجانبين والظلام من الأمام. قرر الرجوع.</p>
+<p>لكن حين نظر في المرآة الخلفية... لم يكن هناك طريق. فقط رمال ممتدة كما لو أنه هبط من السماء في هذا المكان.</p>
+<p>واصل السير إلى الأمام. لم يكن هناك خيار. بعد ساعة، لاحظ شيئاً غريباً... عقربا الساعة لم يتحركا. ظلت الساعة 2:47 صباحاً طوال الوقت.</p>
+<p>عند "الفجر" فجأة، وجد نفسه على الطريق السريع الرئيسي. في نفس النقطة التي انعطف منها. كأن شيئاً لم يحدث. نظر إلى الساعة... 2:47 صباحاً. لم يمضِ دقيقة واحدة.</p>
+<p>وحين فتح باب الشاحنة ليتنفس الهواء... وجد على المقعد المجاور ورقة مطوية. فتحها. كان مكتوباً فيها بخطه هو: "لا ترجع."</p>
+`
   },
-  story3: {
-    title: 'الصوت الذي يأتي من داخل الجدران',
-    cat: 'رعب',
-    date: '١٤ مايو ٢٠٢٦',
+  s3: {
+    title: 'صوت أمي في الهاتف',
+    cat: 'رعب', date: '١٤ مايو ٢٠٢٦',
     img: 'https://images.unsplash.com/photo-1476231682828-37e571bc172f?w=1200&q=80&auto=format',
     body: `
-      <p>بدأ كل شيء في ليلة شتائية باردة. صوت خفيف، كطرق بعيد من داخل الحائط. أولاً ظننته خيالاً. الرياح، ربما، أو الحرارة المركزية. لكن الصوت لم يتوقف.</p>
-      <p>في اليوم الثالث، بدأت أتتبعه. كان يبدو من جدار غرفة النوم الغربية. طرقت على الجدار. توقف الصوت للحظة. ثم أجابني بثلاث طرقات.</p>
-      <p>استدعيت عمالاً لفتح الجدار، ظناً منا أن قطة أو حيواناً ما محاصر هناك. حين فتحوا الجدار، وجدوا فراغاً قديماً. غرفة صغيرة مختومة، يبدو أنها بُنيت في الجدار منذ عشرات السنين.</p>
-      <p>داخلها كان هناك كرسي قديم، ومنضدة عليها صورة لعائلة. الأم، الأب، وطفلان. لم نتعرف على أحد. لكن جارتي العجوز حين رأت الصورة، أمسكت بصدرها وقالت: "هؤلاء عاشوا هنا قبل خمسين عاماً. جميعهم ماتوا في حادثة."</p>
-      <p>أغلقنا الغرفة من جديد. في تلك الليلة، عادت الطرقات. لكنها هذه المرة كانت أربعاً. عدد أفراد الأسرة في الصورة.</p>
-    `
+<p>اتصلت بي أمي في الساعة 3:17 صباحاً. رأيت اسمها على الشاشة وقلبي توقف... لأن أمي توفيت قبل ثلاثة أشهر. دفناها بأيدينا.</p>
+<p>رددت. كان هناك صمت طويل... ثم صوتها. نفس الصوت. نفس النبرة. نفس الدفء الذي أعرفه منذ طفولتي. قالت: "أنا بخير يا حبيبي. لا تحزن عليّ."</p>
+<p>لم أستطع الكلام. أخذت نفساً عميقاً وقلت بصوت مرتجف: "أمي؟" قالت: "نعم يا ولدي." ثم صمتت قليلاً وأضافت: "لكن... لماذا تركت بابها مفتوحاً؟"</p>
+<p>"باب من؟" سألت. ردت بهدوء: "الباب الذي بيني وبينكم. من دفنك... لم يغلقه جيداً." شعرت ببرودة تسري في جسمي كله.</p>
+<p>حاولت أن أسألها أكثر، لكنها قالت: "اسمع... هناك من يريد العبور من هذا الباب. ليس كلهم طيبون مثلي. اذهب الآن وأغلق الباب." وانقطع الاتصال.</p>
+<p>أخذت هاتفي ونظرت في سجل المكالمات. لم يكن هناك أي اتصال. لكن البطارية... كانت فارغة تماماً. رغم أنها كانت مشحونة 100% قبل نومي.</p>
+<p>ذهبت في اليوم التالي إلى المقبرة. وقفت أمام قبر أمي... ورأيت أن التراب حوله كان مفككاً... كما لو أن أحداً حاول الخروج. أو الدخول.</p>
+`
   },
-  story4: {
-    title: 'الظل الذي لا صاحب له',
-    cat: 'إثارة',
-    date: '١٢ مايو ٢٠٢٦',
-    img: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1200&q=80&auto=format',
+  s4: {
+    title: 'الطفل الذي يتحدث مع الجدار',
+    cat: 'إثارة', date: '١٢ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=70&auto=format',
     body: `
-      <p>رأيته لأول مرة في مرآة الحمام. ظل يتحرك خلفي بينما أنا واقف ساكناً تماماً. أغمضت عيني بسرعة وفتحتهما. لم يكن في المرآة سواه.</p>
-      <p>خرجت من الحمام بسرعة. قلت لنفسي إجهاد، قلة نوم، ربما توهم. لكن في اليوم التالي حدث نفس الشيء. وفي اليوم الثالث أيضاً.</p>
-      <p>بدأت أصوّر المرآة بكاميرا تعمل طوال الليل. في الصباح حين راجعت التسجيل، رأيت الظل يتحرك في المرآة حتى حين كنت أنا نائماً بعيداً.</p>
-      <p>ذهبت إلى جارتي القديمة التي تعرف تاريخ الحي. حين وصفت لها ما أراه، أحكمت إغلاق نوافذها وقالت: "تلك المرآة قديمة. كانت في منزل رجل فقد ظله ذات يوم."</p>
-      <p>لم أفهم ما تعني. لكنها أضافت: "الظل يبحث عن صاحبه. وإذا وجده... لن يتركه."</p>
-      <p>في تلك الليلة كسرت المرآة. لكن الظل لا يزال هناك. يمشي معي أينما ذهبت. فقط لا أستطيع أن أراه إلا في المرايا.</p>
-    `
+<p>منذ انتقلنا إلى المنزل الجديد قبل أسبوعين، وابني كريم ذو الخمس سنوات يجلس كل مساء أمام زاوية الغرفة ويتحدث. يضحك أحياناً... أحياناً يهمس.</p>
+<p>في البداية ظننته يتخيل. الأطفال يفعلون ذلك. لكن في اليوم الخامس، سمعته يقول: "حسناً، سأخبره." جاء إليّ وقال: "الرجل يقول إنك جالس في مكانه ويريد كرسيه."</p>
+<p>حاولت أن أبقى هادئاً. سألته: "أي رجل يا كريم؟" أشار نحو الزاوية. "ذاك الرجل. الذي لا يمشي بشكل صحيح." نظرت. لم أرَ شيئاً. لكن كريم واصل: "يقول إنك لا ترى لأنك لا تريد أن ترى."</p>
+<p>تحدثت مع جارتي العجوز التي عاشت في الحي منذ عشرين سنة. حين ذكرت لها المنزل، تجهم وجهها. قالت: "الرجل الذي كان يسكنه مات في تلك الزاوية بالضبط. وحيداً. لم يجده أحد إلا بعد أسبوع."</p>
+<p>في تلك الليلة، قررت أن أتحدث مع كريم بجدية. قلت له: "قل للرجل أننا نحترمه ونريد أن نعيش بسلام." ذهب كريم إلى الزاوية وتحدث بهدوء. ثم عاد وقال: "قال حسناً. لكنه يريد أن يعرف... لماذا لم يحضر أحد من أصحابه لزيارته حين كان مريضاً؟"</p>
+<p>لم أجد جواباً. وفي الصباح، وجدت في الزاوية قطعة ورق صفراء قديمة. عليها اسم ورقم هاتف. اتصلت بالرقم. رد رجل وبدا مندهشاً. قال: "من أنت؟ هذا رقم صديق لم نسمع عنه منذ سنوات." ثم صمت وأضاف: "هل... هل هو بخير؟"</p>
+`
+  },
+  s5: {
+    title: 'الصورة التي تتغير',
+    cat: 'رعب', date: '١٠ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80&auto=format',
+    body: `
+<p>وجدت الصورة في الدرج العلوي للخزانة حين انتقلت للمنزل المستأجر. صورة عائلية قديمة، بالأبيض والأسود. أب، أم، وثلاثة أطفال. جميعهم يبتسمون. وضعتها على الطاولة بدلاً من رميها.</p>
+<p>في اليوم التالي، لاحظت أن الأب في الصورة... كان ينظر نحوي. كنت متأكداً أنه كان ينظر نحو الكاميرا في الأول. قلت لنفسي ربما الإضاءة. صورة قديمة، من الممكن أن أكون مخطئاً.</p>
+<p>في اليوم الثالث، كان الأب في الصورة واقفاً. في الصورة الأصلية كان جالساً. قلبت الصورة لأرى إذا كان هناك شيء مكتوب خلفها. كان هناك تاريخ: "١٩٦٢" واسم المنزل... نفس عنواني.</p>
+<p>بحثت في الأرشيف البلدي. العائلة في الصورة... اختفت كلها في عام ١٩٦٣. دون أي سبب معروف. لم يعثر على أي أثر لهم. المنزل أُغلق لسنوات ثم أُعيد تأجيره.</p>
+<p>في اليوم السابع، كان الأب في الصورة يقف خارج الإطار تماماً. يعني الصورة باتت فيها الأم والأطفال فقط. والأم... كانت تبكي. لكن الغريب... أن مكان الأب الفارغ في الصورة... كان بجواري أنا في الصورة الآن.</p>
+<p>لا أعرف متى دخلت الصورة. لكن وجهي كان واضحاً. وكنت... أبتسم بطريقة لا أتذكر أنني ابتسمتها يوماً.</p>
+`
+  },
+  s6: {
+    title: 'الغرفة 207',
+    cat: 'غموض', date: '٩ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1445991842772-097fea258e7b?w=1200&q=80&auto=format',
+    body: `
+<p>كنت في مدينة غريبة، متأخراً، ومرهقاً. دخلت أول فندق وجدته. قال لي موظف الاستقبال بصوت خافت وهو يحدق في شاشته: "أي غرفة تريد... إلا 207." سألته: "لماذا؟" رفع عينيه ببطء ونظر إليّ. "لأن من يبيت فيها لا يستيقظ صباحاً." توقف ثم أضاف: "إلا أنت."</p>
+<p>جمدت في مكاني. "إلا أنا؟ كيف تعرف؟" ابتسم ابتسامة صغيرة غريبة. "لأن صاحبها ينتظرك منذ وقت طويل."</p>
+<p>كان يجب أن أغادر. لكنني لم أغادر. أخذت مفتاح غرفة أخرى... ثم في الليل، وجدت نفسي أمشي نحو الممر رقم 2. وقفت أمام الباب 207. كان مضاءً من الداخل، مع أن الفندق قال إنها فارغة.</p>
+<p>فتحت الباب. كانت الغرفة عادية تماماً... إلا من رجل جالس على الكرسي بالقرب من النافذة. ظهره نحوي. قلت: "آسف، أظن هذه غرفتي بالخطأ." قال دون أن يلتفت: "لا. هذه غرفتك بالضبط."</p>
+<p>التفت نحوي ببطء شديد. ووجهه... كان وجهي. نفس الملامح. نفس الندبة فوق الحاجب الأيسر. قال: "جلست هنا أنتظرك منذ ثلاث سنوات. منذ تلك الليلة التي قررت فيها أن تنسى."</p>
+<p>"تنسى ماذا؟" سألت. قال بهدوء: "الحادثة. والرجل الذي تركته وهرب منه في تلك الليلة الباردة." وحين قال ذلك... تذكرت كل شيء. وفهمت لماذا ظللت هارباً منذ ثلاث سنوات.</p>
+`
+  },
+  s7: {
+    title: 'آخر تسجيل',
+    cat: 'رعب نفسي', date: '٧ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1518972559570-7cc1309f3229?w=1200&q=80&auto=format',
+    body: `
+<p>وجدت الهاتف في محل الأغراض المستعملة. هاتف قديم بسيط، بسعر رمزي. اشتريته واستخرجت بطاقة الذاكرة فضولاً. لم يكن فيها سوى ملف صوتي واحد. مدته ثلاث دقائق واثنتا عشرة ثانية.</p>
+<p>شغلته. سمعت في البداية تنفساً ثقيلاً. ثم صوت رجل يبكي بصمت... ذلك البكاء الذي يحاول فيه الإنسان أن يكتم صوته ولا يستطيع. قال بصوت مرتجف: "إذا سمع أحد هذا التسجيل... لا تفتح الباب. مهما طرقوا. مهما سمعت. لا تفتح الباب."</p>
+<p>صمت لثلاثين ثانية. ثم صوت طرق على الباب. ثلاث طرقات هادئة. قال الرجل بهمس: "ابدأوا." ثم صراخ مكتوم... ثم صمت تام.</p>
+<p>حاولت أن أعرف من يكون هذا الرجل. ذهبت لصاحب المحل وسألته من أين اشترى الهاتف. قال إنه وجده في حقيبة بجوار أحد المباني المهجورة. أعطاني العنوان.</p>
+<p>ذهبت إلى المبنى. كان مغلقاً منذ سنوات. كسرت القفل ودخلت. في إحدى الغرف، على الأرض... كان هناك هاتف آخر. نفس الطراز. وبجانبه ورقة مكتوب عليها: "التسجيل الأول لمن يجد الهاتف — لا تأتِ إلى هنا."</p>
+<p>وفي تلك اللحظة بالضبط... سمعت طرقاً على الباب. ثلاث طرقات هادئة. من الداخل.</p>
+`
+  },
+  s8: {
+    title: 'الرجل الذي يمشي خلفك دائماً',
+    cat: 'رعب', date: '٥ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=80&auto=format',
+    body: `
+<p>لاحظته لأول مرة يوم الإثنين. رجل طويل بمعطف رمادي يمشي خلفي في الشارع. لم أعطه اهتماماً. المدينة مكتظة والناس تمشي.</p>
+<p>في يوم الثلاثاء، رأيته مجدداً. أمام محل البقالة. ثم خلفي في الباص. ثم في الشارع المقابل لبيتي. وقف ونظر نحو نافذتي. قلت صدفة.</p>
+<p>في يوم الأربعاء، تعمدت أن أسلك طرقاً مختلفة. حارات جانبية، دروباً ضيقة. في كل مرة أنظر... كان هناك. يمشي بنفس السرعة. لا يقترب. لا يبتعد.</p>
+<p>في يوم الخميس، قررت أن أواجهه. استدرت فجأة. كان على بعد خطوة واحدة مني. لم أسمع خطواته رغم أنه كان قريباً جداً. نظر إليّ بعيون لا تعبّر عن شيء. قلت بصوت حازم: "من أنت؟ وماذا تريد مني؟" قال بهدوء مطلق: "أنت تعرفني."</p>
+<p>نظرت في وجهه بتركيز... وبدأ شيء ما يتحرك في ذاكرتي. "لا أعرفك." قال: "نعم تعرفني. أنا ذلك الرجل الذي تجاهلته يوم كنت تستطيع مساعدته. تذكر؟ الشتاء الماضي. الجسر."</p>
+<p>وفجأة... تذكرت. رجل كان يقف على حافة الجسر في ليلة باردة. نظرت إليه ومشيت. لم أقف. قلت لنفسي إنه يتنزه. قلت لنفسي ليس من شأني.</p>
+<p>قال الرجل بنفس الهدوء: "لقد انتظرت أن يوقفني أحد." ثم... اختفى. كما لو أنه لم يكن موجوداً. ومنذ تلك اللحظة... لم أستطع أن أمشي في الشارع دون أن أشعر بأنه لا يزال خلفي.</p>
+`
+  },
+  s9: {
+    title: 'المنزل الذي لا يتركك تخرج',
+    cat: 'غموض', date: '٣ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=1200&q=80&auto=format',
+    body: `
+<p>ورثت المنزل من عمي الذي توفي قبل شهرين. ذهبت إليه في الصباح لأفتشه قبل البيع. بيت قديم في الضواحي. بابه الخشبي ثقيل. مفتاحه صدئ. دخلت.</p>
+<p>أمضيت ساعة أتفقد الغرف. كل شيء قديم ومغبر. قررت المغادرة. فتحت الباب الرئيسي... ووجدت نفسي في غرفة الجلوس. نفس الغرفة التي بدأت منها. جربت مرة أخرى. نفس الشيء.</p>
+<p>فتشت عن نافذة. وجدت واحدة. فتحتها ونظرت إلى الخارج... فرأيت غرفة الجلوس من الداخل. كأن النافذة تطل على نفس المكان الذي أنا فيه.</p>
+<p>صرخت طلباً للمساعدة. جاء صدى صوتي من الجدران. لكن ليس كما يعود الصدى عادة... بل بعد ثانيتين. وبلهجة مختلفة قليلاً. كما لو أن شخصاً آخر يكرر ما أقوله.</p>
+<p>جلست وحاولت أن أفكر بهدوء. وجدت في أحد الأدراج دفتراً قديماً لعمي. فتحته على آخر صفحة. كان مكتوباً بخط مرتجف: "المنزل لا يتركك تخرج إلا إذا وجدت ما جئت تبحث عنه حقاً."</p>
+<p>جلست أفكر. لماذا جئت؟ قلت لنفسي: للبيع. لكن في العمق... كنت أريد أن أجد شيئاً من ذكريات عمي الذي لم يودعني. وحين قلت ذلك بصوت عالٍ... فتح الباب من تلقاء نفسه. وعلى العتبة... كانت صورة قديمة لي ولعمي، أنا طفل، وهو يمسك يدي.</p>
+`
+  },
+  s10: {
+    title: 'رسالة كتبتها قبل أن أموت',
+    cat: 'رعب نفسي', date: '١ مايو ٢٠٢٦',
+    img: 'https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=1200&q=80&auto=format',
+    body: `
+<p>استيقظت اليوم في الساعة السابعة صباحاً. كل شيء عادي. ذهبت إلى المطبخ لأحضر القهوة... ورأيت على المكتب ورقة مطوية. فتحتها. كان الخط... خطي أنا. والورقة مكتوب فيها:</p>
+<p>"إذا قرأت هذا فأنت لم تتذكر ما حدث الليلة الماضية. هذا طبيعي. يحدث دائماً. لا تنظر خلفك الآن. اقرأ أولاً."</p>
+<p>نظرت خلفي. لم يكن هناك شيء. عدت للورقة: "قلت لك لا تنظر. لكنك نظرت. إذن أنت مثلنا جميعاً... فضولي حتى في اللحظات الخاطئة. اسمع: الليلة الماضية رأيت شيئاً لا يجب أن يراه أحد. وكتبت هذه الرسالة لنفسك قبل أن ينسي عقلك كل شيء كما يفعل دائماً لحماية صاحبه."</p>
+<p>توقفت عن القراءة. أصابعي ترتجف. واصلت: "الشيء الذي رأيته ليس مهماً الآن. المهم أن تعرف: هو يعرف أنك رأيته. وهو يعرف أنك تقرأ هذا الآن. لا تلتفت نحو النافذة."</p>
+<p>التفت نحو النافذة. لم يكن هناك شيء. عدت للورقة والسطر الأخير: "في كل مرة تقرأ هذه الرسالة... تقترب المسافة بينكما خطوة. هذه هي المرة السابعة."</p>
+<p>أسقطت الورقة. وفي تلك اللحظة... سمعت خطوة واحدة. من خلفي مباشرة. وشعرت بنفس بارد على رقبتي.</p>
+`
   }
 };
 
-/* ─── MODAL FUNCTIONS ─── */
-function openStory(id) {
-  const s = stories[id];
-  if (!s) return;
-  document.getElementById('modal-content').innerHTML = `
+function openStory(id){
+  const s=stories[id]; if(!s) return;
+  document.getElementById('modal-content').innerHTML=`
     <div class="story-hero">
       <img src="${s.img}" alt="${s.title}">
       <div class="story-hero-content">
@@ -1070,30 +467,21 @@ function openStory(id) {
       </div>
     </div>
     <div class="story-body-wrap">
-      <div class="story-meta-bar">
-        <span>${s.date}</span>
-        <span>◆</span>
-        <span>${s.cat}</span>
-        <span>◆</span>
-        <span>القصص الأسطورية</span>
-      </div>
+      <div class="story-meta-bar"><span>${s.date}</span><span>◆</span><span>${s.cat}</span><span>◆</span><span>القصص الأسطورية</span></div>
       <div class="story-body">${s.body}</div>
-    </div>
-  `;
-  const modal = document.getElementById('story-modal');
+    </div>`;
+  const modal=document.getElementById('story-modal');
   modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  modal.scrollTop=0;
+  document.body.style.overflow='hidden';
 }
 
-function closeStory() {
+function closeStory(){
   document.getElementById('story-modal').classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow='';
 }
 
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeStory();
-});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeStory(); });
 </script>
-
 </body>
 </html>
