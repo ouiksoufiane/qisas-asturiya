@@ -73,19 +73,13 @@
     .sec-link{font-size:0.72rem;color:var(--text-dim);text-decoration:none;white-space:nowrap;transition:color 0.3s}
     .sec-link:hover{color:var(--gold)}
 
-    /* CONCEPT INTRO */
-    .concept-intro{margin-bottom:3rem;padding:2rem 2.5rem;border:1px solid var(--border);text-align:center;position:relative;background:linear-gradient(135deg,rgba(200,168,75,0.03),transparent)}
-    .concept-intro::before,.concept-intro::after{content:'';position:absolute;width:30px;height:30px;border-color:var(--gold-dim);border-style:solid;opacity:0.2}
-    .concept-intro::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
-    .concept-intro::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
-    .concept-title{font-family:'Amiri',serif;font-size:1.35rem;color:var(--white);margin-bottom:0.5rem}
-    .concept-sub{font-size:0.82rem;color:var(--text-dim);margin-bottom:1.4rem;line-height:1.8}
-    .concept-pills{display:flex;align-items:center;justify-content:center;gap:0.6rem;flex-wrap:wrap}
-    .c-pill{font-size:0.75rem;font-weight:600;padding:0.3rem 0.85rem;border:1px solid;letter-spacing:0.05em}
-    .c-pill-t{color:var(--gold);border-color:rgba(200,168,75,0.35);background:rgba(200,168,75,0.05)}
-    .c-pill-v{color:var(--red-bright);border-color:rgba(204,34,34,0.35);background:rgba(204,34,34,0.05)}
-    .c-pill-ai{color:var(--blue-bright);border-color:rgba(42,122,191,0.35);background:rgba(42,122,191,0.05)}
-    .c-arrow{color:var(--text-dim);font-size:0.8rem;opacity:0.5}
+    /* THREE WORLDS INTRO */
+    .worlds-intro{margin-bottom:3rem;padding:2rem 2.5rem;border:1px solid var(--border);text-align:center;position:relative;background:linear-gradient(135deg,rgba(200,168,75,0.03),transparent)}
+    .worlds-intro::before,.worlds-intro::after{content:'';position:absolute;width:30px;height:30px;border-color:var(--gold-dim);border-style:solid;opacity:0.2}
+    .worlds-intro::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
+    .worlds-intro::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
+    .worlds-title{font-family:'Amiri',serif;font-size:1.3rem;color:var(--white);margin-bottom:0.75rem}
+    .worlds-sub{font-size:0.85rem;color:var(--text-dim);line-height:2;max-width:600px;margin:0 auto}
 
     /* FEATURED — fixed: div not a, each button has its own link */
     .featured{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:5rem;border:1px solid var(--border);overflow:hidden;color:inherit;transition:border-color 0.3s}
@@ -136,24 +130,11 @@
     .card-title-link:hover .card-title{color:var(--gold)}
     .card-excerpt{font-size:0.8rem;line-height:1.8;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-    /* STATUS BADGES — availability indicator */
-    .card-status{display:flex;gap:0.35rem;padding:0.75rem 1.3rem 0;flex-wrap:wrap}
-    .s-badge{font-size:0.56rem;padding:0.14rem 0.42rem;border:1px solid;font-weight:700;letter-spacing:0.06em;white-space:nowrap}
-    .s-avail{color:var(--gold);border-color:rgba(200,168,75,0.4);background:rgba(200,168,75,0.07)}
-    .s-soon{color:var(--text-dim);border-color:var(--border);opacity:0.7}
-    .s-soon-v{color:rgba(204,34,34,0.5);border-color:rgba(204,34,34,0.2)}
-    .s-soon-ai{color:rgba(42,122,191,0.5);border-color:rgba(42,122,191,0.2)}
-
     .card-footer{padding:0.8rem 1.3rem 1.3rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-    .card-date{font-size:0.65rem;color:var(--text-dim)}
-    .card-btns{display:flex;gap:0.4rem}
-    .c-btn{font-size:0.62rem;font-weight:700;letter-spacing:0.05em;padding:0.25rem 0.55rem;border:1px solid;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center}
-    .c-btn-r{color:var(--gold);border-color:rgba(200,168,75,0.3)}
-    .c-btn-r:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
-    .c-btn-v{color:var(--red-bright);border-color:rgba(204,34,34,0.3)}
-    .c-btn-v:hover{border-color:var(--red-bright);background:rgba(204,34,34,0.08)}
-    .c-btn-ai{color:var(--blue-bright);border-color:rgba(42,122,191,0.3)}
-    .c-btn-ai:hover{border-color:var(--blue-bright);background:rgba(42,122,191,0.08)}
+    .card-meta{font-size:0.65rem;color:var(--text-dim);display:flex;align-items:center;gap:0.5rem}
+    .card-meta-dot{width:2px;height:2px;border-radius:50%;background:var(--text-dim)}
+    .c-btn-read{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;padding:0.3rem 0.85rem;border:1px solid rgba(200,168,75,0.3);color:var(--gold);text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:0.3rem}
+    .c-btn-read:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
 
     /* VIDEO CARDS */
     .videos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
@@ -267,13 +248,13 @@
     <a href="#video-section" class="pillar pillar-v">
       <span class="pillar-icon">🎬</span>
       <p class="pillar-name">قصص بالفيديو</p>
-      <p class="pillar-desc">أفضل فيديوهات قصص الرعب العربية، مختارة بعناية وموجودة في مكان واحد</p>
+      <p class="pillar-desc">فيديوهات رعب وغموض مختارة من مصادرها، مجمعة في مكان واحد لتستمتع بالمشاهدة</p>
       <span class="pillar-count">٦ فيديوهات مختارة</span>
     </a>
     <a href="#ai-section" class="pillar pillar-ai">
       <span class="pillar-icon">🤖</span>
       <p class="pillar-name">قصص الذكاء الاصطناعي</p>
-      <p class="pillar-desc">قصص أصيلة تُروى بأصوات وشخصيات مولَّدة بالذكاء الاصطناعي — قريباً</p>
+      <p class="pillar-desc">قصص ومشاهد جديدة ومستقلة، تُولَد بالصوت والصورة باستخدام الذكاء الاصطناعي</p>
       <span class="pillar-count">٦ قصص قادمة</span>
     </a>
   </div>
@@ -291,17 +272,15 @@
       <a href="story.html?id=s1" class="sec-link">كل القصص ←</a>
     </div>
 
-    <!-- CONCEPT INTRO -->
-    <div class="concept-intro reveal">
-      <p class="concept-title">اختر طريقتك لدخول الحكاية</p>
-      <p class="concept-sub">كل قصة في عالم القصص الأسطورية يمكن أن تعيشها بثلاث طرق مختلفة</p>
-      <div class="concept-pills">
-        <span class="c-pill c-pill-t">📖 اقرأها</span>
-        <span class="c-arrow">←</span>
-        <span class="c-pill c-pill-v">🎬 شاهدها</span>
-        <span class="c-arrow">←</span>
-        <span class="c-pill c-pill-ai">🤖 عِشها بالذكاء الاصطناعي</span>
-      </div>
+    <!-- THREE WORLDS INTRO -->
+    <div class="worlds-intro reveal">
+      <p class="worlds-title">◆ ثلاثة عوالم من الحكايات ◆</p>
+      <p class="worlds-sub">
+        في القصص الأسطورية، لا توجد طريقة واحدة لدخول عالم الغموض.<br>
+        <strong style="color:var(--gold)">نكتب الحكايات</strong>،
+        <strong style="color:var(--red-bright)">نختار الفيديوهات</strong>،
+        ونصنع <strong style="color:var(--blue-bright)">عوالم جديدة بالذكاء الاصطناعي</strong>.
+      </p>
     </div>
 
     <!-- FEATURED — div wrapper, each button has its own link -->
@@ -322,15 +301,8 @@
           <h2 class="fi-title">البيت الذي عاد إليه صاحبه بعد موته</h2>
         </a>
         <p class="fi-excerpt">قبل أن يدخل ياسين المنزل، قال له الجار العجوز: "لا تنظر في المرآة بعد منتصف الليل." ابتسم ياسين... لكن الليلة الأولى غيّرت كل شيء.</p>
-        <div class="fi-avail">
-          <span class="fi-avail-badge fi-avail-r">📖 متاح للقراءة</span>
-          <span class="fi-avail-badge fi-avail-v">🎬 الفيديو قريباً</span>
-          <span class="fi-avail-badge fi-avail-ai">🤖 AI قيد الإنتاج</span>
-        </div>
         <div class="fi-btns">
-          <a href="story.html?id=s1" class="fi-btn fi-btn-read">📖 اقرأ القصة</a>
-          <a href="videos.html" class="fi-btn fi-btn-watch">🎬 شاهد الفيديو</a>
-          <a href="ai-videos.html" class="fi-btn fi-btn-ai">🤖 نسخة AI</a>
+          <a href="story.html?id=s1" class="fi-btn fi-btn-read">📖 اقرأ القصة الآن</a>
         </div>
       </div>
     </div>
@@ -347,18 +319,9 @@
           <a href="story.html?id=s2" class="card-title-link"><h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3></a>
           <p class="card-excerpt">سائق شاحنات محترف منذ عشرين سنة دخل طريقاً غير موجود... واختفى خلفه.</p>
         </div>
-        <div class="card-status">
-          <span class="s-badge s-avail">📖 متاح</span>
-          <span class="s-badge s-soon-v">🎬 قريباً</span>
-          <span class="s-badge s-soon-ai">🤖 قيد الإنتاج</span>
-        </div>
         <div class="card-footer">
-          <span class="card-date">١٦ مايو</span>
-          <div class="card-btns">
-            <a href="story.html?id=s2" class="c-btn c-btn-r">📖 اقرأ</a>
-            <a href="videos.html" class="c-btn c-btn-v">🎬</a>
-            <a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a>
-          </div>
+          <div class="card-meta"><span>١٦ مايو</span><div class="card-meta-dot"></div><span>٨ دقائق</span></div>
+          <a href="story.html?id=s2" class="c-btn-read">اقرأ ←</a>
         </div>
       </div>
 
@@ -371,18 +334,9 @@
           <a href="story.html?id=s3" class="card-title-link"><h3 class="card-title">صوت أمي في الهاتف</h3></a>
           <p class="card-excerpt">اتصلت به في الساعة 3:17 صباحاً... أمه التي دفنها قبل ثلاثة أشهر.</p>
         </div>
-        <div class="card-status">
-          <span class="s-badge s-avail">📖 متاح</span>
-          <span class="s-badge s-soon-v">🎬 قريباً</span>
-          <span class="s-badge s-soon-ai">🤖 قيد الإنتاج</span>
-        </div>
         <div class="card-footer">
-          <span class="card-date">١٤ مايو</span>
-          <div class="card-btns">
-            <a href="story.html?id=s3" class="c-btn c-btn-r">📖 اقرأ</a>
-            <a href="videos.html" class="c-btn c-btn-v">🎬</a>
-            <a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a>
-          </div>
+          <div class="card-meta"><span>١٤ مايو</span><div class="card-meta-dot"></div><span>١٢ دقيقة</span></div>
+          <a href="story.html?id=s3" class="c-btn-read">اقرأ ←</a>
         </div>
       </div>
 
@@ -395,18 +349,9 @@
           <a href="story.html?id=s4" class="card-title-link"><h3 class="card-title">الطفل الذي يتحدث مع الجدار</h3></a>
           <p class="card-excerpt">ابنه يتحدث كل مساء مع "الرجل" في الزاوية. أرسل له رسائل لم يستطع أحد تجاهلها.</p>
         </div>
-        <div class="card-status">
-          <span class="s-badge s-avail">📖 متاح</span>
-          <span class="s-badge s-soon-v">🎬 قريباً</span>
-          <span class="s-badge s-soon-ai">🤖 قيد الإنتاج</span>
-        </div>
         <div class="card-footer">
-          <span class="card-date">١٢ مايو</span>
-          <div class="card-btns">
-            <a href="story.html?id=s4" class="c-btn c-btn-r">📖 اقرأ</a>
-            <a href="videos.html" class="c-btn c-btn-v">🎬</a>
-            <a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a>
-          </div>
+          <div class="card-meta"><span>١٢ مايو</span><div class="card-meta-dot"></div><span>٩ دقائق</span></div>
+          <a href="story.html?id=s4" class="c-btn-read">اقرأ ←</a>
         </div>
       </div>
 
@@ -419,18 +364,9 @@
           <a href="story.html?id=s6" class="card-title-link"><h3 class="card-title">الغرفة 207</h3></a>
           <p class="card-excerpt">قال الموظف: "أي غرفة إلا 207." ثم أضاف: "إلا أنت."</p>
         </div>
-        <div class="card-status">
-          <span class="s-badge s-avail">📖 متاح</span>
-          <span class="s-badge s-soon-v">🎬 قريباً</span>
-          <span class="s-badge s-soon-ai">🤖 قيد الإنتاج</span>
-        </div>
         <div class="card-footer">
-          <span class="card-date">٩ مايو</span>
-          <div class="card-btns">
-            <a href="story.html?id=s6" class="c-btn c-btn-r">📖 اقرأ</a>
-            <a href="videos.html" class="c-btn c-btn-v">🎬</a>
-            <a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a>
-          </div>
+          <div class="card-meta"><span>٩ مايو</span><div class="card-meta-dot"></div><span>١٠ دقائق</span></div>
+          <a href="story.html?id=s6" class="c-btn-read">اقرأ ←</a>
         </div>
       </div>
 
@@ -443,18 +379,9 @@
           <a href="story.html?id=s7" class="card-title-link"><h3 class="card-title">آخر تسجيل</h3></a>
           <p class="card-excerpt">هاتف قديم. تسجيل واحد. رجل يبكي: "لا تفتح الباب مهما حدث." ثم ثلاث طرقات.</p>
         </div>
-        <div class="card-status">
-          <span class="s-badge s-avail">📖 متاح</span>
-          <span class="s-badge s-soon-v">🎬 قريباً</span>
-          <span class="s-badge s-soon-ai">🤖 قيد الإنتاج</span>
-        </div>
         <div class="card-footer">
-          <span class="card-date">٧ مايو</span>
-          <div class="card-btns">
-            <a href="story.html?id=s7" class="c-btn c-btn-r">📖 اقرأ</a>
-            <a href="videos.html" class="c-btn c-btn-v">🎬</a>
-            <a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a>
-          </div>
+          <div class="card-meta"><span>٧ مايو</span><div class="card-meta-dot"></div><span>٧ دقائق</span></div>
+          <a href="story.html?id=s7" class="c-btn-read">اقرأ ←</a>
         </div>
       </div>
 
@@ -467,18 +394,9 @@
           <a href="story.html?id=s10" class="card-title-link"><h3 class="card-title">رسالة كتبتها قبل أن أموت</h3></a>
           <p class="card-excerpt">استيقظ ووجد رسالة بخطه: "لا تنظر خلفك الآن. اقرأ أولاً."</p>
         </div>
-        <div class="card-status">
-          <span class="s-badge s-avail">📖 متاح</span>
-          <span class="s-badge s-soon-v">🎬 قريباً</span>
-          <span class="s-badge s-soon-ai">🤖 قيد الإنتاج</span>
-        </div>
         <div class="card-footer">
-          <span class="card-date">١ مايو</span>
-          <div class="card-btns">
-            <a href="story.html?id=s10" class="c-btn c-btn-r">📖 اقرأ</a>
-            <a href="videos.html" class="c-btn c-btn-v">🎬</a>
-            <a href="ai-videos.html" class="c-btn c-btn-ai">🤖</a>
-          </div>
+          <div class="card-meta"><span>١ مايو</span><div class="card-meta-dot"></div><span>١١ دقيقة</span></div>
+          <a href="story.html?id=s10" class="c-btn-read">اقرأ ←</a>
         </div>
       </div>
 
