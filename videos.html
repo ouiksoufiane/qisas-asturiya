@@ -3,201 +3,476 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>قصص بالفيديو — القصص الأسطورية</title>
-  <meta name="description" content="قصص رعب وغموض بالفيديو من القصص الأسطورية">
+  <title>مكتبة المسلسلات التركية — القصص الأسطورية</title>
+  <meta name="description" content="مسلسلات تركية مدبلجة وأفلام مختارة — مكتبة منظمة بالعربية والدارجة المغربية مع تصنيف واضح لكل سلسلة">
+  <meta property="og:title" content="مكتبة المسلسلات التركية — القصص الأسطورية">
+  <meta property="og:type" content="website">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    :root{
-      --bg:#060608; --card:#0f0f14; --red:#9b1a1a; --red-bright:#cc2222;
-      --gold:#c8a84b; --gold-dim:#8a7030; --text:#d8d0c8; --text-dim:#7a7268;
-      --white:#f0ece4; --border:#1e1e28;
-    }
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'Cairo',serif;min-height:100vh;overflow-x:hidden}
-
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,168,75,0.08)}
-    .nav-logo{font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);text-decoration:none;text-shadow:0 0 20px rgba(200,168,75,0.3)}
-    .nav-links{display:flex;gap:2rem;align-items:center}
-    .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.8rem;font-weight:300;transition:color 0.3s;letter-spacing:0.05em}
-    .nav-links a:hover,.nav-links a.active{color:var(--gold)}
-    .nav-links a.active{color:var(--red-bright)}
-
-    /* PAGE HERO */
-    .page-hero{padding:120px 2rem 60px;text-align:center;position:relative;overflow:hidden}
-    .page-hero::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(155,26,26,0.12) 0%,transparent 70%);pointer-events:none}
-    .hero-tag{font-size:0.65rem;font-weight:700;letter-spacing:0.4em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1rem;display:block}
-    .hero-title{font-family:'Amiri',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--white);line-height:1.3;margin-bottom:1rem}
-    .hero-sub{font-size:0.9rem;color:var(--text-dim);max-width:500px;margin:0 auto;line-height:1.8}
-
-    /* FILTER */
-    .filter-bar{max-width:1200px;margin:0 auto;padding:0 2rem 3rem;display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center}
-    .filter-btn{padding:0.45rem 1.2rem;border:1px solid var(--border);background:none;color:var(--text-dim);font-family:'Cairo',sans-serif;font-size:0.78rem;cursor:pointer;transition:all 0.3s;letter-spacing:0.05em}
-    .filter-btn:hover,.filter-btn.active{border-color:var(--red-bright);color:var(--red-bright);background:rgba(155,26,26,0.06)}
-
-    /* VIDEO GRID */
-    .videos-grid{max-width:1200px;margin:0 auto;padding:0 2rem 6rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2rem}
-    .video-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all 0.4s;display:flex;flex-direction:column}
-    .video-card:hover{border-color:rgba(155,26,26,0.3);transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
-
-    /* THUMBNAIL WRAPPER */
-    .thumb-wrap{position:relative;padding-bottom:56.25%;background:#0a0a0f;overflow:hidden;cursor:pointer}
-    .thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(30%);transition:all 0.5s}
-    .thumb-wrap:hover .thumb-img{filter:grayscale(0%);transform:scale(1.04)}
-    .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:rgba(155,26,26,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;transition:all 0.3s;backdrop-filter:blur(4px)}
-    .thumb-wrap:hover .play-btn{background:var(--red-bright);transform:translate(-50%,-50%) scale(1.1)}
-    .duration-badge{position:absolute;bottom:0.75rem;left:0.75rem;background:rgba(6,6,8,0.85);color:var(--text);font-size:0.72rem;padding:0.2rem 0.55rem;font-weight:600;letter-spacing:0.05em;backdrop-filter:blur(4px)}
-
-    /* IFRAME PLAYER (hidden by default) */
-    .iframe-wrap{position:absolute;inset:0;display:none}
-    .iframe-wrap iframe{width:100%;height:100%;border:none}
-    .iframe-wrap.active{display:block}
-
-    /* VIDEO BODY */
-    .video-body{padding:1.25rem 1.5rem 1.5rem;flex:1;display:flex;flex-direction:column;gap:0.75rem}
-    .video-cat{font-size:0.6rem;font-weight:700;letter-spacing:0.3em;color:var(--red-bright);text-transform:uppercase}
-    .video-title{font-family:'Amiri',serif;font-size:1.1rem;color:var(--white);line-height:1.5;flex:1}
-    .video-desc{font-size:0.82rem;color:var(--text-dim);line-height:1.7}
-    .video-source{font-size:0.7rem;color:var(--text-dim);display:flex;align-items:center;gap:0.5rem;border-top:1px solid var(--border);padding-top:0.75rem;margin-top:auto}
-    .source-dot{width:6px;height:6px;border-radius:50%;background:var(--red-bright);flex-shrink:0}
-    .watch-btn{display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.65rem 1.2rem;background:rgba(155,26,26,0.1);border:1px solid rgba(155,26,26,0.25);color:var(--red-bright);font-family:'Cairo',sans-serif;font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;text-decoration:none;margin-top:0.25rem;letter-spacing:0.05em}
-    .watch-btn:hover{background:var(--red-bright);color:var(--white);border-color:var(--red-bright)}
-
-    /* MODAL PLAYER */
-    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:200;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity 0.3s}
-    .modal-overlay.open{opacity:1;pointer-events:all}
-    .modal-inner{width:100%;max-width:900px;position:relative}
-    .modal-close{position:absolute;top:-3rem;left:0;background:none;border:1px solid var(--border);color:var(--text-dim);width:40px;height:40px;font-size:1.2rem;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center}
-    .modal-close:hover{border-color:var(--gold-dim);color:var(--gold)}
-    .modal-video{position:relative;padding-bottom:56.25%;background:#000}
-    .modal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
-    .modal-title{color:var(--white);font-family:'Amiri',serif;font-size:1.2rem;margin-top:1rem;text-align:center}
-
-    /* EMPTY STATE */
-    .empty-state{text-align:center;padding:4rem 2rem;color:var(--text-dim);font-family:'Amiri',serif;font-size:1.1rem}
-
-    /* FOOTER */
-    footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center}
-    .footer-logo{font-family:'Amiri',serif;font-size:1.6rem;color:var(--gold);margin-bottom:0.5rem}
-    .footer-text{font-size:0.75rem;color:var(--text-dim)}
-
-    @media(max-width:768px){
-      .nav-links{display:none}
-      .videos-grid{grid-template-columns:1fr;padding:0 1.25rem 4rem}
-      .page-hero{padding:100px 1.5rem 40px}
-    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#050508;--panel:#0d0d13;--panel2:#14141d;--line:#242431;--line2:#343447;--txt:#ddd7ce;--muted:#8f887d;--white:#fffaf0;--gold:#c9a84c;--gold2:#e0c875;--red:#9c172b;--red2:#d21f3c;--teal:#22b8a0;--blue:#5b8cff;--green:#27c07d}
+    body{font-family:'Cairo',sans-serif;background:radial-gradient(circle at 20% 0%,rgba(150,22,42,.25),transparent 35%),linear-gradient(180deg,#050508,#07070c 45%,#050508);color:var(--txt);min-height:100vh;overflow-x:hidden}
+    a{text-decoration:none;color:inherit}
+    nav{height:68px;position:fixed;z-index:1000;top:0;right:0;left:0;background:rgba(5,5,8,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+    .logo{font-family:'Amiri',serif;color:var(--gold);font-size:1.55rem;font-weight:700}.links{display:flex;gap:24px;list-style:none;font-size:.85rem}.links a{color:var(--muted);transition:.25s}.links a:hover,.links a.active{color:var(--gold)}
+    .hero{min-height:78vh;position:relative;display:flex;align-items:flex-end;padding:120px 5vw 72px;overflow:hidden}.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(14px) brightness(.38) saturate(1.25);transform:scale(1.08);opacity:.78}.hero::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,8,.98) 0%,rgba(5,5,8,.72) 42%,rgba(5,5,8,.3) 100%),linear-gradient(0deg,var(--bg) 0%,transparent 38%)}.hero-content{position:relative;z-index:2;max-width:760px}.eyebrow{color:var(--gold);letter-spacing:.25em;font-size:.72rem;font-weight:800;margin-bottom:16px}.hero h1{font-family:'Amiri',serif;font-size:clamp(2.8rem,7vw,6.8rem);line-height:.95;color:var(--white);text-shadow:0 14px 50px #000}.orig{color:var(--teal);font-size:1rem;letter-spacing:.04em;margin:14px 0}.hero-desc{color:#d6cec4;line-height:2;max-width:680px;margin:18px 0 22px}.meta{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}.pill{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.04);padding:6px 12px;border-radius:999px;font-size:.76rem;color:#cac3b8}.pill.gold{color:var(--gold);border-color:rgba(201,168,76,.38)}.pill.teal{color:var(--teal);border-color:rgba(34,184,160,.35)}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}.btn{border:0;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:800;border-radius:12px;padding:13px 22px;transition:.25s}.btn-main{background:var(--white);color:#07070a}.btn-main:hover{background:var(--gold2);transform:translateY(-2px)}.btn-dark{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--txt)}.btn-dark:hover{border-color:rgba(201,168,76,.45);color:var(--gold)}
+    .hero-strip{position:absolute;z-index:3;left:5vw;bottom:32px;display:flex;gap:12px;max-width:55vw;overflow-x:auto;padding-bottom:6px}.hthumb{width:112px;flex:0 0 auto;cursor:pointer;opacity:.62;transition:.25s}.hthumb.active,.hthumb:hover{opacity:1;transform:translateY(-3px)}.hthumb img{width:112px;height:68px;object-fit:cover;border-radius:10px;border:2px solid transparent}.hthumb.active img{border-color:var(--gold)}.hthumb p{font-size:.65rem;color:#eee;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+    main{position:relative;z-index:2}.section{padding:56px 5vw}.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:24px}.section h2{font-family:'Amiri',serif;font-size:2.3rem;color:var(--white)}.section-sub{color:var(--muted);font-size:.85rem;line-height:1.8}
+    .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:-34px;position:relative;z-index:5;padding:0 5vw}.stat{background:rgba(13,13,19,.92);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;box-shadow:0 16px 45px rgba(0,0,0,.35)}.stat strong{display:block;color:var(--white);font-size:1.7rem}.stat span{color:var(--muted);font-size:.78rem}
+    .toolbar{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px;align-items:center}.search{flex:1;min-width:240px;background:#0d0d13;border:1px solid var(--line);color:var(--txt);border-radius:12px;padding:12px 14px;font-family:'Cairo';outline:none}.search:focus{border-color:rgba(201,168,76,.45)}.filter{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);padding:10px 15px;border-radius:999px;cursor:pointer;font-family:'Cairo';font-weight:700}.filter.active{background:rgba(201,168,76,.13);border-color:rgba(201,168,76,.4);color:var(--gold)}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}.card{background:linear-gradient(180deg,#11111a,#0b0b10);border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;transition:.28s;position:relative;cursor:pointer}.card:hover{transform:translateY(-5px);border-color:rgba(201,168,76,.35);box-shadow:0 22px 65px rgba(0,0,0,.55)}.poster{position:relative;aspect-ratio:2/3;background:#09090d;overflow:hidden}.poster img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.8);transition:.45s}.card:hover .poster img{transform:scale(1.05);filter:brightness(.62)}.play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);opacity:0;transition:.25s}.card:hover .play{opacity:1}.play span{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.92);color:#08080b;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.2rem}.badge{position:absolute;top:10px;right:10px;background:rgba(5,5,8,.78);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:999px;color:var(--gold);padding:5px 10px;font-size:.62rem;font-weight:800}.body{padding:15px}.body h3{font-family:'Amiri',serif;color:var(--white);font-size:1.2rem;line-height:1.45}.body .small{color:var(--muted);font-size:.72rem;margin:6px 0}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.tag{font-size:.6rem;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#afa89d;border-radius:999px;padding:4px 8px}.prog{height:5px;background:#24242e;border-radius:99px;overflow:hidden;margin-top:13px}.prog i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--gold));width:0}.card-note{font-size:.68rem;color:var(--muted);margin-top:8px}.card-note.warn{color:#d6ad5e}.series-page-link{display:inline-block;margin-top:10px;font-size:.68rem;color:var(--teal);text-decoration:none;border:1px solid rgba(34,168,150,.3);padding:4px 10px;border-radius:3px;transition:.2s}.series-page-link:hover{background:rgba(34,168,150,.1);border-color:var(--teal)}
+    .films-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:12px;scrollbar-width:thin;scrollbar-color:#2a2a3a transparent}.fc{flex:0 0 200px;background:linear-gradient(180deg,#11111a,#0b0b10);border:1px solid rgba(255,255,255,.08);border-radius:16px;overflow:hidden;cursor:pointer;transition:.28s}.fc:hover{transform:translateY(-4px);border-color:rgba(201,168,76,.35);box-shadow:0 18px 55px rgba(0,0,0,.55)}.fc-img{position:relative;aspect-ratio:16/9;overflow:hidden;background:#09090d}.fc-img img{width:100%;height:100%;object-fit:cover;filter:brightness(.85);transition:.4s}.fc:hover .fc-img img{transform:scale(1.05);filter:brightness(.65)}.fc-img .play{opacity:0;transition:.25s}.fc:hover .fc-img .play{opacity:1}.fc-body{padding:10px}.fc-body h4{font-family:'Amiri',serif;color:var(--white);font-size:1rem;line-height:1.4}.fc-body p{font-size:.65rem;color:var(--muted);margin-top:4px}
+    .episode-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}.ep-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:.25s}.ep-card:hover{border-color:rgba(201,168,76,.38);transform:translateY(-3px)}.ep-thumb{aspect-ratio:16/9;background:#08080c;position:relative}.ep-thumb img{width:100%;height:100%;object-fit:cover;filter:brightness(.82)}.ep-body{padding:10px}.ep-body h4{font-size:.86rem;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ep-body p{font-size:.65rem;color:var(--muted);margin-top:4px}
+    .ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.ai-card{background:linear-gradient(135deg,rgba(91,140,255,.07),rgba(150,22,42,.05));border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden;position:relative}.ai-card img{width:100%;aspect-ratio:16/9;object-fit:cover;filter:brightness(.5) saturate(.6)}.ai-body{padding:14px}.ai-body h4{font-family:'Amiri',serif;color:var(--white);font-size:1.1rem}.ai-body p{font-size:.78rem;color:#a09890;line-height:1.9;margin-top:6px}.ai-badge{position:absolute;top:10px;left:10px;background:rgba(91,140,255,.25);border:1px solid rgba(91,140,255,.4);color:#8ab4ff;border-radius:999px;font-size:.62rem;font-weight:800;padding:5px 10px}
+    .empty{border:1px dashed var(--line2);border-radius:20px;padding:36px;text-align:center;color:var(--muted);background:rgba(255,255,255,.02)}.empty strong{display:block;color:var(--gold);font-size:1.2rem;margin-bottom:8px}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:2000;display:none;align-items:center;justify-content:center;padding:24px}.modal.active{display:flex}.modal-box{width:min(1240px,100%);height:min(760px,92vh);background:#07070b;border:1px solid rgba(255,255,255,.1);border-radius:20px;overflow:hidden;display:grid;grid-template-columns:1fr 360px;box-shadow:0 40px 120px rgba(0,0,0,.75)}.player-col{display:flex;flex-direction:column;min-width:0}.modal-head{height:60px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px}.modal-title{font-family:'Amiri',serif;color:var(--white);font-size:1.3rem}.close{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1rem}.player-wrap{position:relative;background:#000;aspect-ratio:16/9}.player-wrap iframe{width:100%;height:100%;border:0;display:none}.player-empty{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:var(--muted)}.player-empty strong{font-size:2rem}.controlbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line);background:#0a0a10}.ctrl-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.ctrl-label{font-size:.7rem;color:var(--muted);font-weight:800}.lang-btn,.sub-btn{font-family:'Cairo';font-size:.72rem;font-weight:800;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);padding:7px 10px;border-radius:999px;cursor:pointer;transition:.2s}.lang-btn.active,.sub-btn.active{border-color:rgba(201,168,76,.55);color:var(--gold);background:rgba(201,168,76,.12)}.lang-btn:disabled,.sub-btn:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}.info{padding:16px;overflow:auto;flex:1}.info h2{font-family:'Amiri';color:var(--white);font-size:1.7rem}.info .meta{margin-top:8px}.info p{color:#bcb4a8;line-height:1.9;margin-top:8px;font-size:.85rem}.info .hint{color:var(--muted);font-size:.72rem;margin-top:12px;line-height:1.8;border-top:1px solid var(--line);padding-top:10px}.side{border-right:1px solid var(--line);background:#0a0a10;display:flex;flex-direction:column;min-height:0}.season-tabs{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line)}.season-tabs button{background:transparent;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:12px 16px;font-family:'Cairo';cursor:pointer;white-space:nowrap;transition:.2s}.season-tabs button.active{color:var(--gold);border-color:var(--gold)}.episode-list{overflow:auto;padding:10px;flex:1}.row{display:flex;gap:10px;border:1px solid transparent;border-radius:12px;padding:8px;cursor:pointer;transition:.2s}.row:hover,.row.active{background:rgba(255,255,255,.04);border-color:var(--line)}.row.watched .rnum{color:var(--teal)}.rthumb{width:96px;aspect-ratio:16/9;flex:0 0 auto;border-radius:9px;overflow:hidden;background:#050507}.rthumb img{width:100%;height:100%;object-fit:cover}.rbody{min-width:0}.rnum{font-size:.62rem;color:var(--muted);font-weight:800}.rtitle{color:var(--white);font-size:.78rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rmeta{font-size:.62rem;color:var(--muted)}
+    .strategy{background:linear-gradient(135deg,rgba(34,184,160,.08),rgba(201,168,76,.05));border:1px solid rgba(255,255,255,.08);border-radius:24px;padding:26px;display:grid;grid-template-columns:1.3fr .7fr;gap:20px}.strategy h3{font-family:'Amiri';font-size:1.8rem;color:var(--white);margin-bottom:8px}.strategy p{color:#bdb4a9;line-height:2}.strategy ul{list-style:none;color:var(--muted);line-height:2;font-size:.85rem}.strategy li::before{content:'✓ ';color:var(--teal)}
+    footer{border-top:1px solid var(--line);padding:34px 5vw;text-align:center;color:var(--muted)}
+    @media(max-width:1050px){.grid{grid-template-columns:repeat(3,1fr)}.episode-grid{grid-template-columns:repeat(3,1fr)}.ai-grid{grid-template-columns:repeat(2,1fr)}.modal-box{grid-template-columns:1fr}.side{display:none}.hero-strip{max-width:90vw;right:5vw;left:5vw}.stats{grid-template-columns:repeat(3,1fr)}.strategy{grid-template-columns:1fr}}
+    @media(max-width:620px){nav{padding:0 16px}.links{display:none}.hero{padding:96px 22px 80px}.section{padding:38px 22px}.grid,.episode-grid{grid-template-columns:repeat(2,1fr);gap:12px}.ai-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr);margin-top:0;padding:22px}.modal{padding:0}.modal-box{height:100vh;border-radius:0}.hero-strip{bottom:14px}.hthumb{width:88px}.hthumb img{width:88px;height:54px}}
   </style>
 </head>
 <body>
-
 <nav>
-  <a href="index.html" class="nav-logo">القصص الأسطورية</a>
-  <div class="nav-links">
-    <a href="index.html#stories">📖 قصص مقروءة</a>
-    <a href="videos.html" class="active">🎬 قصص بالفيديو</a>
-    <a href="ai-videos.html">🤖 قصص الذكاء الاصطناعي</a>
-  </div>
+  <a href="index.html" class="logo">القصص الأسطورية</a>
+  <ul class="links">
+    <li><a href="index.html">الرئيسية</a></li>
+    <li><a href="videos.html" class="active">مكتبة المسلسلات التركية</a></li>
+    <li><a href="ai-videos.html">الذكاء الاصطناعي</a></li>
+    <li><a href="about.html">عن الموقع</a></li>
+  </ul>
 </nav>
 
-<div class="page-hero">
-  <span class="hero-tag">🎬 القسم الثاني</span>
-  <h1 class="hero-title">قصص بالفيديو</h1>
-  <p class="hero-sub">فيديوهات رعب وغموض مختارة من مصادرها الأصلية — مستقلة عن القصص المكتوبة وعن قصص الذكاء الاصطناعي</p>
-</div>
-
-<div class="filter-bar" id="filter-bar">
-  <button class="filter-btn active" data-cat="all" onclick="filterVideos('all',this)">الكل</button>
-  <button class="filter-btn" data-cat="رعب" onclick="filterVideos('رعب',this)">رعب</button>
-  <button class="filter-btn" data-cat="غموض" onclick="filterVideos('غموض',this)">غموض</button>
-  <button class="filter-btn" data-cat="رعب نفسي" onclick="filterVideos('رعب نفسي',this)">رعب نفسي</button>
-  <button class="filter-btn" data-cat="إثارة" onclick="filterVideos('إثارة',this)">إثارة</button>
-</div>
-
-<div class="videos-grid" id="videos-grid"></div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
-  <div class="modal-inner">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-video">
-      <iframe id="modal-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <div class="eyebrow">مكتبة المسلسلات التركية</div>
+    <h1 id="heroTitle">مكتبة المسلسلات التركية</h1>
+    <p class="orig" id="heroOrig">مسلسلات تركية مدبلجة بالعربية والدارجة</p>
+    <div class="meta" id="heroMeta"></div>
+    <p class="hero-desc" id="heroDesc">اختر ما تريد مشاهدته من مكتبة منظمة حسب السلاسل، المواسم، والحلقات. يمكنك تغيير لغة الصوت والترجمة من داخل المشغل عندما تتوفر النسخ.</p>
+    <div class="hero-actions">
+      <button class="btn btn-main" id="heroPlay">▶ ابدأ المشاهدة</button>
+      <button class="btn btn-dark" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">تصفح المكتبة</button>
     </div>
-    <p class="modal-title" id="modal-title"></p>
+  </div>
+  <div class="hero-strip" id="heroStrip"></div>
+</section>
+
+<div class="stats" id="stats"></div>
+
+<main>
+  <!-- المسلسلات والسلاسل -->
+  <section class="section" id="library">
+    <div class="section-head">
+      <div>
+        <h2>مكتبة المسلسلات التركية</h2>
+        <p class="section-sub">مسلسلات مدبلجة بالعربية والدارجة — نعرض فقط ما هو متوفر فعلاً مع تصنيف واضح لكل سلسلة.</p>
+      </div>
+    </div>
+    <div class="toolbar" id="toolbar"></div>
+    <div class="grid" id="seriesGrid"></div>
+  </section>
+
+  <!-- الأفلام التركية -->
+  <section class="section" id="films-sec">
+    <div class="section-head">
+      <div>
+        <h2>أفلام تركية مختارة</h2>
+        <p class="section-sub">أفلام كاملة مدبلجة بالعربية — دراما، إثارة، وملهمات.</p>
+      </div>
+    </div>
+    <div class="films-row" id="filmsRow"></div>
+  </section>
+
+  <!-- فيديوهات مستقلة -->
+  <section class="section" id="standalone-sec">
+    <div class="section-head">
+      <div>
+        <h2>حلقات وفيديوهات مستقلة</h2>
+        <p class="section-sub">محتوى لا ينتمي إلى سلسلة — قصص، وثائقيات، مقاطع مختارة.</p>
+      </div>
+    </div>
+    <div class="episode-grid" id="standaloneGrid"></div>
+  </section>
+
+  <!-- قصص الذكاء الاصطناعي -->
+  <section class="section" id="ai-sec">
+    <div class="section-head">
+      <div>
+        <h2>قصص بالذكاء الاصطناعي <span style="color:var(--blue);font-size:.75rem;margin-right:8px;font-family:'Cairo'">قريباً</span></h2>
+        <p class="section-sub">قصص رعب وغموض مُنتجة بتقنيات الذكاء الاصطناعي — تجربة مشاهدة جديدة كلياً.</p>
+      </div>
+    </div>
+    <div class="ai-grid" id="aiGrid"></div>
+  </section>
+
+  <!-- كيف نجعلها منصة حقيقية -->
+  <section class="section">
+    <div class="strategy">
+      <div>
+        <h3>كيف نجعلها مثل منصة حقيقية؟</h3>
+        <p>الأفضل هو استيراد Playlist كاملة من قناة رسمية عبر لوحة التحكم، ثم تصنيفها حسب السلسلة والموسم والحلقة. خيار لغة الصوت يعمل عندما تضيف نسخة دارجة أو تركية أو فرنسية مستقلة لنفس الحلقة.</p>
+      </div>
+      <ul>
+        <li>استيراد Playlist كاملة من admin</li>
+        <li>إخفاء الحلقات التي لا تقبل التضمين</li>
+        <li>حفظ تقدم المشاهدة محلياً</li>
+        <li>صوت الدارجة يحتاج نسخة فيديو مستقلة</li>
+        <li>الترجمة تعتمد على توفر Captions في YouTube</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>© ٢٠٢٦ القصص الأسطورية — كل فيديو يحتفظ بمصدره الأصلي على YouTube.</p>
+</footer>
+
+<!-- مشغل الفيديو -->
+<div class="modal" id="modal" onclick="modalBg(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="player-col">
+      <div class="modal-head">
+        <span class="modal-title" id="modalTitle">المشاهدة</span>
+        <button class="close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="player-wrap">
+        <iframe id="player" allowfullscreen allow="autoplay; encrypted-media; picture-in-picture"></iframe>
+        <div class="player-empty" id="playerEmpty"><strong>▶</strong><span>اختر حلقة للتشغيل</span></div>
+      </div>
+      <div class="controlbar">
+        <div class="ctrl-group"><span class="ctrl-label">النسخة المتوفرة</span><div id="audioBtns"></div></div>
+        <div class="ctrl-group"><span class="ctrl-label">ترجمة</span><div id="subBtns"></div></div>
+      </div>
+      <div class="info" id="videoInfo"></div>
+    </div>
+    <aside class="side">
+      <div class="season-tabs" id="seasonTabs"></div>
+      <div class="episode-list" id="episodeList"></div>
+    </aside>
   </div>
 </div>
 
-<footer>
-  <div class="footer-logo">القصص الأسطورية</div>
-  <p class="footer-text">© ٢٠٢٦ — جميع الحقوق محفوظة</p>
-</footer>
-
-<script src="videos-data.js"></script>
+<script src="videos-data.js?v=19"></script>
 <script>
-let currentCat = 'all';
+const AUDIO_LABELS = { ar:'العربية', darija:'الدارجة 🇲🇦', tr:'التركية', fr:'Français' };
+const SUB_LABELS   = { off:'بدون', ar:'العربية', fr:'Français', tr:'Türkçe' };
 
-function getThumb(ytId) {
-  return `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+let activeSeries = null, activeSeason = null, activeVideo = null;
+let activeAudio = localStorage.getItem('qa_audio_lang') || 'ar';
+let activeSub = 'off', activeFilter = 'الكل', query = '';
+
+const rawSeriesInfo = (typeof SERIES_INFO !== 'undefined') ? SERIES_INFO : {};
+const rawVideos     = (typeof VIDEO_LIBRARY !== 'undefined') ? VIDEO_LIBRARY : [];
+const allFilms      = (typeof TURKISH_FILMS !== 'undefined') ? TURKISH_FILMS : [];
+const allAI         = (typeof AI_VIDEOS !== 'undefined') ? AI_VIDEOS : [];
+
+const videos = rawVideos.filter(v => v && (v.ytId || (v.langs && Object.values(v.langs).some(Boolean))));
+
+function normalizeText(s){return String(s||'').toLowerCase().replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').trim()}
+function slugify(s){return normalizeText(s).replace(/[^؀-ۿa-z0-9]+/g,'-').replace(/^-|-$/g,'')||'series'}
+function getSeriesId(v){return v.series||v.seriesId||(v.seriesTitle?slugify(v.seriesTitle):'')}
+function thumb(id){return id?`https://i.ytimg.com/vi/${id}/hqdefault.jpg`:''}
+
+function getAudioTracks(v){
+  const tracks={};
+  if(v.langs) Object.keys(v.langs).forEach(k=>{if(v.langs[k]) tracks[k]={ytId:v.langs[k],label:AUDIO_LABELS[k]||k};});
+  if(v.audio) Object.keys(v.audio).forEach(k=>{if(v.audio[k]?.ytId) tracks[k]={ytId:v.audio[k].ytId,label:v.audio[k].label||AUDIO_LABELS[k]||k};});
+  if(v.ytId&&!Object.values(tracks).some(t=>t.ytId===v.ytId)) tracks.ar=tracks.ar||{ytId:v.ytId,label:'العربية'};
+  return tracks;
+}
+function captionOptions(v){return Object.assign({off:true},v.captions||v.subtitles||{});}
+function mainYt(v){const a=getAudioTracks(v);return a[activeAudio]?.ytId||a.ar?.ytId||a.tr?.ytId||v.ytId||'';}
+
+function getSeriesStatus(available, total, explicitStatus){
+  if(explicitStatus==='complete'||(!total&&explicitStatus==='complete')) return {label:'مكتملة ✓', color:'var(--green)', warn:false, key:'complete'};
+  if(!total||total===0) return {label:'حلقات مختارة', color:'#d6ad5e', warn:false, key:'selected'};
+  const pct=available/total;
+  if(pct>=0.85||explicitStatus==='complete') return {label:'مكتملة ✓', color:'var(--green)', warn:false, key:'complete'};
+  if(pct>=0.60||explicitStatus==='near_complete') return {label:'شبه مكتملة', color:'var(--teal)', warn:false, key:'near_complete'};
+  if(pct>=0.08||explicitStatus==='partial') return {label:'قيد الإكمال', color:'var(--gold)', warn:true, key:'partial'};
+  return {label:'حلقات مختارة', color:'#d6ad5e', warn:false, key:'selected'};
 }
 
-function renderVideos(cat) {
-  const grid = document.getElementById('videos-grid');
-  const filtered = cat === 'all' ? YOUTUBE_VIDEOS : YOUTUBE_VIDEOS.filter(v => v.cat === cat);
+function buildSeries(){
+  const map={};
+  videos.forEach(v=>{
+    const sid=getSeriesId(v); if(!sid) return;
+    const meta=rawSeriesInfo[sid]||{};
+    if(meta.status==='hidden') return;
+    if(!map[sid]){
+      map[sid]={id:sid,title:meta.title||v.seriesTitle||sid,titleOrig:meta.titleOrig||'',
+        poster:meta.poster||thumb(mainYt(v)),desc:meta.desc||v.desc||'',
+        genre:meta.genre||[v.cat||'مختارات'],year:meta.year||'',rating:meta.rating||'',
+        badge:meta.badge||'مختارات',mood:meta.mood||'',moodColor:meta.moodColor||'',
+        totalEps:meta.totalEps||0,seasons:meta.seasons||0,status:meta.status||'partial',episodes:[]};
+    }
+    map[sid].episodes.push(v);
+  });
+  Object.values(map).forEach(s=>s.episodes.sort((a,b)=>(Number(a.season)||0)-(Number(b.season)||0)||(Number(a.episode)||0)-(Number(b.episode)||0)));
+  return map;
+}
+const seriesMap=buildSeries();
+function seriesList(){return Object.values(seriesMap)}
+function standalone(){return videos.filter(v=>!getSeriesId(v));}
 
-  if (!filtered.length) {
-    grid.innerHTML = '<div class="empty-state">لا توجد مقاطع في هذا التصنيف حتى الآن</div>';
-    return;
-  }
+document.addEventListener('DOMContentLoaded',init);
+function init(){
+  renderStats();renderToolbar();renderSeries();renderFilms();renderStandalone();renderAI();
+  renderHero(seriesList()[0]?.id);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+}
 
-  grid.innerHTML = filtered.map(v => `
-    <div class="video-card" data-cat="${v.cat}" data-id="${v.id}">
-      <div class="thumb-wrap" onclick="openModal('${v.ytId}','${v.title.replace(/'/g,"\\'")}')">
-        <img class="thumb-img" src="${getThumb(v.ytId)}" alt="${v.title}" loading="lazy" onerror="this.style.display='none'">
-        <div class="play-btn">▶</div>
-        <span class="duration-badge">${v.duration}</span>
-      </div>
-      <div class="video-body">
-        <span class="video-cat">◆ ${v.cat}</span>
-        <p class="video-title">${v.title}</p>
-        <p class="video-desc">${v.desc}</p>
-        <div class="video-source">
-          <div class="source-dot"></div>
-          <span>المصدر: ${v.source}</span>
+function renderStats(){
+  const total=videos.length;
+  const scount=seriesList().length;
+  const fcount=allFilms.length;
+  const aud=videos.filter(v=>Object.keys(getAudioTracks(v)).length>1).length+allFilms.filter(f=>Object.keys(getAudioTracks(f)).length>1).length;
+  const totalExpected=Object.values(rawSeriesInfo).filter(s=>s.status!=='hidden').reduce((a,s)=>a+(s.totalEps||0),0);
+  document.getElementById('stats').innerHTML=[
+    [`${total}`,`حلقة متاحة${totalExpected?` من ${totalExpected}`:''}`],
+    [`${scount}`,'مسلسل / سلسلة'],
+    [`${fcount}`,'فيلم تركي'],
+    [`${aud}`,'بأكثر من لغة صوت'],
+    [`${allAI.length}`,'قصة ذكاء اصطناعي']
+  ].map(x=>`<div class="stat"><strong>${x[0]}</strong><span>${x[1]}</span></div>`).join('');
+}
+
+function renderToolbar(){
+  const cats=['الكل',...new Set(videos.map(v=>v.cat).filter(Boolean))];
+  document.getElementById('toolbar').innerHTML=
+    `<input class="search" placeholder="ابحث عن مسلسل، حلقة، فيلم..." oninput="query=this.value;renderSeries();renderStandalone()">` +
+    cats.map(c=>`<button class="filter ${c===activeFilter?'active':''}" onclick="activeFilter='${c}';renderToolbar();renderSeries();renderStandalone()">${c}</button>`).join('');
+}
+
+function matches(v){
+  const q=normalizeText(query);const catOk=activeFilter==='الكل'||v.cat===activeFilter;
+  const qOk=!q||normalizeText([v.title,v.desc,v.seriesTitle,v.source,v.cat].join(' ')).includes(q);
+  return catOk&&qOk;
+}
+function seriesMatches(s){return s.episodes.some(matches)||(activeFilter==='الكل'&&!query)}
+
+function renderHero(sid){
+  const s=seriesMap[sid]||seriesList()[0];
+  if(!s){document.getElementById('heroTitle').textContent='مكتبة المسلسلات التركية';return;}
+  document.getElementById('heroBg').style.backgroundImage=`url(${s.poster})`;
+  document.getElementById('heroTitle').textContent=s.title;
+  document.getElementById('heroOrig').textContent=s.titleOrig||'مجموعة مختارة';
+  document.getElementById('heroDesc').textContent=s.desc||'مجموعة فيديوهات مختارة من مصادرها الأصلية.';
+  const seasons=[...new Set(s.episodes.map(e=>e.season||'1'))];
+  const meta=rawSeriesInfo[s.id]||{};
+  const totalEps=s.totalEps||meta.totalEps||0;
+  const st=getSeriesStatus(s.episodes.length,totalEps,s.status||meta.status);
+  document.getElementById('heroMeta').innerHTML=
+    `<span class="pill gold">${s.badge||'مختارات'}</span>`+
+    (totalEps?`<span class="pill teal">${s.episodes.length} من ${totalEps} حلقة</span>`:`<span class="pill teal">${s.episodes.length} حلقة متاحة</span>`)+
+    `<span class="pill" style="color:${st.color}">${st.label}</span>`+
+    `<span class="pill">${seasons.length} مواسم داخل المكتبة</span>`+
+    (s.rating?`<span class="pill">★ ${s.rating}</span>`:'');
+  document.getElementById('heroPlay').onclick=()=>location.href='series.html?id='+s.id;
+  document.getElementById('heroStrip').innerHTML=seriesList().map(x=>
+    `<div class="hthumb ${x.id===sid?'active':''}" onclick="renderHero('${x.id}')">
+      <img src="${x.poster}" alt="${x.title}" loading="lazy"><p>${x.title}</p>
+    </div>`).join('');
+}
+
+function renderSeries(){
+  const list=seriesList().filter(seriesMatches);
+  const grid=document.getElementById('seriesGrid');
+  if(!list.length){grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><strong>لا توجد سلاسل مطابقة</strong><p>غيّر البحث أو أضف Playlist كاملة من لوحة التحكم.</p></div>`;return;}
+  grid.innerHTML=list.map(s=>{
+    const allEps=s.episodes;const watchedCount=watched(s.id).length;
+    const total=s.totalEps||0;
+    const st=getSeriesStatus(allEps.length,total,s.status);
+    const pctBar=total?Math.round(allEps.length/total*100):Math.round(watchedCount/(allEps.length||1)*100);
+    const pctWatched=allEps.length?Math.round(watchedCount/allEps.length*100):0;
+    const multiAudio=allEps.some(e=>Object.keys(getAudioTracks(e)).length>1);
+    const seasonCount=[...new Set(allEps.map(e=>e.season||'1'))].length;
+    const countLabel=total?`${allEps.length} من أصل ${total} حلقة`:`${allEps.length} حلقة متاحة`;
+    return `<article class="card" onclick="location.href='series.html?id=${s.id}'">
+      <div class="poster"><img src="${s.poster}" alt="${s.title}" loading="lazy"><div class="play"><span>▶</span></div><span class="badge">${s.badge||'مختارات'}</span></div>
+      <div class="body">
+        <h3>${s.title}</h3>
+        <p class="small">${s.titleOrig||''}</p>
+        <div class="tags">
+          <span class="tag" style="color:${st.color};border-color:${st.color}40">${st.label}</span>
+          <span class="tag">${countLabel}</span>
+          <span class="tag">${seasonCount} موسم</span>
+          ${multiAudio?'<span class="tag" style="color:var(--teal)">متعدد الأصوات</span>':''}
         </div>
-        <button class="watch-btn" onclick="openModal('${v.ytId}','${v.title.replace(/'/g,"\\'")}')">▶ شاهد الآن</button>
+        <div class="prog"><i style="width:${pctBar}%;background:${st.warn?'linear-gradient(90deg,#d6ad5e,#c8a84b)':'linear-gradient(90deg,var(--teal),var(--gold))'}"></i></div>
+        <p class="card-note ${st.warn?'warn':''}">${st.warn?`${st.label} — المكتبة قيد الإكمال`:`شاهدت ${watchedCount} من ${allEps.length} · ${pctWatched}%`}</p>
       </div>
+    </article>`;
+  }).join('');
+}
+
+function renderFilms(){
+  const row=document.getElementById('filmsRow');
+  const sec=document.getElementById('films-sec');
+  if(!allFilms.length){sec.style.display='none';return;}
+  row.innerHTML=allFilms.map(f=>`
+    <div class="fc" onclick="openFilm('${f.id}')">
+      <div class="fc-img">
+        <img src="${f.poster||thumb(f.ytId)}" alt="${f.title}" loading="lazy">
+        <div class="play"><span>▶</span></div>
+      </div>
+      <div class="fc-body">
+        <h4>${f.title}</h4>
+        <p>${f.genre?.join(' · ')||''} · ${f.year||''} · ${f.duration||''}</p>
+      </div>
+    </div>`).join('');
+}
+
+function renderStandalone(){
+  const list=standalone().filter(matches);const box=document.getElementById('standaloneGrid');
+  const sec=document.getElementById('standalone-sec');
+  if(!list.length){sec.style.display='none';return;}
+  sec.style.display='';
+  box.innerHTML=list.map(v=>`
+    <div class="ep-card" onclick="openSingle('${v.id}')">
+      <div class="ep-thumb"><img src="${thumb(mainYt(v))}" alt="${v.title}" loading="lazy"></div>
+      <div class="ep-body"><h4>${v.title}</h4><p>${v.cat||''} · ${v.type||'فيديو'}</p></div>
+    </div>`).join('');
+}
+
+function renderAI(){
+  const grid=document.getElementById('aiGrid');
+  const sec=document.getElementById('ai-sec');
+  if(!allAI.length){sec.style.display='none';return;}
+  grid.innerHTML=allAI.map(v=>`
+    <div class="ai-card">
+      <img src="${v.thumb||''}" alt="${v.title}" loading="lazy">
+      <span class="ai-badge">قريباً ✦ ذكاء اصطناعي</span>
+      <div class="ai-body"><h4>${v.title}</h4><p>${v.desc||''}</p></div>
+    </div>`).join('');
+}
+
+function openSeries(sid){
+  const s=seriesMap[sid];if(!s)return;
+  activeSeries=sid;
+  activeSeason=[...new Set(s.episodes.map(e=>e.season||'1'))].sort((a,b)=>Number(a)-Number(b))[0];
+  activeVideo=s.episodes.find(e=>(e.season||'1')===activeSeason)||s.episodes[0];
+  document.getElementById('modalTitle').textContent=s.title;
+  buildSeasons(s);buildEpisodeList();loadVideo(activeVideo);openModal();
+}
+
+function openFilm(id){
+  const f=allFilms.find(x=>x.id===id);if(!f)return;
+  activeSeries=null;activeVideo=f;
+  document.getElementById('modalTitle').textContent=f.title;
+  document.getElementById('seasonTabs').innerHTML=`<div style="padding:12px 16px;font-size:.78rem;color:var(--muted)">${f.titleOrig||''} · ${f.year||''} · ${f.duration||''}</div>`;
+  document.getElementById('episodeList').innerHTML='';
+  loadVideo(f);openModal();
+}
+
+function openSingle(id){
+  const v=videos.find(x=>x.id===id);if(!v)return;
+  activeSeries=null;activeVideo=v;
+  document.getElementById('modalTitle').textContent=v.title;
+  document.getElementById('seasonTabs').innerHTML='';
+  document.getElementById('episodeList').innerHTML='';
+  loadVideo(v);openModal();
+}
+
+function buildSeasons(s){
+  const seasons=[...new Set(s.episodes.map(e=>e.season||'1'))].sort((a,b)=>Number(a)-Number(b));
+  document.getElementById('seasonTabs').innerHTML=seasons.map(sn=>
+    `<button class="${sn===activeSeason?'active':''}" onclick="activeSeason='${sn}';buildEpisodeList()">الموسم ${sn}</button>`
+  ).join('');
+}
+
+function buildEpisodeList(){
+  const s=seriesMap[activeSeries];if(!s)return;
+  const w=watched(activeSeries);
+  const eps=s.episodes.filter(e=>(e.season||'1')===activeSeason);
+  document.getElementById('seasonTabs').querySelectorAll('button').forEach(b=>
+    b.classList.toggle('active',b.textContent.trim()===`الموسم ${activeSeason}`)
+  );
+  document.getElementById('episodeList').innerHTML=eps.map(e=>{
+    const multi=Object.keys(getAudioTracks(e)).length>1;
+    return `<div class="row ${activeVideo?.id===e.id?'active':''} ${w.includes(e.id)?'watched':''}" onclick="loadVideoById('${e.id}')">
+      <div class="rthumb"><img src="${thumb(mainYt(e))}" alt="" loading="lazy"></div>
+      <div class="rbody">
+        <p class="rnum">م${e.season||'1'} · ح${e.episode||''}</p>
+        <p class="rtitle">${e.title}</p>
+        <p class="rmeta">${e.duration||''} ${multi?'· 🎙 متعدد الأصوات':''}</p>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function loadVideoById(id){const v=videos.find(x=>x.id===id);if(v)loadVideo(v);}
+
+function loadVideo(v){
+  activeVideo=v;
+  const tracks=getAudioTracks(v);
+  if(!tracks[activeAudio]) activeAudio=Object.keys(tracks)[0]||'ar';
+  renderControls();
+  setPlayer(tracks[activeAudio]?.ytId||v.ytId);
+  if(activeSeries){
+    const w=watched(activeSeries);
+    if(!w.includes(v.id)){w.push(v.id);localStorage.setItem('qa_watch_'+activeSeries,JSON.stringify(w));}
+    buildEpisodeList();renderSeries();
+  }
+  document.getElementById('videoInfo').innerHTML=`
+    <h2>${v.title}</h2>
+    <div class="meta">
+      <span class="pill gold">${v.cat||'فيديو'}</span>
+      ${v.type?`<span class="pill">${v.type}</span>`:''}
+      ${v.source?`<span class="pill teal">${v.source}</span>`:''}
+      ${v.year?`<span class="pill">${v.year}</span>`:''}
+      ${v.rating?`<span class="pill">★ ${v.rating}</span>`:''}
     </div>
-  `).join('');
+    <p>${v.desc||''}</p>
+    <p class="hint">تغيير الصوت يتطلب نسخة YouTube مختلفة لنفس الحلقة. الترجمة تعتمد على توفر Captions في الفيديو الأصلي.</p>`;
 }
 
-function filterVideos(cat, btn) {
-  currentCat = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderVideos(cat);
+function renderControls(){
+  const tracks=getAudioTracks(activeVideo);const caps=captionOptions(activeVideo);
+  document.getElementById('audioBtns').innerHTML=Object.keys(AUDIO_LABELS).map(k=>
+    `<button class="lang-btn ${k===activeAudio?'active':''}" ${tracks[k]?'':'disabled'} onclick="switchAudio('${k}')">${AUDIO_LABELS[k]}</button>`
+  ).join('');
+  document.getElementById('subBtns').innerHTML=Object.keys(SUB_LABELS).map(k=>
+    `<button class="sub-btn ${k===activeSub?'active':''}" ${caps[k]?'':'disabled'} onclick="switchSub('${k}')">${SUB_LABELS[k]}</button>`
+  ).join('');
 }
 
-function openModal(ytId, title) {
-  const modal = document.getElementById('modal');
-  document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
-  document.getElementById('modal-title').textContent = title;
-  modal.classList.add('open');
-  document.body.style.overflow = 'hidden';
+function switchAudio(k){
+  const tracks=getAudioTracks(activeVideo);if(!tracks[k])return;
+  activeAudio=k;localStorage.setItem('qa_audio_lang',k);
+  renderControls();setPlayer(tracks[k].ytId);
+}
+function switchSub(k){
+  const caps=captionOptions(activeVideo);if(!caps[k])return;
+  activeSub=k;renderControls();
+  setPlayer(getAudioTracks(activeVideo)[activeAudio]?.ytId||activeVideo.ytId);
 }
 
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('modal') && !e.target.classList.contains('modal-close')) return;
-  const modal = document.getElementById('modal');
-  modal.classList.remove('open');
-  document.getElementById('modal-iframe').src = '';
-  document.body.style.overflow = '';
+function setPlayer(ytId){
+  if(!ytId)return;
+  const f=document.getElementById('player');
+  let params='autoplay=1&rel=0&modestbranding=1&playsinline=1';
+  if(activeSub!=='off') params+=`&cc_load_policy=1&cc_lang_pref=${encodeURIComponent(activeSub)}`;
+  f.src=`https://www.youtube.com/embed/${ytId}?${params}`;
+  f.style.display='block';
+  document.getElementById('playerEmpty').style.display='none';
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-
-renderVideos('all');
+function openModal(){document.getElementById('modal').classList.add('active');document.body.style.overflow='hidden';}
+function closeModal(){
+  document.getElementById('modal').classList.remove('active');
+  document.getElementById('player').src='';
+  document.getElementById('player').style.display='none';
+  document.getElementById('playerEmpty').style.display='flex';
+  document.body.style.overflow='';
+}
+function modalBg(e){if(e.target.id==='modal')closeModal();}
+function watched(sid){try{return JSON.parse(localStorage.getItem('qa_watch_'+sid)||'[]')}catch{return[]}}
 </script>
 </body>
 </html>

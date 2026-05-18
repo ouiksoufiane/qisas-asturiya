@@ -3,519 +3,740 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>القصص الأسطورية — قصص تُقرأ، تُشاهد، وتُولَد من الخيال</title>
-  <meta name="description" content="القصص الأسطورية — منصة قصص الرعب والغموض العربية. قصص مكتوبة، فيديوهات، وقصص بالذكاء الاصطناعي.">
+  <title>القصص الأسطورية — رعب وغموض وأفلام تركية</title>
+  <meta name="description" content="منصة عربية للرعب والغموض والأفلام التركية: قصص مكتوبة أصلية، مكتبة فيديو منظّمة، ومحتوى بالذكاء الاصطناعي. محتوى جديد كل أسبوع.">
+  <meta property="og:title" content="القصص الأسطورية">
+  <meta property="og:description" content="قصص رعب وغموض وأفلام تركية مختارة — محتوى عربي متميّز.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=1200&q=85&auto=format">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ar_AR">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <style>
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     :root{
-      --bg:#060608;--card:#0f0f14;--card-hover:#16161e;
-      --red:#9b1a1a;--red-bright:#cc2222;--gold:#c8a84b;--gold-dim:#8a7030;
-      --blue:#1a4a7a;--blue-bright:#2a7abf;
-      --text:#d8d0c8;--text-dim:#7a7268;--white:#f0ece4;--border:#1e1e28;
+      --bg:#05050A;--surface:#0B0B12;--card:#101017;
+      --red-bright:#C41E3A;--red-dim:rgba(196,30,58,.1);
+      --gold:#C9A84C;--gold-bright:#E5C068;--gold-dim:rgba(201,168,76,.1);
+      --teal:#22A896;--teal-dim:rgba(34,168,150,.08);
+      --blue-bright:#4A9EDA;
+      --text:#CEC6BE;--text-dim:#5A554F;--text-muted:#3A3530;
+      --white:#EEEAE2;--border:rgba(255,255,255,.055);
     }
     html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'Cairo',serif;min-height:100vh;overflow-x:hidden}
-    #bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0.35}
+    body{background:var(--bg);color:var(--text);font-family:'Cairo',sans-serif;overflow-x:hidden}
 
-    /* NAV */
-    nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 2rem;height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,8,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(200,168,75,0.1)}
-    .nav-logo{font-family:'Amiri',serif;font-size:1.35rem;color:var(--gold);text-decoration:none;text-shadow:0 0 20px rgba(200,168,75,0.35)}
-    .nav-links{display:flex;gap:0;list-style:none}
-    .nav-links a{color:var(--text-dim);text-decoration:none;font-size:0.82rem;font-weight:400;transition:all 0.3s;padding:0.4rem 0.9rem;border:1px solid transparent;border-radius:2px}
-    .nav-links a:hover,.nav-links a.active{color:var(--gold);border-color:rgba(200,168,75,0.2);background:rgba(200,168,75,0.05)}
+    /* ═══ NAV ═══ */
+    nav{position:fixed;top:0;left:0;right:0;z-index:300;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(5,5,10,.97);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+    .nav-logo{font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);text-decoration:none;text-shadow:0 0 30px rgba(201,168,76,.2)}
+    .nav-links{display:flex;align-items:center;gap:2rem}
+    .nav-links a{color:var(--text-dim);text-decoration:none;font-size:.78rem;transition:color .25s;letter-spacing:.04em}
+    .nav-links a:hover{color:var(--text)}
+    .nav-cta{padding:.38rem 1.1rem;background:var(--red-dim);border:1px solid rgba(196,30,58,.3);color:var(--red-bright)!important;font-size:.75rem!important;font-weight:700!important;letter-spacing:.07em!important;transition:all .3s!important}
+    .nav-cta:hover{background:rgba(196,30,58,.2)!important;border-color:var(--red-bright)!important;color:var(--white)!important}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none}
+    .hamburger span{width:22px;height:1.5px;background:var(--text-dim);display:block;transition:all .3s}
+    .mobile-nav{display:none;position:fixed;inset:64px 0 0;background:rgba(5,5,10,.98);z-index:299;flex-direction:column;gap:0;padding:2rem 2.5rem;border-top:1px solid var(--border)}
+    .mobile-nav.open{display:flex}
+    .mobile-nav a{color:var(--text-dim);text-decoration:none;font-size:1rem;padding:.9rem 0;border-bottom:1px solid var(--border);transition:color .25s}
+    .mobile-nav a:hover{color:var(--gold)}
 
-    /* HERO */
-    .hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem}
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 50% 40%,rgba(155,26,26,0.12) 0%,rgba(200,168,75,0.04) 45%,transparent 70%);pointer-events:none}
-    .hero-eyebrow{font-size:0.7rem;font-weight:300;letter-spacing:0.35em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp 1s 0.2s forwards}
-    .hero-title{font-family:'Amiri',serif;font-size:clamp(3rem,9vw,7.5rem);font-weight:700;line-height:1.1;color:var(--white);text-shadow:0 0 60px rgba(200,168,75,0.25),0 0 120px rgba(155,26,26,0.15);margin-bottom:1rem;opacity:0;animation:fadeUp 1s 0.4s forwards}
-    .hero-title span{color:var(--gold);display:block}
-    .hero-tagline{font-family:'Amiri',serif;font-size:clamp(1rem,2.5vw,1.4rem);font-style:italic;color:var(--text-dim);margin-bottom:3.5rem;line-height:1.7;opacity:0;animation:fadeUp 1s 0.6s forwards}
-    .hero-tagline strong{color:var(--gold)}
+    /* ═══ TICKER ═══ */
+    .ticker-wrap{overflow:hidden;background:var(--surface);border-bottom:1px solid var(--border);height:36px;display:flex;align-items:center;padding-right:0}
+    .ticker-label{font-size:.58rem;font-weight:700;letter-spacing:.3em;color:var(--red-bright);text-transform:uppercase;padding:0 1.5rem;border-left:1px solid var(--border);white-space:nowrap;height:100%;display:flex;align-items:center;flex-shrink:0;background:var(--surface)}
+    .ticker-inner{display:flex;gap:0;white-space:nowrap;animation:tickerRun 40s linear infinite}
+    .ticker-inner:hover{animation-play-state:paused}
+    .tick-item{font-size:.72rem;color:var(--text-dim);padding:0 2.5rem;display:inline-flex;align-items:center;gap:.6rem}
+    .tick-item em{color:var(--red-bright);font-style:normal;font-size:.6rem;font-weight:700;letter-spacing:.15em}
+    @keyframes tickerRun{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-    .hero-3btn{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp 1s 0.8s forwards;margin-bottom:4rem}
-    .btn-section{display:inline-flex;align-items:center;gap:0.6rem;padding:0.8rem 1.8rem;border:1px solid;font-size:0.85rem;font-weight:600;letter-spacing:0.08em;text-decoration:none;transition:all 0.35s;position:relative;overflow:hidden}
-    .btn-section::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.35s}
-    .btn-section:hover::before{opacity:1}
-    .btn-text{border-color:var(--gold-dim);color:var(--gold)}
-    .btn-text::before{background:rgba(200,168,75,0.08)}
-    .btn-text:hover{border-color:var(--gold);box-shadow:0 0 25px rgba(200,168,75,0.12)}
-    .btn-video{border-color:rgba(204,34,34,0.4);color:var(--red-bright)}
-    .btn-video::before{background:rgba(204,34,34,0.06)}
-    .btn-video:hover{border-color:var(--red-bright);box-shadow:0 0 25px rgba(204,34,34,0.12)}
-    .btn-ai{border-color:rgba(42,122,191,0.4);color:var(--blue-bright)}
-    .btn-ai::before{background:rgba(42,122,191,0.06)}
-    .btn-ai:hover{border-color:var(--blue-bright);box-shadow:0 0 25px rgba(42,122,191,0.12)}
+    /* ═══ HERO ═══ */
+    .hero{position:relative;min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;margin-top:64px}
+    #bg-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .hero-left{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;padding:5rem 4rem 5rem 2.5rem;background:linear-gradient(to left,transparent,rgba(5,5,10,.6))}
+    .hero-eyebrow{font-size:.58rem;font-weight:700;letter-spacing:.45em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:.75rem}
+    .hero-eyebrow::after{content:'';display:block;width:32px;height:1px;background:rgba(196,30,58,.4)}
+    .hero-title{font-family:'Amiri',serif;font-size:clamp(2.8rem,5vw,4.5rem);color:var(--white);line-height:1.15;margin-bottom:1.25rem}
+    .hero-title span{color:var(--gold)}
+    .hero-sub{font-size:.9rem;color:var(--text-dim);line-height:1.95;max-width:420px;margin-bottom:2.5rem;font-weight:300}
+    .hero-actions{display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:3rem}
+    .btn-primary{padding:.75rem 1.8rem;background:var(--red-bright);border:1px solid var(--red-bright);color:var(--white);text-decoration:none;font-size:.85rem;font-weight:700;letter-spacing:.07em;transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;cursor:pointer}
+    .btn-primary:hover{background:#a0182e;border-color:#a0182e;transform:translateY(-2px);box-shadow:0 10px 35px rgba(196,30,58,.3)}
+    .btn-ghost{padding:.75rem 1.8rem;background:transparent;border:1px solid rgba(201,168,76,.3);color:var(--gold);text-decoration:none;font-size:.85rem;font-weight:600;letter-spacing:.07em;transition:all .3s;display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;font-family:'Cairo',sans-serif}
+    .btn-ghost:hover{background:var(--gold-dim);border-color:var(--gold);transform:translateY(-2px)}
+    .hero-kpi{display:flex;gap:2rem}
+    .kpi{display:flex;flex-direction:column}
+    .kpi-num{font-family:'Amiri',serif;font-size:1.5rem;color:var(--gold);font-weight:700;line-height:1}
+    .kpi-label{font-size:.65rem;color:var(--text-dim);letter-spacing:.06em;margin-top:.25rem}
+    .hero-right{position:relative;z-index:2}
+    .hero-feature-card{position:absolute;inset:3rem 2.5rem 3rem 0;overflow:hidden;border:1px solid rgba(201,168,76,.12);transition:all .5s}
+    .hero-feature-card:hover{border-color:rgba(201,168,76,.25)}
+    .hfc-img{width:100%;height:100%;object-fit:cover;filter:grayscale(20%) brightness(.75);transition:transform 8s ease,filter .5s}
+    .hero-feature-card:hover .hfc-img{transform:scale(1.04);filter:grayscale(0%) brightness(.8)}
+    .hfc-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,10,.96) 0%,rgba(5,5,10,.4) 55%,transparent 100%)}
+    .hfc-body{position:absolute;bottom:0;left:0;right:0;padding:2rem}
+    .hfc-cat{font-size:.58rem;font-weight:700;letter-spacing:.3em;color:var(--red-bright);text-transform:uppercase;display:block;margin-bottom:.6rem}
+    .hfc-title{font-family:'Amiri',serif;font-size:1.4rem;color:var(--white);line-height:1.4;margin-bottom:.75rem;text-decoration:none;display:block;transition:color .25s}
+    .hfc-title:hover{color:var(--gold)}
+    .hfc-excerpt{font-size:.8rem;color:rgba(220,210,200,.65);line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:1rem}
+    .hfc-meta{display:flex;align-items:center;justify-content:space-between}
+    .hfc-read{font-size:.72rem;color:var(--text-dim)}
+    .hfc-cta{font-size:.75rem;font-weight:700;color:var(--gold);letter-spacing:.07em;text-decoration:none;display:flex;align-items:center;gap:.4rem;transition:color .25s}
+    .hfc-cta:hover{color:var(--gold-bright)}
+    .hfc-views{font-size:.7rem;color:var(--text-muted);display:flex;align-items:center;gap:.3rem}
 
-    .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);opacity:0;animation:fadeUp 1s 1s forwards;max-width:900px;margin:0 auto}
-    .pillar{background:var(--card);padding:2rem 1.5rem;text-align:center;transition:background 0.3s;cursor:pointer;text-decoration:none;color:inherit;display:block}
-    .pillar:hover{background:var(--card-hover)}
-    .pillar-icon{font-size:2rem;margin-bottom:1rem;display:block}
-    .pillar-name{font-family:'Amiri',serif;font-size:1.1rem;color:var(--white);margin-bottom:0.5rem}
-    .pillar-desc{font-size:0.75rem;color:var(--text-dim);line-height:1.7}
-    .pillar-count{margin-top:1rem;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.25rem 0.6rem;border:1px solid;display:inline-block}
-    .pillar-t .pillar-count{color:var(--gold);border-color:rgba(200,168,75,0.3)}
-    .pillar-v .pillar-count{color:var(--red-bright);border-color:rgba(204,34,34,0.3)}
-    .pillar-ai .pillar-count{color:var(--blue-bright);border-color:rgba(42,122,191,0.3)}
+    /* ═══ STATS ═══ */
+    .stats-bar{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.1rem 2.5rem;display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap}
+    .stat-item{display:flex;align-items:center;gap:.7rem;padding:0 2.5rem;border-left:1px solid var(--border)}
+    .stat-item:last-child{border-left:none}
+    .stat-icon{font-size:1rem;opacity:.7}
+    .stat-num{font-family:'Amiri',serif;font-size:1.3rem;color:var(--gold);font-weight:700;line-height:1}
+    .stat-label{font-size:.68rem;color:var(--text-dim);font-weight:300}
 
-    main{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:5rem 2rem 8rem}
+    /* ═══ SECTIONS ═══ */
+    .section{padding:5rem 2.5rem;max-width:1320px;margin:0 auto}
+    .section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:3rem;gap:1rem}
+    .section-tag{font-size:.58rem;font-weight:700;letter-spacing:.38em;color:var(--red-bright);text-transform:uppercase;margin-bottom:.5rem;display:block}
+    .section-title{font-family:'Amiri',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--white);line-height:1.3}
+    .section-link{font-size:.75rem;color:var(--text-dim);text-decoration:none;letter-spacing:.05em;border-bottom:1px solid transparent;transition:all .25s;white-space:nowrap}
+    .section-link:hover{color:var(--gold);border-bottom-color:rgba(201,168,76,.4)}
 
-    /* SECTION HEADER */
-    .sec-header{display:flex;align-items:center;gap:1.5rem;margin-bottom:2rem}
-    .sec-label{font-size:0.68rem;font-weight:700;letter-spacing:0.4em;text-transform:uppercase;white-space:nowrap}
-    .sec-label-t{color:var(--gold)}
-    .sec-label-v{color:var(--red-bright)}
-    .sec-label-ai{color:var(--blue-bright)}
-    .sec-line{flex:1;height:1px;background:linear-gradient(to left,transparent,var(--border))}
-    .sec-link{font-size:0.72rem;color:var(--text-dim);text-decoration:none;white-space:nowrap;transition:color 0.3s}
-    .sec-link:hover{color:var(--gold)}
+    /* ═══ REVEAL ═══ */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s ease}
+    .reveal.visible{opacity:1;transform:none}
 
-    /* THREE WORLDS INTRO */
-    .worlds-intro{margin-bottom:3rem;padding:2rem 2.5rem;border:1px solid var(--border);text-align:center;position:relative;background:linear-gradient(135deg,rgba(200,168,75,0.03),transparent)}
-    .worlds-intro::before,.worlds-intro::after{content:'';position:absolute;width:30px;height:30px;border-color:var(--gold-dim);border-style:solid;opacity:0.2}
-    .worlds-intro::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
-    .worlds-intro::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
-    .worlds-title{font-family:'Amiri',serif;font-size:1.3rem;color:var(--white);margin-bottom:0.75rem}
-    .worlds-sub{font-size:0.85rem;color:var(--text-dim);line-height:2;max-width:600px;margin:0 auto}
+    /* ═══ EDITORIAL GRID ═══ */
+    .editorial-grid{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:auto auto;gap:1.5rem;margin-bottom:1.5rem}
+    .edit-main{grid-row:1/3;background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .4s;display:flex;flex-direction:column}
+    .edit-main:hover{border-color:rgba(201,168,76,.18);box-shadow:0 25px 70px rgba(0,0,0,.5)}
+    .edit-main .card-img-wrap{flex-shrink:0}
+    .edit-main .card-img-wrap a{display:block}
+    .edit-main .card-img{width:100%;height:320px;object-fit:cover;filter:grayscale(25%) brightness(.85);transition:all .5s;display:block}
+    .edit-main:hover .card-img{filter:grayscale(5%) brightness(.9);transform:scale(1.03)}
+    .edit-main .card-body{padding:1.75rem 2rem;flex:1;display:flex;flex-direction:column;gap:.75rem}
+    .edit-main .card-tag{font-size:.58rem;font-weight:700;letter-spacing:.28em;color:var(--red-bright);text-transform:uppercase}
+    .edit-main .card-title{font-family:'Amiri',serif;font-size:1.45rem;color:var(--white);line-height:1.45;text-decoration:none;display:block;transition:color .25s;flex:1}
+    .edit-main .card-title:hover{color:var(--gold)}
+    .edit-main .card-excerpt{font-size:.85rem;color:var(--text-dim);line-height:1.8;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+    .edit-main .card-footer{padding:1rem 2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 
-    /* FEATURED — fixed: div not a, each button has its own link */
-    .featured{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:5rem;border:1px solid var(--border);overflow:hidden;color:inherit;transition:border-color 0.3s}
-    .featured:hover{border-color:rgba(200,168,75,0.22)}
-    .fi-img-link{display:block;text-decoration:none;height:480px;overflow:hidden;position:relative;flex-shrink:0}
-    .fi-img-link::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(155,26,26,0.4),rgba(6,6,8,0.5));opacity:0.8;transition:opacity 0.5s}
-    .featured:hover .fi-img-link::after{opacity:0.5}
-    .fi-img-link img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) contrast(1.1);transition:transform 0.8s;display:block}
-    .featured:hover .fi-img-link img{transform:scale(1.04)}
-    .fi-badge{position:absolute;top:1.5rem;right:1.5rem;z-index:2;padding:0.25rem 0.7rem;background:var(--red);color:var(--white);font-size:0.62rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase}
-    .fi-body{padding:2.5rem;display:flex;flex-direction:column;justify-content:center;background:var(--card)}
-    .fi-meta{display:flex;align-items:center;gap:0.8rem;margin-bottom:1.2rem;font-size:0.7rem;color:var(--text-dim)}
-    .fi-cat{color:var(--gold);font-weight:700;letter-spacing:0.15em;text-transform:uppercase}
-    .fi-dot{width:3px;height:3px;border-radius:50%;background:var(--text-dim)}
-    .fi-title-link{text-decoration:none;color:inherit}
-    .fi-title{font-family:'Amiri',serif;font-size:1.8rem;line-height:1.4;color:var(--white);margin-bottom:0.75rem}
-    .fi-title-link:hover .fi-title{color:var(--gold)}
-    .fi-excerpt{font-size:0.9rem;line-height:2;color:var(--text-dim);margin-bottom:1.5rem}
-    .fi-avail{display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap}
-    .fi-avail-badge{font-size:0.6rem;padding:0.18rem 0.55rem;border:1px solid;font-weight:700;letter-spacing:0.08em}
-    .fi-avail-r{color:var(--gold);border-color:rgba(200,168,75,0.4);background:rgba(200,168,75,0.07)}
-    .fi-avail-v{color:var(--text-dim);border-color:var(--border)}
-    .fi-avail-ai{color:var(--text-dim);border-color:var(--border)}
-    .fi-btns{display:flex;gap:0.75rem;flex-wrap:wrap}
-    .fi-btn{font-size:0.78rem;font-weight:600;letter-spacing:0.08em;padding:0.5rem 1.2rem;border:1px solid;text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:0.4rem}
-    .fi-btn-read{color:var(--gold);border-color:rgba(200,168,75,0.35)}
-    .fi-btn-read:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
-    .fi-btn-watch{color:var(--red-bright);border-color:rgba(204,34,34,0.35)}
-    .fi-btn-watch:hover{border-color:var(--red-bright);background:rgba(204,34,34,0.08)}
-    .fi-btn-ai{color:var(--blue-bright);border-color:rgba(42,122,191,0.35)}
-    .fi-btn-ai:hover{border-color:var(--blue-bright);background:rgba(42,122,191,0.08)}
+    .edit-side{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .4s;display:flex;flex-direction:column}
+    .edit-side:hover{border-color:rgba(201,168,76,.15);box-shadow:0 16px 45px rgba(0,0,0,.4)}
+    .edit-side .card-img{width:100%;height:160px;object-fit:cover;filter:grayscale(35%) brightness(.8);transition:all .5s;display:block}
+    .edit-side:hover .card-img{filter:grayscale(10%) brightness(.88);transform:scale(1.04)}
+    .edit-side .card-body{padding:1.1rem 1.3rem;flex:1;display:flex;flex-direction:column;gap:.5rem}
+    .edit-side .card-tag{font-size:.56rem;font-weight:700;letter-spacing:.25em;color:var(--red-bright);text-transform:uppercase}
+    .edit-side .card-title{font-family:'Amiri',serif;font-size:1rem;color:var(--white);line-height:1.45;text-decoration:none;display:block;transition:color .25s;flex:1}
+    .edit-side .card-title:hover{color:var(--gold)}
+    .edit-side .card-footer{padding:.75rem 1.3rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 
-    /* STORY CARDS — fixed: div not a, no nested links */
-    .stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
-    .story-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all 0.35s;position:relative;display:flex;flex-direction:column}
-    .story-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--red),var(--gold));transform:scaleX(0);transition:transform 0.4s}
-    .story-card:hover{border-color:rgba(200,168,75,0.18);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.45)}
-    .story-card:hover::after{transform:scaleX(1)}
-    .card-img-link{display:block;text-decoration:none}
-    .card-img-wrap{overflow:hidden;height:190px;position:relative}
-    .card-img-wrap::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70px;background:linear-gradient(to top,var(--card),transparent)}
-    .card-img{width:100%;height:100%;object-fit:cover;filter:grayscale(50%) contrast(1.1);transition:all 0.5s;display:block}
-    .story-card:hover .card-img{filter:grayscale(20%) contrast(1.15);transform:scale(1.04)}
-    .card-body{padding:1.3rem 1.3rem 0.5rem;flex:1}
-    .card-tag{font-size:0.58rem;font-weight:700;letter-spacing:0.25em;color:var(--red-bright);text-transform:uppercase;margin-bottom:0.6rem;display:block}
-    .card-title-link{text-decoration:none;color:inherit}
-    .card-title{font-family:'Amiri',serif;font-size:1.05rem;line-height:1.5;color:var(--white);margin-bottom:0.6rem;transition:color 0.3s}
-    .card-title-link:hover .card-title{color:var(--gold)}
-    .card-excerpt{font-size:0.8rem;line-height:1.8;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+    .stories-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+    .story-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .4s;display:flex;flex-direction:column}
+    .story-card:hover{border-color:rgba(201,168,76,.15);transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+    .story-card .card-img-wrap{position:relative;overflow:hidden}
+    .story-card .card-img-wrap a{display:block}
+    .story-card .card-img{width:100%;aspect-ratio:16/10;object-fit:cover;filter:grayscale(35%) brightness(.82);transition:all .5s;display:block}
+    .story-card:hover .card-img{filter:grayscale(10%) brightness(.9);transform:scale(1.04)}
+    .story-card .card-body{padding:1.1rem 1.3rem;flex:1;display:flex;flex-direction:column;gap:.5rem}
+    .story-card .card-tag{font-size:.56rem;font-weight:700;letter-spacing:.25em;color:var(--red-bright);text-transform:uppercase}
+    .story-card .card-title{font-family:'Amiri',serif;font-size:1rem;color:var(--white);line-height:1.45;text-decoration:none;display:block;transition:color .25s;flex:1}
+    .story-card .card-title:hover{color:var(--gold)}
+    .story-card .card-footer{padding:.75rem 1.3rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .card-badge{position:absolute;top:.65rem;right:.65rem;font-size:.55rem;font-weight:700;letter-spacing:.18em;padding:.2rem .55rem;text-transform:uppercase}
+    .badge-new{background:var(--red-bright);color:var(--white)}
+    .badge-top{background:rgba(201,168,76,.15);color:var(--gold);border:1px solid rgba(201,168,76,.25)}
+    .card-meta{font-size:.66rem;color:var(--text-muted)}
+    .card-views{font-size:.66rem;color:var(--text-muted);display:flex;align-items:center;gap:.25rem}
+    .card-read{font-size:.72rem;font-weight:700;color:var(--gold);text-decoration:none;letter-spacing:.05em;transition:color .25s}
+    .card-read:hover{color:var(--gold-bright)}
+    .view-all-wrap{text-align:center;margin-top:2.5rem}
+    .btn-view-all{display:inline-flex;align-items:center;gap:.6rem;padding:.75rem 2.2rem;background:transparent;border:1px solid var(--border);color:var(--text-dim);font-family:'Cairo',sans-serif;font-size:.82rem;font-weight:600;letter-spacing:.06em;cursor:pointer;text-decoration:none;transition:all .3s}
+    .btn-view-all:hover{border-color:rgba(201,168,76,.35);color:var(--gold)}
 
-    .card-footer{padding:0.8rem 1.3rem 1.3rem;display:flex;align-items:center;justify-content:space-between;margin-top:auto}
-    .card-meta{font-size:0.65rem;color:var(--text-dim);display:flex;align-items:center;gap:0.5rem}
-    .card-meta-dot{width:2px;height:2px;border-radius:50%;background:var(--text-dim)}
-    .c-btn-read{font-size:0.7rem;font-weight:700;letter-spacing:0.08em;padding:0.3rem 0.85rem;border:1px solid rgba(200,168,75,0.3);color:var(--gold);text-decoration:none;transition:all 0.3s;display:inline-flex;align-items:center;gap:0.3rem}
-    .c-btn-read:hover{border-color:var(--gold);background:rgba(200,168,75,0.08)}
+    /* ═══ NEWSLETTER ═══ */
+    .newsletter-section{background:linear-gradient(135deg,var(--surface),rgba(139,26,26,.04));border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:4.5rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+    .newsletter-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:250px;background:radial-gradient(ellipse,rgba(139,26,26,.1) 0%,transparent 70%);pointer-events:none}
+    .nl-eyebrow{font-size:.58rem;font-weight:700;letter-spacing:.4em;color:var(--red-bright);text-transform:uppercase;margin-bottom:1rem;display:block}
+    .nl-title{font-family:'Amiri',serif;font-size:clamp(1.5rem,3vw,2.2rem);color:var(--white);margin-bottom:.75rem}
+    .nl-sub{font-size:.88rem;color:var(--text-dim);margin-bottom:2rem;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.85}
+    .nl-form{display:flex;gap:.75rem;max-width:460px;margin:0 auto 1rem;flex-wrap:wrap;justify-content:center}
+    .nl-input{flex:1;min-width:220px;padding:.7rem 1rem;background:rgba(255,255,255,.03);border:1px solid var(--border);color:var(--text);font-family:'Cairo',sans-serif;font-size:.88rem;outline:none;transition:border-color .25s}
+    .nl-input:focus{border-color:rgba(201,168,76,.35)}
+    .nl-input::placeholder{color:var(--text-muted)}
+    .nl-btn{padding:.7rem 1.75rem;background:var(--red-bright);border:none;color:var(--white);font-family:'Cairo',sans-serif;font-size:.85rem;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .3s;white-space:nowrap}
+    .nl-btn:hover{background:#a0182e;transform:translateY(-1px)}
+    .nl-note{font-size:.68rem;color:var(--text-muted)}
 
-    /* VIDEO CARDS */
-    .videos-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
-    .video-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all 0.35s;text-decoration:none;color:inherit;display:block}
-    .video-card:hover{border-color:rgba(204,34,34,0.2);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.45)}
-    .video-thumb{position:relative;height:175px;overflow:hidden;background:#000}
-    .video-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(40%) brightness(0.7);transition:all 0.5s}
-    .video-card:hover .video-thumb img{filter:grayscale(10%) brightness(0.85);transform:scale(1.03)}
-    .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:48px;height:48px;background:rgba(204,34,34,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;transition:all 0.3s;z-index:2}
-    .video-card:hover .play-btn{background:var(--red-bright);transform:translate(-50%,-50%) scale(1.1)}
-    .vid-duration{position:absolute;bottom:0.5rem;left:0.7rem;font-size:0.65rem;color:var(--white);background:rgba(0,0,0,0.7);padding:0.15rem 0.4rem;z-index:2}
-    .vid-body{padding:1rem 1.3rem 0.5rem}
-    .vid-tag{font-size:0.58rem;font-weight:700;letter-spacing:0.25em;color:var(--red-bright);text-transform:uppercase;margin-bottom:0.5rem;display:block}
-    .vid-title{font-family:'Amiri',serif;font-size:1rem;line-height:1.5;color:var(--white);margin-bottom:0.5rem}
-    .vid-desc{font-size:0.78rem;line-height:1.75;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .vid-footer{padding:0.6rem 1.3rem 1rem;display:flex;align-items:center;justify-content:space-between}
-    .vid-source{font-size:0.62rem;color:var(--text-dim)}
-    .vid-watch{font-size:0.65rem;color:var(--red-bright);font-weight:700}
+    /* ═══ VIDEO SECTION ═══ */
+    .vid-tabs{display:flex;gap:0;flex-wrap:wrap;margin-bottom:2rem;border-bottom:1px solid var(--border)}
+    .vid-tab{padding:.55rem 1.35rem;border:none;background:none;color:var(--text-dim);font-family:'Cairo',sans-serif;font-size:.78rem;cursor:pointer;border-bottom:2px solid transparent;transition:all .3s;letter-spacing:.04em}
+    .vid-tab:hover{color:var(--text)}
+    .vid-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .vid-tab.turkish.active{color:var(--teal);border-bottom-color:var(--teal)}
+    .vid-scroll-wrap{overflow-x:auto;padding-bottom:1rem;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+    .vid-scroll-wrap::-webkit-scrollbar{height:3px}
+    .vid-scroll-wrap::-webkit-scrollbar-track{background:transparent}
+    .vid-scroll-wrap::-webkit-scrollbar-thumb{background:var(--border)}
+    .vid-row{display:flex;gap:1.25rem;min-width:max-content}
+    .vid-card{width:300px;background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .35s;flex-shrink:0;cursor:pointer}
+    .vid-card:hover{border-color:rgba(201,168,76,.18);transform:translateY(-3px);box-shadow:0 14px 40px rgba(0,0,0,.45)}
+    .vid-card.turkish:hover{border-color:rgba(34,168,150,.2);box-shadow:0 14px 40px rgba(34,168,150,.06)}
+    .vid-thumb{position:relative;padding-bottom:56.25%;overflow:hidden}
+    .vid-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(25%);transition:all .5s}
+    .vid-card:hover .vid-thumb img{filter:grayscale(0%);transform:scale(1.04)}
+    .vid-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;backdrop-filter:blur(6px);transition:all .3s}
+    .vid-play.horror{background:rgba(196,30,58,.8)}
+    .vid-play.turkish-p{background:rgba(34,168,150,.8)}
+    .vid-play.default-p{background:rgba(201,168,76,.6)}
+    .vid-card:hover .vid-play{transform:translate(-50%,-50%) scale(1.1)}
+    .vid-dur{position:absolute;bottom:.55rem;left:.55rem;background:rgba(5,5,10,.88);color:var(--text);font-size:.65rem;padding:.15rem .45rem;font-weight:600;letter-spacing:.04em}
+    .vid-type{position:absolute;top:.55rem;right:.55rem;font-size:.55rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:.16rem .45rem}
+    .vid-type.turkish{background:rgba(34,168,150,.2);color:var(--teal);border:1px solid rgba(34,168,150,.3)}
+    .vid-type.horror{background:rgba(196,30,58,.18);color:var(--red-bright);border:1px solid rgba(196,30,58,.25)}
+    .vid-type.default{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+    .vid-body{padding:.95rem 1.1rem}
+    .vid-cat{font-size:.55rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;display:block;margin-bottom:.4rem}
+    .vid-cat.turkish{color:var(--teal)}
+    .vid-cat.horror{color:var(--red-bright)}
+    .vid-cat.default{color:var(--gold)}
+    .vid-title{font-family:'Amiri',serif;font-size:.95rem;color:var(--white);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 
-    /* AI CARDS */
-    .ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:1.5rem}
-    .ai-card{background:var(--card);border:1px solid rgba(42,122,191,0.15);overflow:hidden;transition:all 0.35s;text-decoration:none;color:inherit;display:block;position:relative}
-    .ai-card:hover{border-color:rgba(42,122,191,0.3);background:var(--card-hover);transform:translateY(-3px);box-shadow:0 16px 50px rgba(0,0,0,0.45)}
-    .ai-thumb{position:relative;height:175px;overflow:hidden}
-    .ai-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(60%) brightness(0.5);transition:all 0.5s}
-    .ai-card:hover .ai-thumb img{filter:grayscale(30%) brightness(0.65);transform:scale(1.03)}
-    .ai-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,74,122,0.4),rgba(6,6,8,0.6));z-index:1}
-    .coming-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;text-align:center}
-    .coming-badge span{display:block;font-size:0.6rem;letter-spacing:0.3em;color:rgba(255,255,255,0.6);text-transform:uppercase;margin-bottom:0.3rem}
-    .coming-badge strong{font-family:'Amiri',serif;font-size:1.1rem;color:var(--blue-bright)}
-    .ready-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;width:52px;height:52px;background:rgba(42,122,191,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
-    .ai-glow{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(to right,transparent,var(--blue-bright),transparent);opacity:0.5}
-    .ai-body{padding:1rem 1.3rem 0.5rem}
-    .ai-tag{font-size:0.58rem;font-weight:700;letter-spacing:0.25em;color:var(--blue-bright);text-transform:uppercase;margin-bottom:0.5rem;display:block}
-    .ai-title{font-family:'Amiri',serif;font-size:1rem;line-height:1.5;color:var(--white);margin-bottom:0.5rem}
-    .ai-desc{font-size:0.78rem;line-height:1.75;color:var(--text-dim);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-    .ai-footer{padding:0.6rem 1.3rem 1rem;display:flex;align-items:center;justify-content:space-between}
-    .ai-label{font-size:0.62rem;color:var(--blue-bright);font-weight:600}
-    .ai-status{font-size:0.6rem;color:var(--text-dim);letter-spacing:0.1em}
+    /* ═══ AI SECTION ═══ */
+    .ai-section-wrap{background:linear-gradient(180deg,var(--bg) 0%,rgba(20,40,80,.04) 50%,var(--bg) 100%)}
+    .ai-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .ai-card{background:var(--card);border:1px solid var(--border);overflow:hidden;transition:all .35s;display:flex;flex-direction:column}
+    .ai-card:hover{border-color:rgba(74,158,218,.2);transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+    .ai-thumb{position:relative;aspect-ratio:16/9;overflow:hidden}
+    .ai-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(50%) brightness(.7);transition:all .5s;display:block}
+    .ai-card:hover .ai-thumb img{filter:grayscale(20%) brightness(.8)}
+    .ai-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(20,40,80,.2),transparent)}
+    .coming-badge{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;background:rgba(5,5,10,.65)}
+    .coming-badge span{font-size:.56rem;font-weight:700;letter-spacing:.3em;color:var(--blue-bright);text-transform:uppercase}
+    .coming-badge strong{font-family:'Amiri',serif;font-size:.95rem;color:var(--white)}
+    .ai-body{padding:1rem 1.2rem;flex:1;display:flex;flex-direction:column;gap:.5rem}
+    .ai-tag{font-size:.56rem;font-weight:700;letter-spacing:.25em;color:var(--blue-bright);text-transform:uppercase}
+    .ai-title{font-family:'Amiri',serif;font-size:.95rem;color:var(--white);line-height:1.5}
+    .ai-desc{font-size:.76rem;color:var(--text-dim);line-height:1.65;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1}
+    .ai-footer{padding:.75rem 1.2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+    .ai-label{font-size:.62rem;color:var(--text-muted)}
+    .ai-status{font-size:.66rem;font-weight:700;color:var(--blue-bright);letter-spacing:.05em}
 
-    /* SEE ALL */
-    .see-all{display:flex;justify-content:center;margin-top:2rem}
-    .see-all a{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.5rem;border:1px solid var(--border);color:var(--text-dim);text-decoration:none;font-size:0.78rem;transition:all 0.3s}
-    .see-all a:hover{border-color:var(--gold-dim);color:var(--gold)}
+    /* ═══ PILLARS ═══ */
+    .pillars{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:3.5rem 2.5rem;display:flex;align-items:flex-start;justify-content:center;gap:0;flex-wrap:wrap}
+    .pillar{max-width:280px;padding:0 2.5rem;text-align:center;border-left:1px solid var(--border)}
+    .pillar:last-child{border-left:none}
+    .pillar-icon{font-size:1.5rem;margin-bottom:.75rem;display:block;opacity:.7}
+    .pillar h3{font-family:'Amiri',serif;font-size:1.05rem;color:var(--white);margin-bottom:.5rem}
+    .pillar p{font-size:.78rem;color:var(--text-dim);line-height:1.75}
 
-    .section-divider{border:none;border-top:1px solid var(--border);margin:5rem 0}
-    .ornament{text-align:center;color:var(--gold-dim);font-size:1rem;letter-spacing:1rem;opacity:0.4;margin:3rem 0}
+    /* ═══ FOOTER ═══ */
+    footer{background:var(--surface);border-top:1px solid var(--border);padding:3.5rem 2.5rem 2rem}
+    .footer-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+    .footer-brand .footer-logo{font-family:'Amiri',serif;font-size:1.55rem;color:var(--gold);text-decoration:none;display:block;margin-bottom:.75rem}
+    .footer-tagline{font-size:.8rem;color:var(--text-dim);line-height:1.85;margin-bottom:1.25rem}
+    .social-links{display:flex;gap:.65rem;flex-wrap:wrap}
+    .social-link{width:34px;height:34px;border:1px solid var(--border);color:var(--text-muted);display:flex;align-items:center;justify-content:center;font-size:.82rem;text-decoration:none;transition:all .25s}
+    .social-link:hover{border-color:var(--gold);color:var(--gold)}
+    .footer-col h4{font-size:.6rem;font-weight:700;letter-spacing:.32em;color:var(--text-muted);text-transform:uppercase;margin-bottom:1.2rem}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:.65rem}
+    .footer-col ul a{color:var(--text-dim);text-decoration:none;font-size:.8rem;transition:color .25s}
+    .footer-col ul a:hover{color:var(--gold)}
+    .footer-bottom{max-width:1320px;margin:0 auto;padding-top:2rem;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+    .footer-copy{font-size:.7rem;color:var(--text-muted)}
+    .footer-legal{display:flex;gap:1.5rem}
+    .footer-legal a{font-size:.7rem;color:var(--text-muted);text-decoration:none;transition:color .25s}
+    .footer-legal a:hover{color:var(--text-dim)}
 
-    .quote-box{margin:4rem 0;padding:3.5rem;border:1px solid var(--border);text-align:center;background:linear-gradient(135deg,rgba(155,26,26,0.04),transparent);position:relative}
-    .quote-box::before,.quote-box::after{content:'';position:absolute;width:50px;height:50px;border-color:var(--gold-dim);border-style:solid;opacity:0.25}
-    .quote-box::before{top:-1px;right:-1px;border-width:1px 1px 0 0}
-    .quote-box::after{bottom:-1px;left:-1px;border-width:0 0 1px 1px}
-    .quote-text{font-family:'Amiri',serif;font-size:1.5rem;font-style:italic;color:var(--white);line-height:1.8;margin-bottom:1rem}
-    .quote-attr{font-size:0.7rem;letter-spacing:0.2em;color:var(--gold-dim);text-transform:uppercase}
+    /* ═══ SCROLL TOP ═══ */
+    .scroll-top{position:fixed;bottom:2rem;left:2rem;width:40px;height:40px;background:rgba(11,11,18,.92);border:1px solid var(--border);color:var(--text-dim);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.9rem;transition:all .3s;opacity:0;pointer-events:none;z-index:50;backdrop-filter:blur(8px)}
+    .scroll-top.visible{opacity:1;pointer-events:all}
+    .scroll-top:hover{border-color:var(--gold);color:var(--gold)}
 
-    footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:3rem 2rem;text-align:center}
-    .footer-logo{font-family:'Amiri',serif;font-size:1.8rem;color:var(--gold);margin-bottom:0.5rem;text-shadow:0 0 20px rgba(200,168,75,0.15)}
-    .footer-tagline{font-size:0.75rem;color:var(--text-dim);margin-bottom:1.5rem;font-style:italic;font-family:'Amiri',serif}
-    .footer-nav{display:flex;justify-content:center;gap:2rem;list-style:none;margin-bottom:1.5rem}
-    .footer-nav a{font-size:0.78rem;color:var(--text-dim);text-decoration:none;transition:color 0.3s}
-    .footer-nav a:hover{color:var(--gold)}
-    .footer-copy{font-size:0.72rem;color:var(--text-dim)}
+    /* ═══ MODAL ═══ */
+    .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:500;display:flex;align-items:center;justify-content:center;padding:2rem;opacity:0;pointer-events:none;transition:opacity .3s}
+    .modal-overlay.open{opacity:1;pointer-events:all}
+    .modal-inner{width:100%;max-width:900px;position:relative}
+    .modal-close{position:absolute;top:-3rem;left:0;background:none;border:1px solid var(--border);color:var(--text-dim);width:38px;height:38px;font-size:1.1rem;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center}
+    .modal-close:hover{border-color:var(--gold);color:var(--gold)}
+    .modal-video{position:relative;padding-bottom:56.25%;background:#000}
+    .modal-video iframe{position:absolute;inset:0;width:100%;height:100%;border:none}
+    .modal-info{padding:.8rem 0 0;display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap}
+    .modal-title{color:var(--white);font-family:'Amiri',serif;font-size:1.05rem}
+    .modal-source{font-size:.68rem;color:var(--text-dim)}
 
-    @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeIn{from{opacity:0}to{opacity:0.5}}
-    @keyframes scrollPulse{0%,100%{opacity:0.3}50%{opacity:1}}
-    .reveal{opacity:0;transform:translateY(35px);transition:opacity 0.75s ease,transform 0.75s ease}
-    .reveal.visible{opacity:1;transform:translateY(0)}
-    .scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeIn 1s 1.5s forwards}
-    .scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold-dim),transparent);animation:scrollPulse 2s infinite}
-
-    @media(max-width:960px){.featured{grid-template-columns:1fr}.fi-img-link{height:280px}.stories-grid,.videos-grid,.ai-grid{grid-template-columns:1fr 1fr}.pillars{grid-template-columns:1fr}}
-    @media(max-width:600px){.stories-grid,.videos-grid,.ai-grid{grid-template-columns:1fr}.hero-3btn{flex-direction:column;align-items:center}.nav-links{display:none}.fi-body{padding:1.5rem}.concept-intro{padding:1.5rem}}
+    /* ═══ RESPONSIVE ═══ */
+    @media(max-width:1100px){
+      .hero{grid-template-columns:1fr}
+      .hero-right{display:none}
+      .hero-left{padding:5rem 2.5rem}
+      .stories-row{grid-template-columns:repeat(2,1fr)}
+      .footer-inner{grid-template-columns:1fr 1fr}
+    }
+    @media(max-width:900px){
+      .editorial-grid{grid-template-columns:1fr;grid-template-rows:auto}
+      .edit-main{grid-row:auto}
+      .ai-grid{grid-template-columns:1fr 1fr}
+      .pillars{flex-direction:column;align-items:center;gap:2rem}
+      .pillar{border-left:none;border-bottom:1px solid var(--border);padding-bottom:2rem;width:100%;max-width:360px}
+      .pillar:last-child{border-bottom:none;padding-bottom:0}
+    }
+    @media(max-width:640px){
+      nav{padding:0 1.25rem}
+      .nav-links{display:none}
+      .hamburger{display:flex}
+      .section{padding:3.5rem 1.25rem}
+      .stories-row{grid-template-columns:1fr}
+      .ai-grid{grid-template-columns:1fr}
+      .footer-inner{grid-template-columns:1fr;gap:2rem}
+      .footer-bottom{flex-direction:column;align-items:flex-start;gap:.75rem}
+      .stats-bar{gap:0;padding:.85rem}
+      .stat-item{padding:0 1.1rem;border-left:none;border-bottom:none;flex-direction:column;gap:.2rem;text-align:center}
+      .nl-form{flex-direction:column;align-items:stretch}
+      .nl-input{min-width:unset}
+      .hero-kpi{gap:1.5rem}
+      .hero-left{padding:3.5rem 1.5rem}
+      .section-header{flex-direction:column;align-items:flex-start;gap:.5rem}
+    }
   </style>
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
-
+<!-- ═══ NAV ═══ -->
 <nav>
   <a href="index.html" class="nav-logo">القصص الأسطورية</a>
-  <ul class="nav-links">
-    <li><a href="#text-section">📖 قصص مقروءة</a></li>
-    <li><a href="#video-section">🎬 قصص بالفيديو</a></li>
-    <li><a href="#ai-section">🤖 قصص ذكاء اصطناعي</a></li>
-  </ul>
+  <div class="nav-links">
+    <a href="#stories-section">📖 القصص</a>
+    <a href="videos.html">🎬 مكتبة المسلسلات التركية</a>
+    <a href="ai-videos.html">🤖 ذكاء اصطناعي</a>
+    <a href="about.html">من نحن</a>
+    <a href="#newsletter-section" class="nav-cta">اشترك مجاناً</a>
+  </div>
+  <button class="hamburger" onclick="toggleMobileNav()" aria-label="القائمة">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#stories-section" onclick="closeMobileNav()">📖 القصص المكتوبة</a>
+  <a href="videos.html">🎬 مكتبة المسلسلات التركية</a>
+  <a href="ai-videos.html">🤖 الذكاء الاصطناعي</a>
+  <a href="about.html">من نحن</a>
+  <a href="contact.html">تواصل معنا</a>
+  <a href="#newsletter-section" onclick="closeMobileNav()">اشترك في النشرة</a>
+</div>
 
+<!-- ═══ TICKER ═══ -->
+<div class="ticker-wrap" style="margin-top:64px">
+  <div class="ticker-label">آخر القصص</div>
+  <div class="ticker-inner" id="ticker-inner"></div>
+</div>
+
+<!-- ═══ HERO ═══ -->
 <section class="hero">
-  <p class="hero-eyebrow">◆ المنصة العربية الأولى للقصص الغامضة ◆</p>
-  <h1 class="hero-title">القصص<span>الأسطورية</span></h1>
-  <p class="hero-tagline">
-    منصة عربية لعشّاق الرعب والغموض والأساطير:<br>
-    <strong>نكتب قصصاً مشوقة</strong>،
-    <strong>نختار فيديوهات مرعبة</strong>،
-    ونصنع <strong>تجارب جديدة بالذكاء الاصطناعي</strong>.
-  </p>
-
-  <div class="hero-3btn">
-    <a href="#text-section" class="btn-section btn-text">📖 ابدأ القراءة</a>
-    <a href="#video-section" class="btn-section btn-video">🎬 شاهد القصص</a>
-    <a href="#ai-section" class="btn-section btn-ai">🤖 قصص الذكاء الاصطناعي</a>
+  <canvas id="bg-canvas"></canvas>
+  <div class="hero-bg" style="position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 30% 50%,rgba(139,26,26,.15) 0%,transparent 70%);pointer-events:none"></div>
+  <div class="hero-left">
+    <div class="hero-eyebrow">منصة عربية — رعب وغموض وأفلام</div>
+    <h1 class="hero-title">القصص<br><span>الأسطورية</span></h1>
+    <p class="hero-sub">قصص رعب وغموض أصلية، مكتبة فيديو منظّمة من أفلام ومسلسلات وقصص، ومحتوى بالذكاء الاصطناعي — كل شيء في مكان واحد</p>
+    <div class="hero-actions">
+      <a href="#stories-section" class="btn-primary">ابدأ القراءة ←</a>
+      <button class="btn-ghost" onclick="pickRandom()">🎲 قصة عشوائية</button>
+    </div>
+    <div class="hero-kpi">
+      <div class="kpi"><span class="kpi-num" id="total-reads">٢٦٤٠+</span><span class="kpi-label">قارئ</span></div>
+      <div class="kpi"><span class="kpi-num">١٠</span><span class="kpi-label">قصة أصلية</span></div>
+      <div class="kpi"><span class="kpi-num">مجاناً</span><span class="kpi-label">بالكامل</span></div>
+    </div>
   </div>
-
-  <div class="pillars reveal">
-    <a href="#text-section" class="pillar pillar-t">
-      <span class="pillar-icon">📖</span>
-      <p class="pillar-name">قصص مقروءة</p>
-      <p class="pillar-desc">قصص طويلة ومفصلة، مكتوبة بأسلوب مشوق يجعلك لا تتوقف عن القراءة</p>
-      <span class="pillar-count">١٠ قصص حصرية</span>
-    </a>
-    <a href="#video-section" class="pillar pillar-v">
-      <span class="pillar-icon">🎬</span>
-      <p class="pillar-name">قصص بالفيديو</p>
-      <p class="pillar-desc">فيديوهات رعب وغموض مختارة من مصادرها، مجمعة في مكان واحد لتستمتع بالمشاهدة</p>
-      <span class="pillar-count">٦ فيديوهات مختارة</span>
-    </a>
-    <a href="#ai-section" class="pillar pillar-ai">
-      <span class="pillar-icon">🤖</span>
-      <p class="pillar-name">قصص الذكاء الاصطناعي</p>
-      <p class="pillar-desc">قصص ومشاهد جديدة ومستقلة، تُولَد بالصوت والصورة باستخدام الذكاء الاصطناعي</p>
-      <span class="pillar-count">٦ قصص قادمة</span>
-    </a>
+  <div class="hero-right">
+    <div class="hero-feature-card" id="hero-feature"></div>
   </div>
-
-  <div class="scroll-indicator"><div class="scroll-line"></div></div>
 </section>
 
-<main>
+<!-- ═══ STATS BAR ═══ -->
+<div class="stats-bar">
+  <div class="stat-item"><span class="stat-icon">📖</span><div><div class="stat-num">١٠</div><div class="stat-label">قصة أصلية منشورة</div></div></div>
+  <div class="stat-item"><span class="stat-icon">🎬</span><div><div class="stat-num">مكتبة</div><div class="stat-label">فيديوهات وأفلام تركية</div></div></div>
+  <div class="stat-item"><span class="stat-icon">🤖</span><div><div class="stat-num">٦</div><div class="stat-label">قصص ذكاء اصطناعي قادمة</div></div></div>
+  <div class="stat-item"><span class="stat-icon">✦</span><div><div class="stat-num">مجاني</div><div class="stat-label">بالكامل</div></div></div>
+</div>
 
-  <!-- ══ SECTION 1: WRITTEN STORIES ══ -->
-  <div id="text-section" style="padding-top:2rem">
-    <div class="sec-header reveal">
-      <span class="sec-label sec-label-t">📖 قصص مقروءة</span>
-      <div class="sec-line"></div>
-      <a href="story.html?id=s1" class="sec-link">كل القصص ←</a>
+<!-- ═══ STORIES SECTION ═══ -->
+<div class="section" id="stories-section">
+  <div class="section-header reveal">
+    <div>
+      <span class="section-tag">◆ قصص مكتوبة</span>
+      <h2 class="section-title">الأكثر قراءة هذا الأسبوع</h2>
     </div>
-
-    <!-- THREE WORLDS INTRO -->
-    <div class="worlds-intro reveal">
-      <p class="worlds-title">◆ ثلاثة عوالم من الحكايات ◆</p>
-      <p class="worlds-sub">
-        في القصص الأسطورية، لا توجد طريقة واحدة لدخول عالم الغموض.<br><br>
-        هنا ستجد <strong style="color:var(--gold)">قصصاً مكتوبة</strong> لعشّاق القراءة،
-        و<strong style="color:var(--red-bright)">فيديوهات مختارة</strong> لعشّاق المشاهدة،
-        و<strong style="color:var(--blue-bright)">تجارب جديدة مولّدة بالذكاء الاصطناعي</strong> لعشّاق الخيال والتقنية.<br><br>
-        كل قسم مستقل... وكل عالم له طابعه الخاص.
-      </p>
-    </div>
-
-    <!-- FEATURED — div wrapper, each button has its own link -->
-    <div class="featured reveal">
-      <a href="story.html?id=s1" class="fi-img-link">
-        <span class="fi-badge">★ قصة الأسبوع</span>
-        <img src="https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=800&q=80&auto=format" alt="البيت الذي عاد إليه صاحبه بعد موته">
-      </a>
-      <div class="fi-body">
-        <div class="fi-meta">
-          <span class="fi-cat">رعب نفسي</span>
-          <div class="fi-dot"></div>
-          <span>١٦ مايو ٢٠٢٦</span>
-          <div class="fi-dot"></div>
-          <span>١٢ دقيقة قراءة</span>
-        </div>
-        <a href="story.html?id=s1" class="fi-title-link">
-          <h2 class="fi-title">البيت الذي عاد إليه صاحبه بعد موته</h2>
-        </a>
-        <p class="fi-excerpt">قبل أن يدخل ياسين المنزل، قال له الجار العجوز: "لا تنظر في المرآة بعد منتصف الليل." ابتسم ياسين... لكن الليلة الأولى غيّرت كل شيء.</p>
-        <div class="fi-btns">
-          <a href="story.html?id=s1" class="fi-btn fi-btn-read">📖 اقرأ القصة الآن</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- STORIES GRID — divs, no nested links -->
-    <div class="stories-grid">
-
-      <div class="story-card reveal">
-        <a href="story.html?id=s2" class="card-img-link">
-          <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=600&q=70&auto=format" alt="الطريق الذي لا يظهر على الخريطة"></div>
-        </a>
-        <div class="card-body">
-          <span class="card-tag">◆ غموض</span>
-          <a href="story.html?id=s2" class="card-title-link"><h3 class="card-title">الطريق الذي لا يظهر على الخريطة</h3></a>
-          <p class="card-excerpt">سائق شاحنات محترف منذ عشرين سنة دخل طريقاً غير موجود... واختفى خلفه.</p>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta"><span>١٦ مايو</span><div class="card-meta-dot"></div><span>٨ دقائق</span></div>
-          <a href="story.html?id=s2" class="c-btn-read">اقرأ ←</a>
-        </div>
-      </div>
-
-      <div class="story-card reveal">
-        <a href="story.html?id=s3" class="card-img-link">
-          <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=600&q=70&auto=format" alt="صوت أمي في الهاتف"></div>
-        </a>
-        <div class="card-body">
-          <span class="card-tag">◆ رعب</span>
-          <a href="story.html?id=s3" class="card-title-link"><h3 class="card-title">صوت أمي في الهاتف</h3></a>
-          <p class="card-excerpt">اتصلت به في الساعة 3:17 صباحاً... أمه التي دفنها قبل ثلاثة أشهر.</p>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta"><span>١٤ مايو</span><div class="card-meta-dot"></div><span>١٢ دقيقة</span></div>
-          <a href="story.html?id=s3" class="c-btn-read">اقرأ ←</a>
-        </div>
-      </div>
-
-      <div class="story-card reveal">
-        <a href="story.html?id=s4" class="card-img-link">
-          <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&q=70&auto=format" alt="الطفل الذي يتحدث مع الجدار"></div>
-        </a>
-        <div class="card-body">
-          <span class="card-tag">◆ إثارة</span>
-          <a href="story.html?id=s4" class="card-title-link"><h3 class="card-title">الطفل الذي يتحدث مع الجدار</h3></a>
-          <p class="card-excerpt">ابنه يتحدث كل مساء مع "الرجل" في الزاوية. أرسل له رسائل لم يستطع أحد تجاهلها.</p>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta"><span>١٢ مايو</span><div class="card-meta-dot"></div><span>٩ دقائق</span></div>
-          <a href="story.html?id=s4" class="c-btn-read">اقرأ ←</a>
-        </div>
-      </div>
-
-      <div class="story-card reveal">
-        <a href="story.html?id=s6" class="card-img-link">
-          <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=70&auto=format" alt="الغرفة 207"></div>
-        </a>
-        <div class="card-body">
-          <span class="card-tag">◆ غموض</span>
-          <a href="story.html?id=s6" class="card-title-link"><h3 class="card-title">الغرفة 207</h3></a>
-          <p class="card-excerpt">قال الموظف: "أي غرفة إلا 207." ثم أضاف: "إلا أنت."</p>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta"><span>٩ مايو</span><div class="card-meta-dot"></div><span>١٠ دقائق</span></div>
-          <a href="story.html?id=s6" class="c-btn-read">اقرأ ←</a>
-        </div>
-      </div>
-
-      <div class="story-card reveal">
-        <a href="story.html?id=s7" class="card-img-link">
-          <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=70&auto=format" alt="آخر تسجيل"></div>
-        </a>
-        <div class="card-body">
-          <span class="card-tag">◆ رعب</span>
-          <a href="story.html?id=s7" class="card-title-link"><h3 class="card-title">آخر تسجيل</h3></a>
-          <p class="card-excerpt">هاتف قديم. تسجيل واحد. رجل يبكي: "لا تفتح الباب مهما حدث." ثم ثلاث طرقات.</p>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta"><span>٧ مايو</span><div class="card-meta-dot"></div><span>٧ دقائق</span></div>
-          <a href="story.html?id=s7" class="c-btn-read">اقرأ ←</a>
-        </div>
-      </div>
-
-      <div class="story-card reveal">
-        <a href="story.html?id=s10" class="card-img-link">
-          <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?w=600&q=70&auto=format" alt="رسالة كتبتها قبل أن أموت"></div>
-        </a>
-        <div class="card-body">
-          <span class="card-tag">◆ رعب نفسي</span>
-          <a href="story.html?id=s10" class="card-title-link"><h3 class="card-title">رسالة كتبتها قبل أن أموت</h3></a>
-          <p class="card-excerpt">استيقظ ووجد رسالة بخطه: "لا تنظر خلفك الآن. اقرأ أولاً."</p>
-        </div>
-        <div class="card-footer">
-          <div class="card-meta"><span>١ مايو</span><div class="card-meta-dot"></div><span>١١ دقيقة</span></div>
-          <a href="story.html?id=s10" class="c-btn-read">اقرأ ←</a>
-        </div>
-      </div>
-
-    </div>
-    <div class="see-all"><a href="story.html?id=s1">اقرأ كل القصص المكتوبة ←</a></div>
+    <a href="stories/s1.html" class="section-link">كل القصص ←</a>
   </div>
-
-  <hr class="section-divider">
-
-  <!-- ══ SECTION 2: YOUTUBE VIDEOS ══ -->
-  <div id="video-section">
-    <div class="sec-header reveal">
-      <span class="sec-label sec-label-v">🎬 قصص بالفيديو</span>
-      <div class="sec-line"></div>
-      <a href="videos.html" class="sec-link">كل الفيديوهات ←</a>
-    </div>
-
-    <div class="videos-grid" id="yt-grid"></div>
-    <div class="see-all"><a href="videos.html">شاهد كل الفيديوهات ←</a></div>
+  <div class="editorial-grid reveal" id="editorial-grid"></div>
+  <div class="stories-row reveal" id="stories-row"></div>
+  <div class="view-all-wrap reveal">
+    <a href="stories/s1.html" class="btn-view-all">📖 اقرأ كل القصص العشر ←</a>
   </div>
+</div>
 
-  <hr class="section-divider">
+<!-- ═══ NEWSLETTER ═══ -->
+<div class="newsletter-section reveal" id="newsletter-section">
+  <span class="nl-eyebrow">◆ النشرة الأسبوعية</span>
+  <h2 class="nl-title">لا تفوّت أي قصة جديدة</h2>
+  <p class="nl-sub">اشترك مجاناً — قصة رعب جديدة كل أسبوع مباشرة في بريدك الإلكتروني</p>
+  <form class="nl-form" onsubmit="subscribeNewsletter(event)">
+    <input class="nl-input" type="email" placeholder="بريدك الإلكتروني" required>
+    <button class="nl-btn" type="submit">اشترك مجاناً</button>
+  </form>
+  <p class="nl-note">بدون رسائل مزعجة — إلغاء الاشتراك في أي وقت</p>
+</div>
 
-  <!-- ══ SECTION 3: AI VIDEOS ══ -->
-  <div id="ai-section">
-    <div class="sec-header reveal">
-      <span class="sec-label sec-label-ai">🤖 قصص الذكاء الاصطناعي</span>
-      <div class="sec-line"></div>
-      <a href="ai-videos.html" class="sec-link">كل القصص ←</a>
+<!-- ═══ VIDEO LIBRARY ═══ -->
+<div class="section" id="videos-section">
+  <div class="section-header reveal">
+    <div>
+      <span class="section-tag">◆ المكتبة المرئية</span>
+      <h2 class="section-title">مكتبة المسلسلات التركية</h2>
     </div>
+    <a href="videos.html" class="section-link">كل المكتبة ←</a>
+  </div>
+  <div class="vid-tabs reveal">
+    <button class="vid-tab active" onclick="filterLib('all',this)">الكل</button>
+    <button class="vid-tab" onclick="filterLib('رعب',this)">رعب وغموض</button>
+    <button class="vid-tab turkish" onclick="filterLib('turkish',this)">تركي</button>
+  </div>
+  <div class="vid-scroll-wrap reveal">
+    <div class="vid-row" id="vid-row"></div>
+  </div>
+</div>
 
+<hr style="border:none;border-top:1px solid var(--border);max-width:1320px;margin:0 auto 0 auto;padding:0 2.5rem" />
+
+<!-- ═══ PILLARS ═══ -->
+<div class="pillars">
+  <div class="pillar reveal"><span class="pillar-icon">✍️</span><h3>محتوى أصلي</h3><p>كل قصة مكتوبة حصرياً لهذه المنصة بأسلوب أدبي يغوص في الرعب النفسي والغموض</p></div>
+  <div class="pillar reveal"><span class="pillar-icon">🎬</span><h3>مكتبة منظّمة</h3><p>نختار ونرتّب لك أفضل الفيديوهات والأفلام والمسلسلات من مصادرها الأصلية</p></div>
+  <div class="pillar reveal"><span class="pillar-icon">🤖</span><h3>ذكاء اصطناعي</h3><p>نصنع تجارب صوتية وبصرية جديدة بالذكاء الاصطناعي — شخصيات تتحرك وتتكلم بعربية سلسة</p></div>
+</div>
+
+<!-- ═══ AI SECTION ═══ -->
+<div class="ai-section-wrap" id="ai-section">
+  <div class="section">
+    <div class="section-header reveal">
+      <div>
+        <span class="section-tag">◆ قصص الذكاء الاصطناعي</span>
+        <h2 class="section-title">شخصيات تتحرك وتتكلم</h2>
+      </div>
+      <a href="ai-videos.html" class="section-link">اكتشف القسم ←</a>
+    </div>
     <div class="ai-grid" id="ai-grid"></div>
-    <div class="see-all"><a href="ai-videos.html">اكتشف قصص الذكاء الاصطناعي ←</a></div>
   </div>
+</div>
 
-  <div class="ornament">✦ ✦ ✦</div>
-
-  <div class="quote-box reveal">
-    <p class="quote-text">"القصة الحقيقية ليست ما يحدث...<br>بل ما تشعر به بعد أن تنتهي."</p>
-    <span class="quote-attr">— القصص الأسطورية</span>
-  </div>
-
-</main>
-
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <div class="footer-logo">القصص الأسطورية</div>
-  <p class="footer-tagline">اقرأ ما نكتبه... شاهد ما نختاره... واكتشف ما نصنعه بالذكاء الاصطناعي.</p>
-  <ul class="footer-nav">
-    <li><a href="#text-section">📖 قصص مقروءة</a></li>
-    <li><a href="#video-section">🎬 قصص بالفيديو</a></li>
-    <li><a href="#ai-section">🤖 ذكاء اصطناعي</a></li>
-  </ul>
-  <p class="footer-copy">© ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="footer-logo">القصص الأسطورية</a>
+      <p class="footer-tagline">منصة عربية لعشّاق الرعب والغموض والأفلام التركية — قصص أصلية، مكتبة فيديو، وذكاء اصطناعي.</p>
+      <div class="social-links">
+        <a href="#" class="social-link" title="YouTube">▶</a>
+        <a href="#" class="social-link" title="TikTok">♪</a>
+        <a href="#" class="social-link" title="Instagram">◉</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>المحتوى</h4>
+      <ul>
+        <li><a href="#stories-section">القصص المكتوبة</a></li>
+        <li><a href="videos.html">مكتبة المسلسلات التركية</a></li>
+        <li><a href="ai-videos.html">قصص الذكاء الاصطناعي</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>الموقع</h4>
+      <ul>
+        <li><a href="about.html">من نحن</a></li>
+        <li><a href="contact.html">تواصل معنا</a></li>
+        <li><a href="#newsletter-section">النشرة الأسبوعية</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>قانوني</h4>
+      <ul>
+        <li><a href="privacy.html">سياسة الخصوصية</a></li>
+        <li><a href="privacy.html#cookies">سياسة الكوكيز</a></li>
+        <li><a href="about.html">الإعلانات</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© ٢٠٢٦ القصص الأسطورية — جميع الحقوق محفوظة</p>
+    <div class="footer-legal">
+      <a href="privacy.html">الخصوصية</a>
+      <a href="about.html">من نحن</a>
+      <a href="contact.html">تواصل</a>
+    </div>
+  </div>
 </footer>
 
-<script src="videos-data.js?v=2"></script>
+<!-- ═══ MODAL ═══ -->
+<div class="modal-overlay" id="vid-modal" onclick="closeVidModal(event)">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeVidModal()">✕</button>
+    <div class="modal-video"><iframe id="modal-iframe" src="" allow="autoplay;encrypted-media" allowfullscreen></iframe></div>
+    <div class="modal-info"><p class="modal-title" id="modal-title"></p><span class="modal-source" id="modal-source"></span></div>
+  </div>
+</div>
+
+<button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script src="stories.js?v=7"></script>
+<script src="videos-data.js?v=7"></script>
 <script>
-/* PARTICLES */
+/* ── PARTICLES ── */
 const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
 let W,H,P=[];
-function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
-function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.1+0.3;this.vx=(Math.random()-.5)*.14;this.vy=(Math.random()-.5)*.14;this.a=Math.random()*.35+.05;const c=Math.random();this.col=c>.7?`rgba(200,168,75,${this.a})`:c>.4?`rgba(204,34,34,${this.a})`:`rgba(42,122,191,${this.a})`;}
-function init(){resize();P=Array.from({length:130},()=>new Pt());}
+function resize(){W=canvas.width=canvas.parentElement.offsetWidth;H=canvas.height=canvas.parentElement.offsetHeight;}
+function Pt(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*.85+.15;this.vx=(Math.random()-.5)*.1;this.vy=(Math.random()-.5)*.1;this.a=Math.random()*.25+.04;const c=Math.random();this.col=c>.65?`rgba(201,168,76,${this.a})`:c>.4?`rgba(196,30,58,${this.a})`:`rgba(34,168,150,${this.a})`;}
+function init(){resize();P=Array.from({length:110},()=>new Pt());}
 function draw(){ctx.clearRect(0,0,W,H);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=p.col;ctx.fill();});requestAnimationFrame(draw);}
-init();draw();window.addEventListener('resize',resize);
+init();draw();window.addEventListener('resize',()=>{resize();});
 
-/* SCROLL REVEAL */
-const obs=new IntersectionObserver(es=>{es.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('visible'),i*70);obs.unobserve(e.target);}});},{threshold:.1});
+/* ── VIEW COUNTS ── */
+const BASE_VIEWS={s1:1842,s2:1156,s3:1623,s4:934,s5:712,s6:1289,s7:1047,s8:678,s9:1134,s10:1891};
+function getViews(id){
+  const ex=JSON.parse(localStorage.getItem('qa_ev')||'{}');
+  return (BASE_VIEWS[id]||500)+(ex[id]||0);
+}
+function fmtViews(n){return n>=1000?(n/1000).toFixed(1)+'ك':String(n);}
+function toAr(n){return String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);}
+
+/* ── TOTAL READS COUNTER ── */
+(function(){
+  const total=Object.keys(BASE_VIEWS).reduce((a,k)=>a+getViews(k),0);
+  document.getElementById('total-reads').textContent=toAr(total)+'+';
+})();
+
+/* ── TICKER ── */
+(function(){
+  if(typeof STORIES==='undefined')return;
+  const items=Object.values(STORIES).map(s=>`<span class="tick-item"><em>${s.cat}</em> ${s.title}</span>`).join('');
+  const t=document.getElementById('ticker-inner');
+  t.innerHTML=items+items;
+})();
+
+/* ── HERO FEATURED CARD ── */
+(function(){
+  if(typeof STORIES==='undefined')return;
+  const s=STORIES['s1'];
+  if(!s)return;
+  const views=fmtViews(getViews('s1'));
+  document.getElementById('hero-feature').innerHTML=`
+    <img class="hfc-img" src="${s.img}&w=900&q=85&auto=format" alt="${s.title}" loading="eager">
+    <div class="hfc-overlay"></div>
+    <div class="hfc-body">
+      <span class="hfc-cat">◆ ${s.cat}</span>
+      <a href="stories/s1.html" class="hfc-title">${s.title}</a>
+      <p class="hfc-excerpt">${s.excerpt}</p>
+      <div class="hfc-meta">
+        <div class="hfc-views">👁 ${toAr(Number(views.replace('ك',''))*1000||getViews('s1'))} قارئ</div>
+        <a href="stories/s1.html" class="hfc-cta">اقرأ الآن ←</a>
+      </div>
+    </div>`;
+})();
+
+/* ── RANDOM STORY ── */
+function pickRandom(){
+  if(typeof STORIES==='undefined')return;
+  const ids=Object.keys(STORIES);
+  const id=ids[Math.floor(Math.random()*ids.length)];
+  window.location.href='stories/'+id+'.html';
+}
+
+/* ── MOBILE NAV ── */
+function toggleMobileNav(){
+  document.getElementById('mobile-nav').classList.toggle('open');
+}
+function closeMobileNav(){
+  document.getElementById('mobile-nav').classList.remove('open');
+}
+
+/* ── EDITORIAL GRID (top 2 stories) ── */
+(function(){
+  if(typeof STORIES==='undefined')return;
+  const keys=Object.keys(STORIES);
+  const sorted=keys.slice().sort((a,b)=>getViews(b)-getViews(a));
+  const grid=document.getElementById('editorial-grid');
+
+  // Main large card
+  const s0=STORIES[sorted[0]];
+  const v0=getViews(sorted[0]);
+  grid.innerHTML+=`
+  <div class="edit-main">
+    <div class="card-img-wrap"><a href="stories/${s0.id}.html"><img class="card-img" src="${s0.img}&w=900&q=80&auto=format" alt="${s0.title}" loading="lazy"></a>
+      <span class="card-badge badge-top">★ الأكثر قراءة</span>
+    </div>
+    <div class="card-body">
+      <span class="card-tag">◆ ${s0.cat}</span>
+      <a href="stories/${s0.id}.html" class="card-title">${s0.title}</a>
+      <p class="edit-main .card-excerpt" style="font-size:.82rem;color:var(--text-dim);line-height:1.75;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${s0.excerpt}</p>
+    </div>
+    <div class="card-footer">
+      <span class="card-views">👁 ${toAr(v0)} قارئ · ${s0.readTime} قراءة</span>
+      <a href="stories/${s0.id}.html" class="card-read">اقرأ ←</a>
+    </div>
+  </div>`;
+
+  // Side cards (2nd and 3rd)
+  [sorted[1],sorted[2]].forEach(id=>{
+    const s=STORIES[id];if(!s)return;
+    const v=getViews(id);
+    grid.innerHTML+=`
+    <div class="edit-side">
+      <a href="stories/${s.id}.html"><img class="card-img" src="${s.img}&w=500&q=75&auto=format" alt="${s.title}" loading="lazy"></a>
+      <div class="card-body">
+        <span class="card-tag">◆ ${s.cat}</span>
+        <a href="stories/${s.id}.html" class="card-title">${s.title}</a>
+      </div>
+      <div class="card-footer">
+        <span class="card-views">👁 ${toAr(v)}</span>
+        <a href="stories/${s.id}.html" class="card-read">اقرأ ←</a>
+      </div>
+    </div>`;
+  });
+})();
+
+/* ── STORIES ROW (next 4) ── */
+(function(){
+  if(typeof STORIES==='undefined')return;
+  const keys=Object.keys(STORIES);
+  const sorted=keys.slice().sort((a,b)=>getViews(b)-getViews(a));
+  const row=document.getElementById('stories-row');
+  sorted.slice(3,7).forEach((id,i)=>{
+    const s=STORIES[id];if(!s)return;
+    const v=getViews(id);
+    const isNew=i<2;
+    row.innerHTML+=`
+    <div class="story-card">
+      <div class="card-img-wrap">
+        <a href="stories/${s.id}.html"><img class="card-img" src="${s.img}&w=500&q=70&auto=format" alt="${s.title}" loading="lazy"></a>
+        <span class="card-badge ${isNew?'badge-new':'badge-top'}">${isNew?'جديد':'رائج'}</span>
+      </div>
+      <div class="card-body">
+        <span class="card-tag">◆ ${s.cat}</span>
+        <a href="stories/${s.id}.html" class="card-title">${s.title}</a>
+      </div>
+      <div class="card-footer">
+        <span class="card-views">👁 ${toAr(v)} · ${s.readTime}</span>
+        <a href="stories/${s.id}.html" class="card-read">اقرأ ←</a>
+      </div>
+    </div>`;
+  });
+})();
+
+/* ── VIDEO LIBRARY ── */
+const TURKISH_CATS=new Set(['أفلام تركية','مسلسلات تركية','قصص تركية']);
+const HORROR_CATS=new Set(['رعب','رعب نفسي','إثارة','غموض']);
+
+function vidTheme(cat){
+  if(TURKISH_CATS.has(cat))return'turkish';
+  if(HORROR_CATS.has(cat))return'horror';
+  return'default';
+}
+
+function renderVidRow(filter){
+  const lib=(typeof VIDEO_LIBRARY!=='undefined')?VIDEO_LIBRARY:[];
+  let data;
+  if(filter==='turkish') data=lib.filter(v=>TURKISH_CATS.has(v.cat));
+  else if(filter==='رعب') data=lib.filter(v=>HORROR_CATS.has(v.cat));
+  else data=lib;
+  data=data.slice(0,8);
+
+  const row=document.getElementById('vid-row');
+  row.innerHTML=data.map(v=>{
+    const theme=vidTheme(v.cat);
+    const hasVid=!!v.ytId;
+    const thumb=hasVid?`https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg`:'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=600&q=60&auto=format';
+    const t=(v.title||'').replace(/'/g,"\\'");
+    const src=(v.source||'').replace(/'/g,"\\'");
+    return `
+    <div class="vid-card ${theme==='turkish'?'turkish':''}" ${hasVid?`onclick="openVidModal('${v.ytId}','${t}','${src}')"`:'onclick="window.location.href=\'videos.html\'"'}>
+      <div class="vid-thumb">
+        <img src="${thumb}" alt="${v.title||''}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=600&q=60&auto=format'">
+        <div class="vid-play ${theme==='turkish'?'turkish-p':theme==='horror'?'horror':'default-p'}">${hasVid?'▶':'+'}</div>
+        <span class="vid-dur">${v.duration||'--'}</span>
+        ${v.type?`<span class="vid-type ${theme}">${v.type}</span>`:''}
+      </div>
+      <div class="vid-body">
+        <span class="vid-cat ${theme}">◆ ${v.cat}</span>
+        <p class="vid-title">${v.title||''}</p>
+      </div>
+    </div>`;
+  }).join('');
+}
+renderVidRow('all');
+
+function filterLib(cat,btn){
+  document.querySelectorAll('.vid-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderVidRow(cat);
+}
+
+/* ── VIDEO MODAL ── */
+function openVidModal(ytId,title,source){
+  document.getElementById('modal-iframe').src=`https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-source').textContent=source?'المصدر: '+source:'';
+  document.getElementById('vid-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeVidModal(e){
+  if(e&&e.target!==document.getElementById('vid-modal')&&!e.target.classList.contains('modal-close'))return;
+  document.getElementById('vid-modal').classList.remove('open');
+  document.getElementById('modal-iframe').src='';
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeVidModal();});
+
+/* ── AI GRID ── */
+(function(){
+  if(typeof AI_VIDEOS==='undefined')return;
+  const grid=document.getElementById('ai-grid');
+  AI_VIDEOS.slice(0,3).forEach(v=>{
+    grid.innerHTML+=`
+    <a href="ai-videos.html" class="ai-card reveal">
+      <div class="ai-thumb">
+        <img src="${v.thumb}" alt="${v.title}" loading="lazy">
+        <div class="ai-overlay"></div>
+        <div class="coming-badge"><span>قريباً</span><strong>جاري الإنتاج</strong></div>
+      </div>
+      <div class="ai-body">
+        <span class="ai-tag">🤖 ذكاء اصطناعي · ${v.cat}</span>
+        <h3 class="ai-title">${v.title}</h3>
+        <p class="ai-desc">${v.desc}</p>
+      </div>
+      <div class="ai-footer">
+        <span class="ai-label">صوت AI + شخصية متحركة</span>
+        <span class="ai-status">قريباً</span>
+      </div>
+    </a>`;
+  });
+})();
+
+/* ── NEWSLETTER ── */
+function subscribeNewsletter(e){
+  e.preventDefault();
+  e.target.innerHTML='<p style="color:var(--gold);font-family:Amiri,serif;font-size:1.1rem;padding:1rem 0">✦ شكراً! سنتواصل معك قريباً</p>';
+}
+
+/* ── REVEAL ── */
+const obs=new IntersectionObserver(es=>{es.forEach((el,i)=>{if(el.isIntersecting){setTimeout(()=>el.target.classList.add('visible'),i*55);obs.unobserve(el.target);}});},{threshold:.06});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-/* YOUTUBE GRID */
-const ytGrid=document.getElementById('yt-grid');
-YOUTUBE_VIDEOS.slice(0,6).forEach(v=>{
-  ytGrid.innerHTML+=`
-  <a href="videos.html" class="video-card">
-    <div class="video-thumb">
-      <img src="https://img.youtube.com/vi/${v.ytId}/hqdefault.jpg" alt="${v.title}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=600&q=60&auto=format'">
-      <div class="play-btn">▶</div>
-      <span class="vid-duration">${v.duration}</span>
-    </div>
-    <div class="vid-body">
-      <span class="vid-tag">◆ ${v.cat}</span>
-      <h3 class="vid-title">${v.title}</h3>
-      <p class="vid-desc">${v.desc}</p>
-    </div>
-    <div class="vid-footer">
-      <span class="vid-source">📺 ${v.source}</span>
-      <span class="vid-watch">شاهد الآن ←</span>
-    </div>
-  </a>`;
-});
-
-/* AI GRID */
-const aiGrid=document.getElementById('ai-grid');
-AI_VIDEOS.slice(0,6).forEach(v=>{
-  const isReady=v.status==='ready';
-  aiGrid.innerHTML+=`
-  <a href="ai-videos.html" class="ai-card">
-    <div class="ai-thumb">
-      <img src="${v.thumb}" alt="${v.title}" loading="lazy">
-      <div class="ai-overlay"></div>
-      ${isReady
-        ?`<div class="ready-badge">▶</div>`
-        :`<div class="coming-badge"><span>قريباً</span><strong>جاري الإنتاج</strong></div>`
-      }
-      <div class="ai-glow"></div>
-    </div>
-    <div class="ai-body">
-      <span class="ai-tag">🤖 ذكاء اصطناعي · ${v.cat}</span>
-      <h3 class="ai-title">${v.title}</h3>
-      <p class="ai-desc">${v.desc}</p>
-    </div>
-    <div class="ai-footer">
-      <span class="ai-label">صوت AI + شخصية متحركة</span>
-      <span class="ai-status">${isReady?'متاح الآن':'قريباً'}</span>
-    </div>
-  </a>`;
+/* ── SCROLL TOP ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('scroll-top').classList.toggle('visible',window.scrollY>500);
 });
 </script>
 </body>

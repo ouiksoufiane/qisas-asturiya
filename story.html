@@ -149,8 +149,9 @@
 
 <button class="scroll-top" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-<script src="stories.js?v=2"></script>
+<script src="stories.js?v=7"></script>
 <script>
+let currentStory = null;
 (function() {
   var params = new URLSearchParams(window.location.search);
   var id = params.get('id') || 's1';
@@ -162,6 +163,7 @@
   }
 
   var story = STORIES[id];
+  currentStory = story;
 
 if (!story) {
   window.location.href = 'index.html';
@@ -206,7 +208,7 @@ window.addEventListener('scroll', () => {
 
 /* SHARE */
 function shareWhatsApp(){
-  window.open('https://wa.me/?text=' + encodeURIComponent(story.title + ' — اقرأ القصة: ' + window.location.href));
+  window.open('https://wa.me/?text=' + encodeURIComponent((currentStory ? currentStory.title : 'قصة من القصص الأسطورية') + ' — اقرأ القصة: ' + window.location.href));
 }
 function shareFacebook(){
   window.open('https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(window.location.href));

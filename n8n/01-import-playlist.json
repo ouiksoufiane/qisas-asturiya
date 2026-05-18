@@ -1,0 +1,88 @@
+{
+  "name": "QA — Import Playlist Séries",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "qa-import-playlist",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://qisas-asturiya.vercel.app/api/n8n?action=import-playlist",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{$env.N8N_SECRET}}" }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "playlist_url", "value": "={{ $json.body.playlist_url }}" },
+            { "name": "series_id",    "value": "={{ $json.body.series_id }}" },
+            { "name": "season",       "value": "={{ $json.body.season || '1' }}" },
+            { "name": "lang",         "value": "={{ $json.body.lang || 'ar' }}" },
+            { "name": "start_ep",     "value": "={{ $json.body.start_ep || 0 }}" },
+            { "name": "max",          "value": "={{ $json.body.max || 500 }}" }
+          ]
+        },
+        "options": { "timeout": 60000 }
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000002",
+      "name": "Call API — Import Playlist",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-0001-0001-000000000003",
+      "name": "Respond",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{ "node": "Call API — Import Playlist", "type": "main", "index": 0 }]]
+    },
+    "Call API — Import Playlist": {
+      "main": [[{ "node": "Respond", "type": "main", "index": 0 }]]
+    }
+  },
+  "active": false,
+  "settings": { "executionOrder": "v1" },
+  "versionId": "a1b2c3d4-0001-0001-0001-000000000000",
+  "meta": {
+    "instanceId": "qisas-asturiya"
+  },
+  "_comment": {
+    "usage": "POST /webhook/qa-import-playlist",
+    "body_example": {
+      "playlist_url": "https://youtube.com/playlist?list=PLxxxxx",
+      "series_id": "ertugrul",
+      "season": "3",
+      "lang": "ar",
+      "start_ep": 52,
+      "max": 500
+    },
+    "series_ids": ["ertugrul","osman","wadi","hufra","eskiya","yunusemre","omar","taer","fazilet","ask"],
+    "langs": ["ar", "darija", "tr", "fr"]
+  }
+}
