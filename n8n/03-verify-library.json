@@ -27,7 +27,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Extract all ytIds from the JS file content\nconst raw = $input.first().json.data || $input.first().json.body || '';\nconst content = typeof raw === 'string' ? raw : JSON.stringify(raw);\n\nconst matches = [...content.matchAll(/ytId:\\s*['\"]([ A-Za-z0-9_-]{6,})['\"]\\s*[,}]/g)];\nconst ids = [...new Set(matches.map(m => m[1].trim()).filter(id => id && id.length >= 6))];\n\nconsole.log(`Found ${ids.length} unique ytIds`);\nreturn [{ json: { ytIds: ids, total: ids.length } }];"
+        "jsCode": "const raw = $input.first().json.data || $input.first().json || '';\nconst content = typeof raw === 'string' ? raw : JSON.stringify(raw);\nconst matches = [...content.matchAll(/ytId:\\s*['\"]([ A-Za-z0-9_-]{6,})['\"]\\s*[,}]/g)];\nconst ids = [...new Set(matches.map(m => m[1].trim()).filter(id => id && id.length >= 6))];\nconsole.log(`Found ${ids.length} unique ytIds`);\nreturn [{ json: { ytIds: ids, total: ids.length } }];"
       },
       "id": "c3d4e5f6-0003-0003-0003-000000000003",
       "name": "Extract ytIds",
@@ -37,7 +37,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Split ytIds into batches of 50 for the verify endpoint\nconst allIds = $input.first().json.ytIds || [];\nconst batchSize = 50;\nconst batches = [];\nfor (let i = 0; i < allIds.length; i += batchSize) {\n  batches.push({ json: { ytIds: allIds.slice(i, i + batchSize), batchNum: Math.floor(i/batchSize)+1 } });\n}\nconsole.log(`Split into ${batches.length} batches`);\nreturn batches;"
+        "jsCode": "const allIds = $input.first().json.ytIds || [];\nconst batchSize = 50;\nconst batches = [];\nfor (let i = 0; i < allIds.length; i += batchSize) {\n  batches.push({ json: { ytIds: allIds.slice(i, i + batchSize), batchNum: Math.floor(i/batchSize)+1 } });\n}\nconsole.log(`Split into ${batches.length} batches of 50`);\nreturn batches;"
       },
       "id": "c3d4e5f6-0003-0003-0003-000000000004",
       "name": "Split into Batches",
@@ -48,20 +48,24 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://qisas-asturiya.vercel.app/api/n8n?action=verify",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "url": "https://qisas-asturiya.vercel.app/api/n8n?action=verify",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Authorization", "value": "=Bearer {{$env.N8N_SECRET}}" }
+            {
+              "name": "Authorization",
+              "value": "Bearer cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0="
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
-        "contentType": "json",
-        "body": {
-          "ytIds": "={{ $json.ytIds }}"
-        },
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{ JSON.stringify({ ytIds: $json.ytIds }) }}",
         "options": { "timeout": 120000 }
       },
       "id": "c3d4e5f6-0003-0003-0003-000000000005",
@@ -72,7 +76,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Aggregate results from all batches\nconst items = $input.all();\nconst dead = [];\nconst restricted = [];\nlet ok = 0;\nlet total = 0;\n\nfor (const item of items) {\n  const d = item.json;\n  ok += d.ok || 0;\n  total += d.total || 0;\n  if (d.dead?.length) dead.push(...d.dead);\n  if (d.restricted?.length) restricted.push(...d.restricted);\n}\n\nconsole.log(`Verify results: ${ok} ok, ${dead.length} dead, ${restricted.length} restricted`);\n\nreturn [{ json: {\n  checked: total,\n  ok,\n  dead,\n  restricted,\n  issues_found: dead.length + restricted.length,\n  checked_at: new Date().toISOString()\n}}];"
+        "jsCode": "const items = $input.all();\nconst dead = [], restricted = [];\nlet ok = 0, total = 0;\nfor (const item of items) {\n  const d = item.json;\n  ok += d.ok || 0;\n  total += d.total || 0;\n  if (d.dead?.length) dead.push(...d.dead);\n  if (d.restricted?.length) restricted.push(...d.restricted);\n}\nconsole.log(`Results: ${ok} ok, ${dead.length} dead, ${restricted.length} restricted`);\nreturn [{ json: { checked: total, ok, dead, restricted, issues_found: dead.length + restricted.length, checked_at: new Date().toISOString() } }];"
       },
       "id": "c3d4e5f6-0003-0003-0003-000000000006",
       "name": "Aggregate Results",
@@ -104,7 +108,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Format report\nconst d = $input.first().json;\nconst lines = [\n  `📊 Rapport bibliothèque — ${d.checked_at?.slice(0,10)}`,\n  `✅ OK: ${d.ok} / ${d.checked}`,\n  d.dead.length    ? `❌ Morts (${d.dead.length}): ${d.dead.slice(0,10).join(', ')}${d.dead.length>10?' ...':''}` : null,\n  d.restricted.length ? `🔒 Restreints (${d.restricted.length}): ${d.restricted.slice(0,10).join(', ')}` : null,\n  '',\n  d.dead.length ? 'Action: supprimer ou remplacer les IDs morts dans videos-data.js' : ''\n].filter(l => l !== null);\n\nconsole.log(lines.join('\\n'));\nreturn [{ json: { ...d, report: lines.join('\\n') } }];"
+        "jsCode": "const d = $input.first().json;\nconst lines = [\n  `📊 Rapport bibliothèque — ${d.checked_at?.slice(0,10)}`,\n  `✅ OK: ${d.ok} / ${d.checked}`,\n  d.dead?.length    ? `❌ Morts (${d.dead.length}): ${d.dead.slice(0,10).join(', ')}` : null,\n  d.restricted?.length ? `🔒 Restreints (${d.restricted.length}): ${d.restricted.slice(0,10).join(', ')}` : null,\n  '',\n  'Action: supprimer ou remplacer les IDs morts dans videos-data.js'\n].filter(l => l !== null);\nconsole.log(lines.join('\\n'));\nreturn [{ json: { ...d, report: lines.join('\\n') } }];"
       },
       "id": "c3d4e5f6-0003-0003-0003-000000000008",
       "name": "Build Report",
@@ -114,7 +118,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// All good — log and end\nconsole.log('✅ Library OK — no dead/restricted videos found');\nreturn $input.all();"
+        "jsCode": "console.log('✅ Bibliothèque OK — aucun lien mort');\nreturn $input.all();"
       },
       "id": "c3d4e5f6-0003-0003-0003-000000000009",
       "name": "All Good",
@@ -151,9 +155,10 @@
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "c3d4e5f6-0003-0003-0003-000000000000",
-  "_comment": {
-    "trigger": "Every week automatically, or run manually",
-    "tip": "Connect 'Build Report' to an Email or Slack node to receive the report"
+  "versionId": "c3d4e5f6-0003-0003-0003-000000000099",
+  "_doc": {
+    "note": "No credentials needed — auth header embedded directly",
+    "n8n_secret": "cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0=",
+    "tip": "Connect 'Build Report' to an Email or Telegram node to receive alerts"
   }
 }

@@ -17,23 +17,24 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://qisas-asturiya.vercel.app/api/n8n?action=search-films",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "url": "https://qisas-asturiya.vercel.app/api/n8n?action=search-films",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Authorization", "value": "=Bearer {{$env.N8N_SECRET}}" }
+            {
+              "name": "Authorization",
+              "value": "Bearer cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0="
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            { "name": "query", "value": "={{ $json.body.query }}" },
-            { "name": "max",   "value": "={{ $json.body.max || 20 }}" },
-            { "name": "duration_filter", "value": "={{ $json.body.duration_filter || 'long' }}" }
-          ]
-        },
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"query\": \"{{ $json.body.query }}\",\n  \"max\": {{ $json.body.max || 20 }},\n  \"duration_filter\": \"{{ $json.body.duration_filter || 'long' }}\"\n}",
         "options": { "timeout": 30000 }
       },
       "id": "b2c3d4e5-0002-0002-0002-000000000002",
@@ -44,7 +45,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Filter results: exclude already-known IDs if provided\nconst results = $input.first().json.results || [];\nconst knownIds = ($input.first().json.body?.exclude_ids || '').split(',').filter(Boolean);\n\nconst filtered = results.filter(r => r.ytId && !knownIds.includes(r.ytId));\n\nreturn filtered.map(r => ({ json: r }));"
+        "jsCode": "// Filter: keep only valid ytIds, exclude duplicates\nconst results = $input.first().json.results || [];\nconst knownIds = ($('Webhook').first().json.body?.exclude_ids || '').split(',').filter(Boolean);\nconst filtered = results.filter(r => r.ytId && !knownIds.includes(r.ytId));\nconsole.log(`Found ${results.length} results, ${filtered.length} after filter`);\nreturn filtered.map(r => ({ json: r }));"
       },
       "id": "b2c3d4e5-0002-0002-0002-000000000003",
       "name": "Filter Results",
@@ -55,22 +56,24 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://qisas-asturiya.vercel.app/api/n8n?action=import-films",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "url": "https://qisas-asturiya.vercel.app/api/n8n?action=import-films",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Authorization", "value": "=Bearer {{$env.N8N_SECRET}}" }
+            {
+              "name": "Authorization",
+              "value": "Bearer cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0="
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
-        "contentType": "json",
-        "body": {
-          "ytIds": "={{ $items().map(i => i.json.ytId) }}",
-          "category": "={{ $('Webhook').first().json.body.category || 'دراما' }}",
-          "lang": "={{ $('Webhook').first().json.body.lang || 'ar' }}"
-        },
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"ytIds\": {{ JSON.stringify($items().map(i => i.json.ytId)) }},\n  \"category\": \"{{ $('Webhook').first().json.body.category || 'دراما' }}\",\n  \"lang\": \"{{ $('Webhook').first().json.body.lang || 'ar' }}\"\n}",
         "options": { "timeout": 60000 }
       },
       "id": "b2c3d4e5-0002-0002-0002-000000000004",
@@ -108,29 +111,15 @@
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "b2c3d4e5-0002-0002-0002-000000000000",
-  "_comment": {
+  "versionId": "b2c3d4e5-0002-0002-0002-000000000099",
+  "_doc": {
+    "n8n_secret": "cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0=",
     "usage": "POST /webhook/qa-discover-films",
+    "requires": "YOUTUBE_API_KEY on Vercel",
     "body_examples": [
-      {
-        "query": "فيلم تركي مدبلج عربي دراما 2024",
-        "category": "دراما",
-        "lang": "ar",
-        "max": 20
-      },
-      {
-        "query": "فيلم تركي مدبلج عربي رعب إثارة",
-        "category": "رعب",
-        "lang": "ar",
-        "max": 20
-      },
-      {
-        "query": "Turkish movie dubbed Arabic action 2023 2024",
-        "category": "أكشن",
-        "lang": "ar",
-        "max": 20
-      }
-    ],
-    "categories": ["دراما", "أكشن", "رعب", "رومانسية", "كوميديا", "تاريخي", "إثارة"]
+      { "query": "فيلم تركي مدبلج عربي دراما 2024", "category": "دراما", "lang": "ar", "max": 20 },
+      { "query": "فيلم تركي مدبلج عربي رعب إثارة", "category": "رعب", "lang": "ar", "max": 20 },
+      { "query": "فيلم تركي مدبلج بالدارجة المغربية", "category": "دراما", "lang": "darija", "max": 20 }
+    ]
   }
 }

@@ -17,27 +17,32 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "=https://qisas-asturiya.vercel.app/api/n8n?action=import-playlist",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpHeaderAuth",
+        "url": "https://qisas-asturiya.vercel.app/api/n8n?action=import-playlist",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Authorization", "value": "=Bearer {{$env.N8N_SECRET}}" }
+            {
+              "name": "Authorization",
+              "value": "Bearer cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0="
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
           ]
         },
         "sendBody": true,
-        "bodyParameters": {
-          "parameters": [
-            { "name": "playlist_url", "value": "={{ $json.body.playlist_url }}" },
-            { "name": "series_id",    "value": "={{ $json.body.series_id }}" },
-            { "name": "season",       "value": "={{ $json.body.season || '1' }}" },
-            { "name": "lang",         "value": "={{ $json.body.lang || 'ar' }}" },
-            { "name": "start_ep",     "value": "={{ $json.body.start_ep || 0 }}" },
-            { "name": "max",          "value": "={{ $json.body.max || 500 }}" }
-          ]
-        },
-        "options": { "timeout": 60000 }
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={\n  \"playlist_url\": \"{{ $json.body.playlist_url }}\",\n  \"series_id\": \"{{ $json.body.series_id }}\",\n  \"season\": \"{{ $json.body.season || '1' }}\",\n  \"lang\": \"{{ $json.body.lang || 'ar' }}\",\n  \"start_ep\": {{ $json.body.start_ep || 0 }},\n  \"max\": {{ $json.body.max || 500 }}\n}",
+        "options": {
+          "timeout": 60000,
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        }
       },
       "id": "a1b2c3d4-0001-0001-0001-000000000002",
       "name": "Call API — Import Playlist",
@@ -68,11 +73,9 @@
   },
   "active": false,
   "settings": { "executionOrder": "v1" },
-  "versionId": "a1b2c3d4-0001-0001-0001-000000000000",
-  "meta": {
-    "instanceId": "qisas-asturiya"
-  },
-  "_comment": {
+  "versionId": "a1b2c3d4-0001-0001-0001-000000000099",
+  "_doc": {
+    "n8n_secret": "cfK2XbajYv2DMWOXTEvC3QaxYeJnXm1Xh67WJLyYEK0=",
     "usage": "POST /webhook/qa-import-playlist",
     "body_example": {
       "playlist_url": "https://youtube.com/playlist?list=PLxxxxx",
